@@ -46,7 +46,7 @@ App::uses('View', 'View');
  * - array `$_footer`: (default null)    A flat array of footer column names
  * - string `$_delimiter`: (default ',') CSV Delimiter, defaults to comma
  * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputscsv()
- * - string `$_eol`: (default '"')       End-of-line character the csv
+ * - string `$_eol`: (default '\n')       End-of-line character the csv
  */
 class CsvView extends View {
 
@@ -84,6 +84,7 @@ class CsvView extends View {
  * @param string $view The view being rendered.
  * @param string $layout The layout being rendered.
  * @return string The rendered view.
+ * @throws Exception
  */
 	public function render($view = null, $layout = null) {
 		$this->_setupViewVars();
@@ -130,7 +131,7 @@ class CsvView extends View {
  *                                   default is '%s'.
  * - '_delimiter': (default ',')     CSV Delimiter, defaults to comma
  * - '_enclosure': (default '"')     CSV Enclosure for use with fputscsv()
- * - '_eol': (default '"')           End-of-line character the csv
+ * - '_eol': (default '\n')           End-of-line character the csv
  *
  * @return void
  **/
@@ -163,9 +164,9 @@ class CsvView extends View {
 		}
 
 		if ($this->viewVars['_extract'] !== null) {
-			$this->viewVars['_extract'] = (array) $this->viewVars['_extract'];
+			$this->viewVars['_extract'] = (array)$this->viewVars['_extract'];
 			foreach ($this->viewVars['_extract'] as $i => $extract) {
-				$this->viewVars['_extract'][$i] = (array) $extract;
+				$this->viewVars['_extract'][$i] = (array)$extract;
 				if (count($this->viewVars['_extract'][$i]) !== 2) {
 					$this->viewVars['_extract'][$i][1] = '%s';
 				}
@@ -173,7 +174,7 @@ class CsvView extends View {
 		}
 
 		if ($this->viewVars['_serialize'] !== null) {
-			$this->viewVars['_serialize'] = (array) $this->viewVars['_serialize'];
+			$this->viewVars['_serialize'] = (array)$this->viewVars['_serialize'];
 		}
 	}
 
@@ -211,7 +212,7 @@ class CsvView extends View {
  **/
 	protected function _renderRow($row = null) {
 		static $csv = '';
-		$csv .= (string) $this->_generateRow($row);
+		$csv .= (string)$this->_generateRow($row);
 		return $csv;
 	}
 
