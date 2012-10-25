@@ -124,7 +124,7 @@ If you have complex model data, you can use the `$_extract` view variable to spe
 			$_extract = array('Post.id', 'Post.title', 'Post.created');
 
 			$this->viewClass = 'Csv';
-			$this->set(compact('data', '_serialize', '_header', '_extract'));
+			$this->set(compact('posts', '_serialize', '_header', '_extract'));
 		}
 
 You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to automatically have the CsvView class switched in as follows:
@@ -141,7 +141,7 @@ You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to aut
 			$_header = array('Post ID', 'Title', 'Created');
 			$_extract = array('Post.id', 'Post.title', 'Post.created');
 
-			$this->set(compact('data', '_serialize', '_header', '_extract'));
+			$this->set(compact('posts', '_serialize', '_header', '_extract'));
 		}
 
 		// Access /posts/export.csv to get the data as csv
@@ -153,7 +153,7 @@ For really complex CSVs, you can also simply use your own view files. To do so, 
 			$posts = $this->Post->find('all');
 			$_serialize = null;
 			$this->viewClass = 'Csv';
-			$this->set(compact('data', '_serialize');
+			$this->set(compact('posts', '_serialize');
 		}
 
 ## TODO
