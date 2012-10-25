@@ -27,7 +27,7 @@ App::uses('View', 'View');
  * );
  * }}}
  *
- * You can also define `'_serialize'` as an array.  This will create a top level object containing
+ * You can also define `'_serialize'` as an array. This will create a top level object containing
  * all the named view variables:
  *
  * {{{
@@ -37,7 +37,7 @@ App::uses('View', 'View');
  *
  * Each of the viewVars in `_serialize` would then be output into the csv
  *
- * If you don't use the `_serialize` key, you will need a view.  You can use extended
+ * If you don't use the `_serialize` key, you will need a view. You can use extended
  * views to provide layout like functionality.
  *
  * When not using custom views, you may specify the following view variables:
@@ -47,6 +47,8 @@ App::uses('View', 'View');
  * - string `$_delimiter`: (default ',') CSV Delimiter, defaults to comma
  * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputscsv()
  * - string `$_eol`: (default '\n')       End-of-line character the csv
+ *
+ * @link https://github.com/josegonzalez/CsvView
  */
 class CsvView extends View {
 
@@ -74,8 +76,8 @@ class CsvView extends View {
  * Render a CSV view.
  *
  * Uses the special '_serialize' parameter to convert a set of
- * view variables into a CSV response.  Makes generating simple
- * CSV responses very easy.  If you omit the '_serialize' parameter,
+ * view variables into a CSV response. Makes generating simple
+ * CSV responses very easy. If you omit the '_serialize' parameter,
  * and use a normal view + layout as well.
  *
  * Also has support for specifying headers and footers in '_header'
@@ -160,7 +162,7 @@ class CsvView extends View {
 		}
 
 		if ($this->viewVars['_eol'] === null) {
-			$this->viewVars['_eol'] = "\n";
+			$this->viewVars['_eol'] = PHP_EOL;
 		}
 
 		if ($this->viewVars['_extract'] !== null) {
