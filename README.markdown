@@ -55,7 +55,7 @@ To export a flat array as a CSV, one could write the following code:
 			);
 			$_serialize = 'data';
 
-			$this->viewClass = 'Csv';
+			$this->viewClass = 'CsvView.Csv';
 			$this->set(compact('data', '_serialize'));
 		}
 
@@ -70,7 +70,7 @@ It is possible to have multiple variables in the csv output:
 
 			$_serialize = array('data', 'data_two', 'data_three');
 
-			$this->viewClass = 'Csv';
+			$this->viewClass = 'CsvView.Csv';
 			$this->set(compact('data', 'data_two', 'data_three', '_serialize'));
 		}
 
@@ -87,7 +87,7 @@ If you want headers or footers in your CSV output, you can specify either a `$_h
 			$_header = array('Column 1', 'Column 2', 'Column 3');
 			$_footer = array('Totals', '400', '$3000');
 
-			$this->viewClass = 'Csv';
+			$this->viewClass = 'CsvView.Csv';
 			$this->set(compact('data', '_serialize', '_header', '_footer'));
 		}
 
@@ -105,7 +105,7 @@ You can also specify the delimiter, end of line, and escape characters using `$_
 			$_enclosure = '"';
 			$_eol = '~';
 
-			$this->viewClass = 'Csv';
+			$this->viewClass = 'CsvView.Csv';
 			$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_eol'));
 		}
 
@@ -123,7 +123,7 @@ If you have complex model data, you can use the `$_extract` view variable to spe
 			$_header = array('Post ID', 'Title', 'Created');
 			$_extract = array('Post.id', 'Post.title', 'Post.created');
 
-			$this->viewClass = 'Csv';
+			$this->viewClass = 'CsvView.Csv';
 			$this->set(compact('posts', '_serialize', '_header', '_extract'));
 		}
 
@@ -152,7 +152,7 @@ For really complex CSVs, you can also simply use your own view files. To do so, 
 		public function export() {
 			$posts = $this->Post->find('all');
 			$_serialize = null;
-			$this->viewClass = 'Csv';
+			$this->viewClass = 'CsvView.Csv';
 			$this->set(compact('posts', '_serialize');
 		}
 
