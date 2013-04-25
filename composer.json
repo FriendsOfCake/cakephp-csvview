@@ -1,0 +1,11 @@
+{
+  "name": "josegonzalez/CsvView",
+  "type": "cakephp-plugin",
+        "description": "A CSV View class for CakePHP 2.x",
+  "homepage": "http://github.com/josegonzalez/CsvView",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.3.0",
+    "composer/installers": "*"
+  }
+}
