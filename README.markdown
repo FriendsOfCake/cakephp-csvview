@@ -1,4 +1,4 @@
-# CsvView Plugin
+# CsvView Plugin [![Build Status](https://travis-ci.org/josegonzalez/CsvView.png?branch=master)](https://travis-ci.org/josegonzalez/CsvView)
 
 Quickly enable CSV output of your model data
 
