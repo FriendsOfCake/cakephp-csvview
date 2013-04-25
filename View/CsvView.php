@@ -61,6 +61,13 @@ class CsvView extends View {
 	public $subDir = 'csv';
 
 /**
+ * Whether or not to reset static variables in use
+ *
+ * @var boolean
+ */
+	protected $_resetStaticVariables = false;
+
+/**
  * Constructor
  *
  * @param Controller $controller
@@ -113,6 +120,8 @@ class CsvView extends View {
 		if (isset($this->Blocks)) {
 			$this->Blocks->set('content', $content);
 		}
+		$this->_resetStaticVariables = true;
+		$this->_renderRow();
 		return $content;
 	}
 
@@ -218,6 +227,12 @@ class CsvView extends View {
  **/
 	protected function _renderRow($row = null) {
 		static $csv = '';
+		if ($this->_resetStaticVariables) {
+			$csv = '';
+			$this->_resetStaticVariables = false;
+			return;
+		}
+
 		$csv .= (string)$this->_generateRow($row);
 		return $csv;
 	}
