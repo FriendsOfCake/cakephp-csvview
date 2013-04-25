@@ -97,7 +97,9 @@ class CsvView extends View {
 					$this->loadHelpers();
 				}
 				$content = $this->_render($viewFileName);
-				$this->Blocks->set('content', $content);
+				if (isset($this->Blocks)) {
+					$this->Blocks->set('content', $content);
+				}
 				return $content;
 			}
 
@@ -108,7 +110,9 @@ class CsvView extends View {
 		$this->_renderContent();
 		$this->_renderRow($this->viewVars['_footer']);
 		$content = $this->_renderRow(false);
-		$this->Blocks->set('content', $content);
+		if (isset($this->Blocks)) {
+			$this->Blocks->set('content', $content);
+		}
 		return $content;
 	}
 
