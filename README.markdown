@@ -8,7 +8,7 @@ I needed to quickly export CSVs of stuff in the database. Using a view class to 
 
 ## Requirements
 
-* CakePHP 2.x
+* CakePHP 2.1.x or higher (2.2, 2.3, etc.)
 * PHP5
 * Patience
 
