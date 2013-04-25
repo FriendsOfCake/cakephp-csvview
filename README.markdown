@@ -8,7 +8,7 @@ I needed to quickly export CSVs of stuff in the database. Using a view class to 
 
 ## Requirements
 
-* CakePHP 2.1.x or higher (2.2, 2.3, etc.)
+* CakePHP 2.x (custom view files are only supported in 2.1+)
 * PHP5
 * Patience
 
@@ -146,7 +146,7 @@ You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to aut
 
 		// Access /posts/export.csv to get the data as csv
 
-For really complex CSVs, you can also simply use your own view files. To do so, either leave `$_serialize` unspecified or set it to null. The view files will be located in the `csv` subdirectory of your current controller:
+For really complex CSVs, you can also simply use your own view files. This is only supported in 2.1+. To do so, either leave `$_serialize` unspecified or set it to null. The view files will be located in the `csv` subdirectory of your current controller:
 
 		// View used will be in app/View/Posts/csv/export.ctp
 		public function export() {
