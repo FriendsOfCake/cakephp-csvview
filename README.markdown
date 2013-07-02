@@ -171,24 +171,24 @@ The component has the following methods:
 #### prepareExtractFromFindResults($data, $excludePaths = array())
 Recursively searches `$data` and returns an array of all unique `Hash::extract()`-compatible paths, suitable for the $_extract variable
 
-*$data:* the results of a Model `find('all')` call.
-*$excludePaths (optional):* an array of paths to exclude from the returned array, using `Hash::extract()`-compatible syntax. Eg. `array('MyModel.column_name')`
+* *$data:* the results of a Model `find('all')` call.
+* *$excludePaths (optional):* an array of paths to exclude from the returned array, using `Hash::extract()`-compatible syntax. Eg. `array('MyModel.column_name')`
 
 #### prepareHeaderFromExtract($extract, $customHeaders = array())
 
 Returns an array of user-friendly colum titles, suitable for use as the `$_header`, based on the paths in `$extract`. Eg, the path 'City.Country.name' becomes 'Country Name'.
 
-*$extract:* an array of paths, using `Hash::extract()`-compatible syntax.
-*$customHeaders (optional):* an array of 'path' => 'Custom Title' pairs, eg. `array('City.population' => 'No. of People')`. These custom headers, when specified, override the default generated headers.
+* *$extract:* an array of paths, using `Hash::extract()`-compatible syntax.
+* *$customHeaders (optional):* an array of 'path' => 'Custom Title' pairs, eg. `array('City.population' => 'No. of People')`. These custom headers, when specified, override the default generated headers.
 
 #### quickExport($data, $excludePaths = array(), $customHeaders = array(), $includeHeader = true)
 
 Quickly export an the results of a Model `find('all')` call in one line of code.
 
-*$data* - the results of a Model `find('all')` call.
-*$excludePaths (optional):* Same use as in prepareExtractFromFindResults method, above
-*$customHeaders (optional):* Same use as in prepareHeaderFromExtract method, above
-*$includeHeader (optional):* if true, a $_header will be included. Defaults to true.
+* *$data* - the results of a Model `find('all')` call.
+* *$excludePaths (optional):* Same use as in prepareExtractFromFindResults method, above
+* *$customHeaders (optional):* Same use as in prepareHeaderFromExtract method, above
+* *$includeHeader (optional):* if true, a $_header will be included. Defaults to true.
 
 *Example 1 - using quickExport, simplest use:*
 
