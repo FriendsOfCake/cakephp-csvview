@@ -156,6 +156,68 @@ For really complex CSVs, you can also simply use your own view files. This is on
 			$this->set(compact('posts', '_serialize');
 		}
 
+### CsvView Component Usage
+The CsvView component provides a few methods to help you quickly export the results of complex Model `find('all')` calls.
+
+*Note:* nested `belongsTo` associations are handled no problem. Others (eg. `hasMany`) will be ignored (I can't see why you'd want them in a CSV export, or how you'd include them gracefully).
+
+To use the component, include it in your Components array:
+
+        // In your controller:
+        public $components = array('CsvView.CsvView');
+
+The component has the following methods:
+
+#### prepareExtractFromFindResults($data, $excludePaths = array())
+Recursively searches `$data` and returns an array of all unique `Hash::extract()`-compatible paths, suitable for the $_extract variable
+
+* *$data:* the results of a Model `find('all')` call.
+* *$excludePaths (optional):* an array of paths to exclude from the returned array, using `Hash::extract()`-compatible syntax. Eg. `array('MyModel.column_name')`
+
+#### prepareHeaderFromExtract($extract, $customHeaders = array())
+
+Returns an array of user-friendly colum titles, suitable for use as the `$_header`, based on the paths in `$extract`. Eg, the path 'City.Country.name' becomes 'Country Name'.
+
+* *$extract:* an array of paths, using `Hash::extract()`-compatible syntax.
+* *$customHeaders (optional):* an array of 'path' => 'Custom Title' pairs, eg. `array('City.population' => 'No. of People')`. These custom headers, when specified, override the default generated headers.
+
+#### quickExport($data, $excludePaths = array(), $customHeaders = array(), $includeHeader = true)
+
+Quickly export an the results of a Model `find('all')` call in one line of code.
+
+* *$data* - the results of a Model `find('all')` call.
+* *$excludePaths (optional):* Same use as in prepareExtractFromFindResults method, above
+* *$customHeaders (optional):* Same use as in prepareHeaderFromExtract method, above
+* *$includeHeader (optional):* if true, a $_header will be included. Defaults to true.
+
+*Example 1 - using quickExport, simplest use:*
+
+        $results = $this->MyModel->find('all);
+        $this->CsvView->quickExport($results);
+
+*Example 2 - using quickExport, advanced use:*
+
+        $results = $this->MyModel->find('all);
+        $excludePaths = array('City.id', 'State.id', 'State.Country.id'); // Exclude all id fields
+        $customHeaders = array('City.population' => 'No. of People');
+
+        $this->CsvView->quickExport($results, $excludePaths, $customHeaders);
+
+*Example 3 - NOT using quickExport:*
+
+
+        $results = $this->MyModel->find('all);
+
+        $excludePaths = array('City.id', 'State.id', 'State.Country.id'); // Exclude all id fields
+        $_export = $this->CsvView->prepareExtractFromFindResults($results, $excludePaths);
+
+        $customHeaders = array('City.population' => 'No. of People');
+        $_header = $this->CsvView->prepareHeaderFromExtract($_extract, $customHeaders);
+
+        $_serialize = 'results';
+        $this->viewClass = 'CsvView.Csv';
+        $this->set(compact('results' ,'_serialize', '_header', '_extract'));
+
 ## TODO
 
 * Unit Tests
