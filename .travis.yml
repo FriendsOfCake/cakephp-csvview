@@ -2,11 +2,24 @@ language: php
 
 php:
   - 5.3
+  - 5.4
 
 env:
   - CAKE_VERSION=master DB=mysql
 
+matrix:
+  include:
+    - php: 5.3
+      env:
+        - PHPCS=1
+    - php: 5.4
+      env:
+        - PHPCS=1
+
 before_script:
+  - sh -c "if [ '$PHPCS' = '1' ]; then pear channel-discover pear.cakephp.org; fi"
+  - sh -c "if [ '$PHPCS' = '1' ]; then pear install --alldeps cakephp/CakePHP_CodeSniffer; fi"
+  - phpenv rehash
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - git clone --depth 1 git://github.com/cakephp/cakephp ../cakephp && cd ../cakephp && git checkout $CAKE_VERSION
   - cp -R ../CsvView app/Plugin/CsvView
@@ -34,4 +47,4 @@ before_script:
     }" > ./app/Config/database.php
 
 script:
-  - ./app/Console/cake test CsvView View/CsvView
+  - sh -c "if [ '$PHPCS' != '1' ]; then ./app/Console/cake test CsvView --stderr; else phpcs -p --extensions=php --standard=CakePHP ./app/Plugin/CsvView; fi"
