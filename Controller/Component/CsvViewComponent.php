@@ -33,11 +33,11 @@ class CsvViewComponent extends Component {
  * @param  array  $excludePaths [description]
  * @return array                an array of Hash::extract() compatible paths
  */
-	function prepareExtractFromFindResults($data, $excludePaths = array()) {
+	public function prepareExtractFromFindResults($data, $excludePaths = array()) {
 		$extract = array();
 		// Go over every row in case some have keys missing
-		foreach($data as $numericKey => $row){
-			$this->addUniquePaths($row, $excludePaths, $extract);
+		foreach ($data as $numericKey => $row) {
+			$this->_addUniquePaths($row, $excludePaths, $extract);
 		}
 		return $extract;
 	}
@@ -52,16 +52,16 @@ class CsvViewComponent extends Component {
  * @param string $parentPath   Hash::extract() compatible string of all paths up until this point (for deep nested arrays)
  * @return void
  */
-	private function addUniquePaths($dataRow, $excludePaths, &$extract, $parentPath = ''){
-		foreach($dataRow as $key => $value){
-			$fullPath = ($parentPath !== '')? $parentPath.'.'.$key : $key;
-			if(is_numeric($key)){
+	protected function _addUniquePaths($dataRow, $excludePaths, &$extract, $parentPath = '') {
+		foreach ($dataRow as $key => $value) {
+			$fullPath = ($parentPath !== '')? $parentPath . '.' . $key : $key;
+			if (is_numeric($key)) {
 				// ignore it - it's a nested hasMany association
 			} else {
-				if (is_array($value)){
-					$this->addUniquePaths($value, $excludePaths, $extract, $fullPath);
+				if (is_array($value)) {
+					$this->_addUniquePaths($value, $excludePaths, $extract, $fullPath);
 				} else {
-					if(array_search($fullPath, $extract) === false && array_search($fullPath, $excludePaths) === false){
+					if (array_search($fullPath, $extract) === false && array_search($fullPath, $excludePaths) === false) {
 						$extract[] = $fullPath;
 					}
 				}
@@ -76,21 +76,21 @@ class CsvViewComponent extends Component {
  * @param  array  $customHeaders array of 'Hash.Path' => 'Custom Title' pairs, to override default generated titles
  * @return array                 an array of user-friendly headers, matching the passed in $extract array
  */
-	public function prepareHeaderFromExtract($extract, $customHeaders = array()){
+	public function prepareHeaderFromExtract($extract, $customHeaders = array()) {
 		$header = array();
-		foreach($extract as $fullPath){
-			if(!empty($customHeaders[$fullPath])){
+		foreach ($extract as $fullPath) {
+			if (!empty($customHeaders[$fullPath])) {
 				$header[] = $customHeaders[$fullPath];
 			} else {
 				$pathParts = explode('.', $fullPath);
-				$model = $pathParts[count($pathParts)-2];
+				$model = $pathParts[count($pathParts) - 2];
 				$model = preg_replace('/(?<! )(?<!^)[A-Z]/',' $0', $model); // Add space before capitals, excluding first capital - eg. MyModel becomes My Model
 
-				$column = $pathParts[count($pathParts)-1];
+				$column = $pathParts[count($pathParts) - 1];
 				$column = str_replace('_', ' ', $column);
 				$column = ucwords($column);
 
-				$header[] = $model.' '.$column;
+				$header[] = $model . ' ' . $column;
 			}
 		}
 
@@ -106,10 +106,10 @@ class CsvViewComponent extends Component {
  * @param  boolean $includeHeader if true, a header will be included in the exported CSV.
  * @return void
  */
-	public function quickExport($data, $excludePaths = array(), $customHeaders = array(), $includeHeader = true){
+	public function quickExport($data, $excludePaths = array(), $customHeaders = array(), $includeHeader = true) {
 		$_serialize = 'data';
 		$_extract = $this->prepareExtractFromFindResults($data, $excludePaths);
-		if($includeHeader){
+		if ($includeHeader) {
 			$_header = $this->prepareHeaderFromExtract($_extract, $customHeaders);
 		}
 		$this->controller->viewClass = 'CsvView.Csv';

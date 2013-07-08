@@ -7,11 +7,14 @@ App::uses('CsvViewComponent', 'CsvView.Controller/Component');
 
 // A fake controller to test against
 class TestCsvViewController extends Controller {
+
 	public $paginate = null;
 }
 
 class CsvViewComponentTest extends CakeTestCase {
+
 	public $CsvViewComponent = null;
+
 	public $Controller = null;
 
 /**
@@ -21,7 +24,7 @@ class CsvViewComponentTest extends CakeTestCase {
  *
  * @var array
  */
-	private $exampleNested = array(
+	protected $_exampleNested = array(
 		array(
 			'City' => array(
 				'name' => 'Sydney',
@@ -57,10 +60,10 @@ class CsvViewComponentTest extends CakeTestCase {
 	);
 
 /**
- * Expected output of prepareExtractFromFindResults for $exampleNested array above
+ * Expected output of prepareExtractFromFindResults for $_exampleNested array above
  * @var array
  */
-	private $exampleExtract = array(
+	protected $_exampleExtract = array(
 		'City.name',
 		'City.population',
 		'State.name',
@@ -69,10 +72,10 @@ class CsvViewComponentTest extends CakeTestCase {
 	);
 
 /**
- * Expected output of prepareHeaderFromExtract for $exampleExtract array above
+ * Expected output of prepareHeaderFromExtract for $_exampleExtract array above
  * @var array
  */
-	private $exampleHeader = array(
+	protected $_exampleHeader = array(
 		'City Name',
 		'Number of People', // overriding City.population
 		'State Name',
@@ -84,7 +87,7 @@ class CsvViewComponentTest extends CakeTestCase {
  * Example $_extract array, with multi word columns / models included
  * @var array
  */
-	private $exampleExtract2 = array(
+	protected $_exampleExtract2 = array(
 		'City.population',
 		'State.name',
 		'State.Country.multi_word_column',
@@ -92,10 +95,10 @@ class CsvViewComponentTest extends CakeTestCase {
 	);
 
 /**
- * Expected output of prepareHeaderFromExtract for $exampleExtract2 array above
+ * Expected output of prepareHeaderFromExtract for $_exampleExtract2 array above
  * @var array
  */
-	private $exampleHeader2 = array(
+	protected $__exampleHeader2 = array(
 		'City Population',
 		'My Custom Title', // overriding State.name
 		'Country Multi Word Column',
@@ -125,8 +128,8 @@ class CsvViewComponentTest extends CakeTestCase {
  */
 	public function testPrepareExtractFromFindResults() {
 		$excludePaths = array('State.excluded_column');
-		$extract = $this->CsvViewComponent->prepareExtractFromFindResults($this->exampleNested, $excludePaths);
-		$this->assertEqual($this->exampleExtract, $extract);
+		$extract = $this->CsvViewComponent->prepareExtractFromFindResults($this->_exampleNested, $excludePaths);
+		$this->assertEqual($this->_exampleExtract, $extract);
 	}
 
 /**
@@ -136,8 +139,8 @@ class CsvViewComponentTest extends CakeTestCase {
  */
 	public function testPrepareHeaderFromExtract() {
 		$customHeaders = array('State.name' => 'My Custom Title');
-		$header = $this->CsvViewComponent->prepareHeaderFromExtract($this->exampleExtract2, $customHeaders);
-		$this->assertEqual($this->exampleHeader2, $header);
+		$header = $this->CsvViewComponent->prepareHeaderFromExtract($this->_exampleExtract2, $customHeaders);
+		$this->assertEqual($this->__exampleHeader2, $header);
 	}
 
 /**
@@ -148,12 +151,12 @@ class CsvViewComponentTest extends CakeTestCase {
 	public function testQuickExport() {
 		$excludePaths = array('State.excluded_column');
 		$customHeaders = array('City.population' => 'Number of People');
-		$header = $this->CsvViewComponent->quickExport($this->exampleNested, $excludePaths, $customHeaders);
+		$header = $this->CsvViewComponent->quickExport($this->_exampleNested, $excludePaths, $customHeaders);
 
-		$this->assertEqual($this->exampleNested, $this->Controller->viewVars['data']);
+		$this->assertEqual($this->_exampleNested, $this->Controller->viewVars['data']);
 		$this->assertEqual('data', $this->Controller->viewVars['_serialize']);
-		$this->assertEqual($this->exampleExtract, $this->Controller->viewVars['_extract']);
-		$this->assertEqual($this->exampleHeader, $this->Controller->viewVars['_header']);
+		$this->assertEqual($this->_exampleExtract, $this->Controller->viewVars['_extract']);
+		$this->assertEqual($this->_exampleHeader, $this->Controller->viewVars['_header']);
 		$this->assertEqual('CsvView.Csv', $this->Controller->viewClass);
 	}
 
@@ -165,11 +168,11 @@ class CsvViewComponentTest extends CakeTestCase {
 	public function testQuickExportNoHeaders() {
 		$excludePaths = array('State.excluded_column');
 		$customHeaders = array('City.population' => 'Number of People');
-		$header = $this->CsvViewComponent->quickExport($this->exampleNested, $excludePaths, $customHeaders, false);
+		$header = $this->CsvViewComponent->quickExport($this->_exampleNested, $excludePaths, $customHeaders, false);
 
-		$this->assertEqual($this->exampleNested, $this->Controller->viewVars['data']);
+		$this->assertEqual($this->_exampleNested, $this->Controller->viewVars['data']);
 		$this->assertEqual('data', $this->Controller->viewVars['_serialize']);
-		$this->assertEqual($this->exampleExtract, $this->Controller->viewVars['_extract']);
+		$this->assertEqual($this->_exampleExtract, $this->Controller->viewVars['_extract']);
 		$hasHeader = (empty($this->Controller->viewVars['_header']))? false : true;
 		$this->assertFalse($hasHeader);
 		$this->assertEqual('CsvView.Csv', $this->Controller->viewClass);

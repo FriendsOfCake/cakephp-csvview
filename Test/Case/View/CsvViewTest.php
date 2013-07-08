@@ -99,7 +99,6 @@ class CsvViewTest extends CakeTestCase {
 		$this->assertSame('text/csv', $Response->type());
 	}
 
-
 	public function testRenderViaExtract() {
 		App::build(array(
 			'View' => realpath(dirname(__FILE__) . DS . '..' . DS . '..' . DS . 'test_app' . DS . 'View' . DS) . DS,
