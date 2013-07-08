@@ -11,12 +11,12 @@ class AllCsvViewTest extends CakeTestCase {
  *
  * @return void
  */
-  public static function suite() {
-    $suite = new CakeTestSuite('All CsvView test');
+	public static function suite() {
+		$suite = new CakeTestSuite('All CsvView test');
 
-    $path = CakePlugin::path('CsvView') . 'Test' . DS . 'Case' . DS;
-    $suite->addTestDirectoryRecursive($path);
+		$path = CakePlugin::path('CsvView') . 'Test' . DS . 'Case' . DS;
+		$suite->addTestDirectoryRecursive($path);
 
-    return $suite;
-  }
+		return $suite;
+	}
 }
