@@ -47,4 +47,4 @@ before_script:
     }" > ./app/Config/database.php
 
 script:
-  - sh -c "if [ '$PHPCS' != '1' ]; then ./app/Console/cake test CsvView --stderr; else phpcs -p --extensions=php --standard=CakePHP ./app/Plugin/CsvView; fi"
+  - sh -c "if [ '$PHPCS' != '1' ]; then ./app/Console/cake test CsvView AllCsvView --stderr; else phpcs -p --extensions=php --standard=CakePHP ./app/Plugin/CsvView; fi"
