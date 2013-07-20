@@ -60,7 +60,6 @@ public function export() {
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('data', '_serialize'));
 }
-?>
 ```
 
 All variables that are to be included in the csv must be specified in the `$_serialize` view variable, exactly how JsonView or XmlView work.
@@ -79,7 +78,6 @@ public function export() {
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('data', 'data_two', 'data_three', '_serialize'));
 }
-?>
 ```
 
 If you want headers or footers in your CSV output, you can specify either a `$_header` or `$_footer` view variable. Both are completely optional:
@@ -100,7 +98,6 @@ public function export() {
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('data', '_serialize', '_header', '_footer'));
 }
-?>
 ```
 
 You can also specify the delimiter, end of line, and escape characters using `$_delimiter`, `$_eol`, and `$_enclosure`, respectively:
@@ -122,7 +119,6 @@ public function export() {
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_eol'));
 }
-?>
 ```
 
 The defaults for these variables are:
@@ -144,7 +140,6 @@ public function export() {
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('posts', '_serialize', '_header', '_extract'));
 }
-?>
 ```
 
 You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to automatically have the CsvView class switched in as follows:
@@ -165,7 +160,6 @@ public function export() {
 
 	$this->set(compact('posts', '_serialize', '_header', '_extract'));
 }
-?>
 ```
 
 // Access /posts/export.csv to get the data as csv
@@ -181,7 +175,6 @@ public function export() {
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('posts', '_serialize');
 }
-?>
 ```
 
 ### CsvView Component Usage
@@ -195,7 +188,6 @@ To use the component, include it in your Components array:
 <?php
 // In your controller:
 public $components = array('CsvView.CsvView');
-?>
 ```
 
 The component has the following methods:
@@ -228,7 +220,6 @@ Quickly export an the results of a Model `find('all')` call in one line of code.
 <?php
 $results = $this->MyModel->find('all');
 $this->CsvView->quickExport($results);
-?>
 ```
 
 *Example 2 - using quickExport, advanced use:*
@@ -240,7 +231,6 @@ $excludePaths = array('City.id', 'State.id', 'State.Country.id'); // Exclude all
 $customHeaders = array('City.population' => 'No. of People');
 
 $this->CsvView->quickExport($results, $excludePaths, $customHeaders);
-?>
 ```
 
 *Example 3 - NOT using quickExport:*
@@ -258,7 +248,6 @@ $_header = $this->CsvView->prepareHeaderFromExtract($_extract, $customHeaders);
 $_serialize = 'results';
 $this->viewClass = 'CsvView.Csv';
 $this->set(compact('results' ,'_serialize', '_header', '_extract'));
-?>
 ```
 
 ## TODO
