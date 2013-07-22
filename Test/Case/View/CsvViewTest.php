@@ -136,4 +136,41 @@ class CsvViewTest extends CakeTestCase {
 		$this->assertSame('text/csv', $Response->type());
 	}
 
+	public function testRenderViaExtractWithNullValues() {
+		App::build(array(
+			'View' => realpath(dirname(__FILE__) . DS . '..' . DS . '..' . DS . 'test_app' . DS . 'View' . DS) . DS,
+		));
+		$Request = new CakeRequest();
+		$Response = new CakeResponse();
+		$Controller = new Controller($Request, $Response);
+		$Controller->name = $Controller->viewPath = 'Posts';
+
+		$data = array(
+			array(
+				'User' => array(
+					'username' => 'jose'
+				),
+				'Item' => array(
+					'name' => null,
+				)
+			),
+			array(
+				'User' => array(
+					'username' => 'drew'
+				),
+				'Item' => array(
+					'name' => 'ball',
+				)
+			)
+		);
+		$_extract = array('User.username', 'Item.name');
+		$Controller->set(array('user' => $data, '_extract' => $_extract));
+		$Controller->set(array('_serialize' => 'user'));
+		$View = new CsvView($Controller);
+		$output = $View->render(false);
+
+		$this->assertSame('jose,NULL' . PHP_EOL . 'drew,ball' . PHP_EOL, $output);
+		$this->assertSame('text/csv', $Response->type());
+	}
+
 }

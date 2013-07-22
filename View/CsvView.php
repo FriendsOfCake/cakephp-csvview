@@ -211,7 +211,11 @@ class CsvView extends View {
 					foreach ($extract as $e) {
 						list($path, $format) = $e;
 						$value = Hash::extract($_data, $path);
-						$values[] = sprintf($format, $value[0]);
+						if(isset($value[0])){
+							$values[] = sprintf($format, $value[0]);
+						} else {
+							$values[] = 'NULL';
+						}
 					}
 					$this->_renderRow($values);
 				}
