@@ -151,7 +151,7 @@ class CsvViewTest extends CakeTestCase {
 					'username' => 'jose'
 				),
 				'Item' => array(
-					'name' => 'beach',
+					'type' => 'beach',
 				)
 			),
 			array(
@@ -170,7 +170,7 @@ class CsvViewTest extends CakeTestCase {
 		$View = new CsvView($Controller);
 		$output = $View->render(false);
 
-		$this->assertSame('jose,beach' . PHP_EOL . 'drew,ball,fun' . PHP_EOL, $output);
+		$this->assertSame('jose,NULL,beach' . PHP_EOL . 'drew,ball,fun' . PHP_EOL, $output);
 		$this->assertSame('text/csv', $Response->type());
 	}
 
