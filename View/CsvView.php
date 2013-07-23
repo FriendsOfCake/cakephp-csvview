@@ -158,7 +158,8 @@ class CsvView extends View {
 			'_serialize',
 			'_delimiter',
 			'_enclosure',
-			'_eol'
+			'_eol',
+			'_null'
 		);
 		foreach ($required as $viewVar) {
 			if (!isset($this->viewVars[$viewVar])) {
@@ -176,6 +177,10 @@ class CsvView extends View {
 
 		if ($this->viewVars['_eol'] === null) {
 			$this->viewVars['_eol'] = PHP_EOL;
+		}
+
+		if ($this->viewVars['_null'] === null) {
+			$this->viewVars['_null'] = 'NULL';
 		}
 
 		if ($this->viewVars['_extract'] !== null) {
@@ -213,6 +218,8 @@ class CsvView extends View {
 						$value = Hash::extract($_data, $path);
 						if (isset($value[0])) {
 							$values[] = sprintf($format, $value[0]);
+						} else {
+							$values[] = $this->viewVars['_null'];
 						}
 					}
 					$this->_renderRow($values);
