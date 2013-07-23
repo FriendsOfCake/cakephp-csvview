@@ -254,10 +254,6 @@ $this->viewClass = 'CsvView.Csv';
 $this->set(compact('results' ,'_serialize', '_header', '_extract'));
 ```
 
-## TODO
-
-* Unit Tests
-
 ## License
 
 Copyright (c) 2012 Jose Diaz-Gonzalez
