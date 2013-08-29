@@ -181,6 +181,27 @@ public function export() {
 }
 ```
 
+#### Setting the downloaded file name
+By default, the downloaded file will be named after the last segment of the URL used to generate it. Eg: `example.com/my_controller/my_action` would download `my_action.csv`, while `example.com/my_controller/my_action/first_param` would download `first_param.csv`.
+
+To set a custom file name, use the [`CakeResponse::download`](http://book.cakephp.org/2.0/en/controllers/request-response.html#sending-a-string-as-file) method. The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
+
+```php
+<?php
+public function export() {
+	$data = array(
+		array('a', 'b', 'c'),
+		array(1, 2, 3),
+		array('you', 'and', 'me'),
+	);
+	$_serialize = 'data';
+
+	$this->response->download('my_file.csv'); // <= setting the file name
+	$this->viewClass = 'CsvView.Csv';
+	$this->set(compact('data', '_serialize'));
+}
+```
+
 ### CsvView Component Usage
 The CsvView component provides a few methods to help you quickly export the results of complex Model `find('all')` calls.
 
