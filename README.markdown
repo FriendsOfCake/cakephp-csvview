@@ -265,7 +265,7 @@ $this->CsvView->quickExport($results, $excludePaths, $customHeaders);
 $results = $this->MyModel->find('all');
 
 $excludePaths = array('City.id', 'State.id', 'State.Country.id'); // Exclude all id fields
-$_export = $this->CsvView->prepareExtractFromFindResults($results, $excludePaths);
+$_extract = $this->CsvView->prepareExtractFromFindResults($results, $excludePaths);
 
 $customHeaders = array('City.population' => 'No. of People');
 $_header = $this->CsvView->prepareHeaderFromExtract($_extract, $customHeaders);
