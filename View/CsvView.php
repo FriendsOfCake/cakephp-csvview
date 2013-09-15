@@ -100,9 +100,6 @@ class CsvView extends View {
 
 		if ($this->viewVars['_serialize'] === null) {
 			if ($view !== false && $viewFileName = $this->_getViewFileName($view)) {
-				if (!$this->_helpersLoaded) {
-					$this->loadHelpers();
-				}
 				$content = $this->_render($viewFileName);
 				if (isset($this->Blocks)) {
 					$this->Blocks->set('content', $content);
