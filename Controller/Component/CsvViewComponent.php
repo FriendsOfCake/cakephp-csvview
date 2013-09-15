@@ -85,7 +85,7 @@ class CsvViewComponent extends Component {
 			} else {
 				$pathParts = explode('.', $fullPath);
 				$model = $pathParts[count($pathParts) - 2];
-				$model = preg_replace('/(?<! )(?<!^)[A-Z]/', '$0', $model);
+				$model = preg_replace('/(?<! )(?<!^)[A-Z]/', ' $0', $model);
 
 				$column = $pathParts[count($pathParts) - 1];
 				$column = str_replace('_', ' ', $column);
