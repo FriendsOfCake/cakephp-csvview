@@ -1,7 +1,5 @@
 <?php
 /**
- * CsvViewTest file
- *
  * PHP 5
  *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
@@ -12,7 +10,6 @@
  *
  * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://book.cakephp.org/2.0/en/development/testing.html CakePHP(tm) Tests
- * @package       Cake.Test.Case.View
  * @since         CakePHP(tm) v 2.1.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -24,8 +21,6 @@ App::uses('CsvView', 'CsvView.View');
 
 /**
  * CsvViewTest
- *
- * @package       CsvView.Test.Case.View
  */
 class CsvViewTest extends CakeTestCase {
 
@@ -68,6 +63,31 @@ class CsvViewTest extends CakeTestCase {
 		$output = $View->render(false);
 
 		$this->assertSame('a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'you,and,me' . PHP_EOL, $output);
+		$this->assertSame('text/csv', $Response->type());
+	}
+
+/**
+ * Test render with a custom EOL char.
+ *
+ * @return void
+ */
+	public function testRenderWithCustomEol() {
+		$Request = new CakeRequest();
+		$Response = new CakeResponse();
+		$Controller = new Controller($Request, $Response);
+		$data = array(
+			array('a', 'b', 'c'),
+			array(1, 2, 3),
+			array('you', 'and', 'me'),
+		);
+		$_serialize = 'data';
+		$Controller->set('data', $data);
+		$Controller->set(array('_serialize' => 'data'));
+		$View = new CsvView($Controller);
+		$View->viewVars['_eol'] = '~';
+		$output = $View->render(false);
+
+		$this->assertSame('a,b,c~1,2,3~you,and,me~', $output);
 		$this->assertSame('text/csv', $Response->type());
 	}
 
