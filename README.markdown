@@ -1,4 +1,5 @@
-# CsvView Plugin [![Build Status](https://travis-ci.org/josegonzalez/CsvView.png?branch=master)](https://travis-ci.org/josegonzalez/CsvView)
+# CsvView Plugin [![Build Status](https://travis-ci.org/josegonzalez/cakephp-csvview.png?branch=master)](https://travis-ci.org/josegonzalez/cakephp-csvview) [![Coverage Status](https://coveralls.io/repos/josegonzalez/cakephp-csvview/badge.png?branch=master)](https://coveralls.io/r/josegonzalez/cakephp-csvview?branch=master) [![Total Downloads](https://poser.pugx.org/josegonzalez/cakephp-csvview/d/total.png)](https://packagist.org/packages/josegonzalez/cakephp-csvview) [![Latest Stable Version](https://poser.pugx.org/josegonzalez/cakephp-csvview/v/stable.png)](https://packagist.org/packages/josegonzalez/cakephp-csvview)
+
 
 Quickly enable CSV output of your model data
 
@@ -14,9 +15,21 @@ I needed to quickly export CSVs of stuff in the database. Using a view class to 
 
 ## Installation
 
+_[Using [Composer](http://getcomposer.org/)]_
+
+Add the plugin to your project's `composer.json` - something like this:
+
+	{
+		"require": {
+			"josegonzalez/cakephp-csvview": "dev-master"
+		}
+	}
+
+Because this plugin has the type `cakephp-plugin` set in it's own `composer.json`, composer knows to install it inside your `/Plugins` directory, rather than in the usual vendors file. It is recommended that you add `/Plugins/Upload` to your .gitignore file. (Why? [read this](http://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).)
+
 _[Manual]_
 
-* Download this: [http://github.com/josegonzalez/CsvView/zipball/master](http://github.com/josegonzalez/CsvView/zipball/master)
+* Download this: [http://github.com/josegonzalez/cakephp-csvview/zipball/master](http://github.com/josegonzalez/cakephp-csvview/zipball/master)
 * Unzip that download.
 * Copy the resulting folder to `app/Plugin`
 * Rename the folder you just copied to `CsvView`
@@ -25,7 +38,7 @@ _[GIT Submodule]_
 
 In your app directory type:
 
-	git submodule add -b master git://github.com/josegonzalez/CsvView.git Plugin/CsvView
+	git submodule add -b master git://github.com/josegonzalez/cakephp-csvview.git Plugin/CsvView
 	git submodule init
 	git submodule update
 
@@ -33,7 +46,7 @@ _[GIT Clone]_
 
 In your `Plugin` directory type:
 
-	git clone -b master git://github.com/josegonzalez/CsvView.git CsvView
+	git clone -b master git://github.com/josegonzalez/cakephp-csvview.git CsvView
 
 ### Enable plugin
 
@@ -276,6 +289,8 @@ $this->set(compact('results' ,'_serialize', '_header', '_extract'));
 ```
 
 ## License
+
+The MIT License (MIT)
 
 Copyright (c) 2012 Jose Diaz-Gonzalez
 
