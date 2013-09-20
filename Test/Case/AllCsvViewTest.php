@@ -1,8 +1,6 @@
 <?php
 /**
  * All CsvView plugin tests
- *
- * @package       CsvView.Test.Case
  */
 class AllCsvViewTest extends CakeTestCase {
 

@@ -273,8 +273,8 @@ class CsvView extends View {
 		$csv = fgets($fp);
 
 		$eol = $this->viewVars['_eol'];
-		if ($eol != PHP_EOL) {
-			$csv = substr($csv, 0, (0 - strlen(PHP_EOL))) . $eol;
+		if ($eol !== "\n") {
+			$csv = str_replace("\n", $eol, $csv);
 		}
 
 		return $csv;
