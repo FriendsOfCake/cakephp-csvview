@@ -17,15 +17,15 @@ I needed to quickly export CSVs of stuff in the database. Using a view class to 
 
 _[Using [Composer](http://getcomposer.org/)]_
 
-Add the plugin to your project's `composer.json` - something like this:
+[View on Packagist](https://packagist.org/packages/josegonzalez/cakephp-csvview), and copy the json snippet for the latest version into your project's `composer.json`. Eg, v. 1.0.0 would look like this:
 
 	{
 		"require": {
-			"josegonzalez/cakephp-csvview": "dev-master"
+			"josegonzalez/cakephp-csvview": "1.0.0"
 		}
 	}
 
-Because this plugin has the type `cakephp-plugin` set in it's own `composer.json`, composer knows to install it inside your `/Plugins` directory, rather than in the usual vendors file. It is recommended that you add `/Plugins/Upload` to your .gitignore file. (Why? [read this](http://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).)
+Because this plugin has the type `cakephp-plugin` set in it's own `composer.json`, composer knows to install it inside your `/Plugins` directory, rather than in the usual vendors file. It is recommended that you add `/Plugins/CsvView` to your .gitignore file. (Why? [read this](http://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).)
 
 _[Manual]_
 
