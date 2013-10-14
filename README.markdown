@@ -61,7 +61,6 @@ If you are already using `CakePlugin::loadAll();`, then this is not necessary.
 To export a flat array as a CSV, one could write the following code:
 
 ```php
-<?php
 public function export() {
 	$data = array(
 		array('a', 'b', 'c'),
@@ -80,7 +79,6 @@ All variables that are to be included in the csv must be specified in the `$_ser
 It is possible to have multiple variables in the csv output:
 
 ```php
-<?php
 public function export() {
 	$data = array(array('a', 'b', 'c'));
 	$data_two = array(array(1, 2, 3));
@@ -96,7 +94,6 @@ public function export() {
 If you want headers or footers in your CSV output, you can specify either a `$_header` or `$_footer` view variable. Both are completely optional:
 
 ```php
-<?php
 public function export() {
 	$data = array(
 		array('a', 'b', 'c'),
@@ -113,10 +110,10 @@ public function export() {
 }
 ```
 
-You can also specify the delimiter, end of line, and escape characters using `$_delimiter`, `$_eol`, and `$_enclosure`, respectively:
+You can also specify the delimiter, end of line, newline and escape characters using
+`$_delimiter`, `$_eol`, `$_newline` and `$_enclosure`, respectively:
 
 ```php
-<?php
 public function export() {
 	$data = array(
 		array('a', 'b', 'c'),
@@ -127,10 +124,11 @@ public function export() {
 	$_serialize = 'data';
 	$_delimiter = chr(9); //tab
 	$_enclosure = '"';
+	$_newline = '\r\n';
 	$_eol = '~';
 
 	$this->viewClass = 'CsvView.Csv';
-	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_eol'));
+	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol'));
 }
 ```
 
@@ -138,12 +136,16 @@ The defaults for these variables are:
 
 * `_delimiter`: `,`
 * `_enclosure`: `"`
+* `_newline`: `\n`
 * `_eol`: `\n`
+
+The `_eol` variable is the one used to generate newlines in the output.
+`_newline`, however, is the character that should replace the newline characters in the actual data.
+It is recommended to use the string representation of the newline character to avoid rendering invalid output.
 
 If you have complex model data, you can use the `$_extract` view variable to specify the individual paths for each record. This is an array of `Hash::extract()`-compatible syntax:
 
 ```php
-<?php
 public function export() {
 	$posts = $this->Post->find('all');
 	$_serialize = 'posts';
@@ -162,7 +164,6 @@ If your model data contains some null values or missing keys, you can use the `$
 You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to automatically have the CsvView class switched in as follows:
 
 ```php
-<?php
 // In your routes.php file:
 Router::parseExtensions('csv');
 
@@ -184,7 +185,6 @@ public function export() {
 For really complex CSVs, you can also simply use your own view files. This is only supported in 2.1+. To do so, either leave `$_serialize` unspecified or set it to null. The view files will be located in the `csv` subdirectory of your current controller:
 
 ```php
-<?php
 // View used will be in app/View/Posts/csv/export.ctp
 public function export() {
 	$posts = $this->Post->find('all');
@@ -200,7 +200,6 @@ By default, the downloaded file will be named after the last segment of the URL 
 To set a custom file name, use the [`CakeResponse::download`](http://book.cakephp.org/2.0/en/controllers/request-response.html#sending-a-string-as-file) method. The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
 
 ```php
-<?php
 public function export() {
 	$data = array(
 		array('a', 'b', 'c'),
@@ -223,7 +222,6 @@ The CsvView component provides a few methods to help you quickly export the resu
 To use the component, include it in your Components array:
 
 ```php
-<?php
 // In your controller:
 public $components = array('CsvView.CsvView');
 ```
@@ -255,7 +253,6 @@ Quickly export an the results of a Model `find('all')` call in one line of code.
 *Example 1 - using quickExport, simplest use:*
 
 ```php
-<?php
 $results = $this->MyModel->find('all');
 $this->CsvView->quickExport($results);
 ```
@@ -263,7 +260,6 @@ $this->CsvView->quickExport($results);
 *Example 2 - using quickExport, advanced use:*
 
 ```php
-<?php
 $results = $this->MyModel->find('all');
 $excludePaths = array('City.id', 'State.id', 'State.Country.id'); // Exclude all id fields
 $customHeaders = array('City.population' => 'No. of People');
@@ -274,7 +270,6 @@ $this->CsvView->quickExport($results, $excludePaths, $customHeaders);
 *Example 3 - NOT using quickExport:*
 
 ```php
-<?php
 $results = $this->MyModel->find('all');
 
 $excludePaths = array('City.id', 'State.id', 'State.Country.id'); // Exclude all id fields

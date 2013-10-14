@@ -119,6 +119,11 @@ class CsvViewTest extends CakeTestCase {
 		$this->assertSame('text/csv', $Response->type());
 	}
 
+/**
+ * CsvViewTest::testRenderViaExtract()
+ *
+ * @return void
+ */
 	public function testRenderViaExtract() {
 		App::build(array(
 			'View' => realpath(dirname(__FILE__) . DS . '..' . DS . '..' . DS . 'test_app' . DS . 'View' . DS) . DS,
@@ -156,6 +161,11 @@ class CsvViewTest extends CakeTestCase {
 		$this->assertSame('text/csv', $Response->type());
 	}
 
+/**
+ * CsvViewTest::testRenderViaExtractOptionalField()
+ *
+ * @return void
+ */
 	public function testRenderViaExtractOptionalField() {
 		App::build(array(
 			'View' => realpath(dirname(__FILE__) . DS . '..' . DS . '..' . DS . 'test_app' . DS . 'View' . DS) . DS,
@@ -191,6 +201,64 @@ class CsvViewTest extends CakeTestCase {
 		$output = $View->render(false);
 
 		$this->assertSame('jose,NULL,beach' . PHP_EOL . 'drew,ball,fun' . PHP_EOL, $output);
+		$this->assertSame('text/csv', $Response->type());
+	}
+
+/**
+ * CsvViewTest::testRenderWithSpecialCharacters()
+ *
+ * @return void
+ */
+	public function testRenderWithSpecialCharacters() {
+		App::build(array(
+			'View' => realpath(dirname(__FILE__) . DS . '..' . DS . '..' . DS . 'test_app' . DS . 'View' . DS) . DS,
+		));
+		$Request = new CakeRequest();
+		$Response = new CakeResponse();
+		$Controller = new Controller($Request, $Response);
+		$Controller->name = $Controller->viewPath = 'Posts';
+
+		$data = array(
+			array(
+				'User' => array(
+					'username' => 'José'
+				),
+				'Item' => array(
+					'type' => 'äöü',
+				)
+			),
+			array(
+				'User' => array(
+					'username' => 'Including,Comma'
+				),
+				'Item' => array(
+					'name' => 'Containing"char',
+					'type' => 'Containing\'char'
+				)
+			),
+			array(
+				'User' => array(
+					'username' => 'Some Space'
+				),
+				'Item' => array(
+					'name' => "A\nNewline",
+					'type' => "A\tTab"
+				)
+			)
+		);
+		$_extract = array('User.username', 'Item.name', 'Item.type');
+		$Controller->set(array('user' => $data, '_extract' => $_extract));
+		$Controller->set(array('_serialize' => 'user'));
+		$View = new CsvView($Controller);
+		$output = $View->render(false);
+
+		$expected = <<<CSV
+José,NULL,äöü
+"Including,Comma","Containing""char",Containing'char
+"Some Space","A\\nNewline","A\tTab"
+
+CSV;
+		$this->assertTextEquals($expected, $output);
 		$this->assertSame('text/csv', $Response->type());
 	}
 
