@@ -125,7 +125,7 @@ public function export() {
 	);
 
 	$_serialize = 'data';
-	$_delimiter = '\t';
+	$_delimiter = chr(9); //tab
 	$_enclosure = '"';
 	$_eol = '~';
 
