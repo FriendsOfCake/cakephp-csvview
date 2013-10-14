@@ -173,7 +173,7 @@ class CsvViewComponentTest extends CakeTestCase {
 		$this->assertEqual($this->_exampleNested, $this->Controller->viewVars['data']);
 		$this->assertEqual('data', $this->Controller->viewVars['_serialize']);
 		$this->assertEqual($this->_exampleExtract, $this->Controller->viewVars['_extract']);
-		$hasHeader = (empty($this->Controller->viewVars['_header']))? false : true;
+		$hasHeader = (empty($this->Controller->viewVars['_header'])) ? false : true;
 		$this->assertFalse($hasHeader);
 		$this->assertEqual('CsvView.Csv', $this->Controller->viewClass);
 	}
