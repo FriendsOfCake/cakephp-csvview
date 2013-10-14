@@ -133,16 +133,17 @@ class CsvView extends View {
  * - array '_extract': (default null) An array of Hash-compatible 'paths' with
  *                                    matching 'sprintf' $format as follows:
  *
- *                                   $_extract = array(
- *                                     array($path, $format),
- *                                     array($path),
- *                                     $path,
- *                                   );
+ *                                    $_extract = array(
+ *                                      array($path, $format),
+ *                                      array($path),
+ *                                      $path,
+ *                                    );
  *
- *                                   If a string or unspecified, the format
- *                                   default is '%s'.
- * - '_delimiter': (default ',')     CSV Delimiter, defaults to comma
- * - '_enclosure': (default '"')     CSV Enclosure for use with fputscsv()
+ *                                    If a string or unspecified, the format
+ *                                    default is '%s'.
+ * - '_delimiter': (default ',')      CSV Delimiter, defaults to comma
+ * - '_enclosure': (default '"')      CSV Enclosure for use with fputscsv()
+ * - '_newline': (default '\n')       CSV Newline replacement for use with fputscsv()
  * - '_eol': (default '\n')           End-of-line character the csv
  *
  * @return void
@@ -155,6 +156,7 @@ class CsvView extends View {
 			'_serialize',
 			'_delimiter',
 			'_enclosure',
+			'_newline',
 			'_eol',
 			'_null'
 		);
@@ -170,6 +172,10 @@ class CsvView extends View {
 
 		if ($this->viewVars['_enclosure'] === null) {
 			$this->viewVars['_enclosure'] = '"';
+		}
+
+		if ($this->viewVars['_newline'] === null) {
+			$this->viewVars['_newline'] = '\n';
 		}
 
 		if ($this->viewVars['_eol'] === null) {
@@ -265,6 +271,9 @@ class CsvView extends View {
 
 		$delimiter = $this->viewVars['_delimiter'];
 		$enclosure = $this->viewVars['_enclosure'];
+		$newline = $this->viewVars['_newline'];
+
+		$row = str_replace(array("\r\n", "\n", "\r"), $newline, $row);
 		if (fputcsv($fp, $row, $delimiter, $enclosure) === false) {
 			return false;
 		}
