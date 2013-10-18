@@ -145,6 +145,7 @@ class CsvView extends View {
  * - '_enclosure': (default '"')      CSV Enclosure for use with fputscsv()
  * - '_newline': (default '\n')       CSV Newline replacement for use with fputscsv()
  * - '_eol': (default '\n')           End-of-line character the csv
+ * - '_bom': (default false)          Adds BOM (byte order mark) header
  *
  * @return void
  **/
@@ -158,7 +159,8 @@ class CsvView extends View {
 			'_enclosure',
 			'_newline',
 			'_eol',
-			'_null'
+			'_null',
+			'_bom'
 		);
 		foreach ($required as $viewVar) {
 			if (!isset($this->viewVars[$viewVar])) {
@@ -184,6 +186,10 @@ class CsvView extends View {
 
 		if ($this->viewVars['_null'] === null) {
 			$this->viewVars['_null'] = 'NULL';
+		}
+
+		if ($this->viewVars['_bom'] === null) {
+			$this->viewVars['_bom'] = false;
 		}
 
 		if ($this->viewVars['_extract'] !== null) {
@@ -261,6 +267,10 @@ class CsvView extends View {
 		static $fp = false;
 		if ($fp === false) {
 			$fp = fopen('php://temp', 'r+');
+
+			if ($this->viewVars['_bom']) {
+				fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
+			}
 		} else {
 			rewind($fp);
 		}
