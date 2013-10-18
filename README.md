@@ -110,8 +110,8 @@ public function export() {
 }
 ```
 
-You can also specify the delimiter, end of line, newline and escape characters using
-`$_delimiter`, `$_eol`, `$_newline` and `$_enclosure`, respectively:
+You can also specify the delimiter, end of line, newline, escape characters and byte order mark (BOM) sequence using
+`$_delimiter`, `$_eol`, `$_newline`, `$_enclosure` and `$_bom` respectively:
 
 ```php
 public function export() {
@@ -126,6 +126,7 @@ public function export() {
 	$_enclosure = '"';
 	$_newline = '\r\n';
 	$_eol = '~';
+	$_bom = true;
 
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol'));
@@ -138,10 +139,13 @@ The defaults for these variables are:
 * `_enclosure`: `"`
 * `_newline`: `\n`
 * `_eol`: `\n`
+* `_bom`: false
 
 The `_eol` variable is the one used to generate newlines in the output.
 `_newline`, however, is the character that should replace the newline characters in the actual data.
 It is recommended to use the string representation of the newline character to avoid rendering invalid output.
+
+Some reader software incorrectly renders UTF-8 encoded files which do not contain byte order mark (BOM) byte sequence. The `_bom` variable is the one used to add byte order mark (BOM) byte sequence beginning of the generated CSV output stream. See [`Wikipedia article about byte order mark`](http://en.wikipedia.org/wiki/Byte_order_mark) for more information.
 
 If you have complex model data, you can use the `$_extract` view variable to specify the individual paths for each record. This is an array of `Hash::extract()`-compatible syntax:
 
