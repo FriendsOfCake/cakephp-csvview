@@ -1,11 +1,13 @@
 # CsvView Plugin [![Build Status](https://travis-ci.org/josegonzalez/cakephp-csvview.png?branch=master)](https://travis-ci.org/josegonzalez/cakephp-csvview) [![Coverage Status](https://coveralls.io/repos/josegonzalez/cakephp-csvview/badge.png?branch=master)](https://coveralls.io/r/josegonzalez/cakephp-csvview?branch=master) [![Total Downloads](https://poser.pugx.org/josegonzalez/cakephp-csvview/d/total.png)](https://packagist.org/packages/josegonzalez/cakephp-csvview) [![Latest Stable Version](https://poser.pugx.org/josegonzalez/cakephp-csvview/v/stable.png)](https://packagist.org/packages/josegonzalez/cakephp-csvview)
 
 
-Quickly enable CSV output of your model data
+Quickly enable CSV output of your model data.
 
 ## Background
 
-I needed to quickly export CSVs of stuff in the database. Using a view class to iterate manually would be a chore to replicate for each export method, so I figured it would be much easier to do this with a custom view class, like JsonView or XmlView.
+I needed to quickly export CSVs of stuff in the database. Using a view class to iterate manually
+would be a chore to replicate for each export method, so I figured it would be much easier to do
+this with a custom view class, like JsonView or XmlView.
 
 ## Requirements
 
@@ -17,7 +19,8 @@ I needed to quickly export CSVs of stuff in the database. Using a view class to 
 
 _[Using [Composer](http://getcomposer.org/)]_
 
-[View on Packagist](https://packagist.org/packages/josegonzalez/cakephp-csvview), and copy the json snippet for the latest version into your project's `composer.json`. Eg, v. 1.0.0 would look like this:
+[View on Packagist](https://packagist.org/packages/josegonzalez/cakephp-csvview), and copy
+the JSON snippet for the latest version into your project's `composer.json`. Eg, v. 1.0.0 would look like this:
 
 	{
 		"require": {
@@ -172,7 +175,11 @@ You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to aut
 Router::parseExtensions('csv');
 
 // In your controller:
-public $components = array('RequestHandler');
+public $components = array(
+	'RequestHandler' => array(
+		'viewClassMap' => array('csv' => 'CsvView.Csv)
+	)
+);
 
 public function export() {
 	$posts = $this->Post->find('all');
