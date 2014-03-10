@@ -177,7 +177,7 @@ Router::parseExtensions('csv');
 // In your controller:
 public $components = array(
 	'RequestHandler' => array(
-		'viewClassMap' => array('csv' => 'CsvView.Csv)
+		'viewClassMap' => array('csv' => 'CsvView.Csv')
 	)
 );
 
