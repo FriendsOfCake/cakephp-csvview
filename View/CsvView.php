@@ -76,6 +76,7 @@ class CsvView extends View {
 		parent::__construct($controller);
 		if (isset($controller->response) && $controller->response instanceof CakeResponse) {
 			$controller->response->type('csv');
+			$controller->response->statusCode(200);
 		}
 	}
 
