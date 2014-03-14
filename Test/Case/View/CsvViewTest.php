@@ -255,7 +255,8 @@ class CsvViewTest extends CakeTestCase {
 		$expected = <<<CSV
 José,NULL,äöü
 "Including,Comma","Containing""char",Containing'char
-"Some Space","A\\nNewline","A\tTab"
+"Some Space","A
+Newline","A\tTab"
 
 CSV;
 		$this->assertTextEquals($expected, $output);
