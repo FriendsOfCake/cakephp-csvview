@@ -289,7 +289,7 @@ class CsvView extends View {
 		}
 
 		rewind($fp);
-		
+
 		$csv = '';
 		while (($buffer = fgets($fp, 4096)) !== false) {
 			$csv .= $buffer;
