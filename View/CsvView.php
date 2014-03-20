@@ -177,7 +177,7 @@ class CsvView extends View {
 		}
 
 		if ($this->viewVars['_newline'] === null) {
-			$this->viewVars['_newline'] = '\n';
+			$this->viewVars['_newline'] = "\n";
 		}
 
 		if ($this->viewVars['_eol'] === null) {
@@ -272,7 +272,7 @@ class CsvView extends View {
 				fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
 			}
 		} else {
-			rewind($fp);
+			ftruncate($fp, 0);
 		}
 
 		if ($row === false || $row === null) {
@@ -289,7 +289,11 @@ class CsvView extends View {
 		}
 
 		rewind($fp);
-		$csv = fgets($fp);
+
+		$csv = '';
+		while (($buffer = fgets($fp, 4096)) !== false) {
+			$csv .= $buffer;
+		}
 
 		$eol = $this->viewVars['_eol'];
 		if ($eol !== "\n") {
