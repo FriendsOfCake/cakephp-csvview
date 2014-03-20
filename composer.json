@@ -1,58 +1,58 @@
 {
-  "name": "josegonzalez/cakephp-csvview",
-  "version": "1.0.0",
-  "description": "A CSV View class for CakePHP 2.x",
-  "type": "cakephp-plugin",
-  "keywords": [
-    "cakephp",
-    "csv",
-    "view",
-    "export"
-  ],
-  "homepage": "http://github.com/josegonzalez/cakephp-csvview",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Jose Diaz-Gonzalez",
-      "email": "email@josediazgonzalez.com",
-      "homepage": "http://josediazgonzalez.com",
-      "role": "Maintainer"
-    },
-    {
-      "name":"ADmad",
-      "role":"Contributor",
-      "homepage":"https://github.com/admad"
-    },
-    {
-      "name":"Mark Scherer",
-      "role":"Contributor",
-      "homepage":"https://github.com/dereuromark"
-    },
-    {
-      "name":"Joshua Paling",
-      "role":"Contributor",
-      "homepage":"https://github.com/joshuapaling"
-    },
-    {
-      "name":"Gaurish Sharma",
-      "role":"Contributor",
-      "homepage":"https://github.com/gaurish"
-    },
-    {
-      "name":"Gregory Gaskill",
-      "role":"Contributor",
-      "homepage":"https://github.com/chronon"
-    }
-  ],
-  "require": {
-    "composer/installers": "*"
-  },
-  "support": {
-    "email": "cakephp+csvview@josediazgonzalez.com",
-    "issues": "https://github.com/josegonzalez/cakephp-csvview/issues",
-    "source": "https://github.com/josegonzalez/cakephp-csvview"
-  },
-  "extra": {
-    "installer-name": "CsvView"
-  }
+	"name": "josegonzalez/cakephp-csvview",
+	"version": "1.2.0",
+	"description": "A CSV View class for CakePHP 2.x",
+	"type": "cakephp-plugin",
+	"keywords": [
+		"cakephp",
+		"csv",
+		"view",
+		"export"
+	],
+	"homepage": "http://github.com/josegonzalez/cakephp-csvview",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jose Diaz-Gonzalez",
+			"email": "email@josediazgonzalez.com",
+			"homepage": "http://josediazgonzalez.com",
+			"role": "Maintainer"
+		},
+		{
+			"name":"ADmad",
+			"role":"Contributor",
+			"homepage":"https://github.com/admad"
+		},
+		{
+			"name":"Mark Scherer",
+			"role":"Contributor",
+			"homepage":"https://github.com/dereuromark"
+		},
+		{
+			"name":"Joshua Paling",
+			"role":"Contributor",
+			"homepage":"https://github.com/joshuapaling"
+		},
+		{
+			"name":"Gaurish Sharma",
+			"role":"Contributor",
+			"homepage":"https://github.com/gaurish"
+		},
+		{
+			"name":"Gregory Gaskill",
+			"role":"Contributor",
+			"homepage":"https://github.com/chronon"
+		}
+	],
+	"require": {
+		"composer/installers": "*"
+	},
+	"support": {
+		"email": "cakephp+csvview@josediazgonzalez.com",
+		"issues": "https://github.com/josegonzalez/cakephp-csvview/issues",
+		"source": "https://github.com/josegonzalez/cakephp-csvview"
+	},
+	"extra": {
+		"installer-name": "CsvView"
+	}
 }

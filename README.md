@@ -20,11 +20,11 @@ this with a custom view class, like JsonView or XmlView.
 _[Using [Composer](http://getcomposer.org/)]_
 
 [View on Packagist](https://packagist.org/packages/josegonzalez/cakephp-csvview), and copy
-the JSON snippet for the latest version into your project's `composer.json`. Eg, v. 1.0.0 would look like this:
+the JSON snippet for the latest version into your project's `composer.json`. Eg, v. 1.2.0 would look like this:
 
 	{
 		"require": {
-			"josegonzalez/cakephp-csvview": "1.0.0"
+			"josegonzalez/cakephp-csvview": "1.2.0"
 		}
 	}
 
