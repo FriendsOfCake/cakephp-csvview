@@ -162,7 +162,7 @@ class CsvView extends View {
 			'_eol',
 			'_null',
 			'_bom',
-		    '_setSeparator'
+			'_setSeparator'
 		);
 		foreach ($required as $viewVar) {
 			if (!isset($this->viewVars[$viewVar])) {
