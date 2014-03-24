@@ -146,6 +146,7 @@ class CsvView extends View {
  * - '_newline': (default '\n')       CSV Newline replacement for use with fputscsv()
  * - '_eol': (default '\n')           End-of-line character the csv
  * - '_bom': (default false)          Adds BOM (byte order mark) header
+ * - '_setSeperator: (default false)  Adds sep=[_delimiter] in the first line
  *
  * @return void
  **/
@@ -160,7 +161,8 @@ class CsvView extends View {
 			'_newline',
 			'_eol',
 			'_null',
-			'_bom'
+			'_bom',
+		    '_setSeperator'
 		);
 		foreach ($required as $viewVar) {
 			if (!isset($this->viewVars[$viewVar])) {
@@ -190,6 +192,10 @@ class CsvView extends View {
 
 		if ($this->viewVars['_bom'] === null) {
 			$this->viewVars['_bom'] = false;
+		}
+		
+		if($this->viewVars['_setSeperator'] === null) {
+		    $this->viewVars['_setSeperator'] = false;
 		}
 
 		if ($this->viewVars['_extract'] !== null) {
@@ -271,6 +277,10 @@ class CsvView extends View {
 			if ($this->viewVars['_bom']) {
 				fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
 			}
+			if($this->viewVars['_setSeperator']) {
+			    fputs($fp, "sep=".$this->viewVars['_delimiter']."\n");
+			}
+			
 		} else {
 			ftruncate($fp, 0);
 		}
