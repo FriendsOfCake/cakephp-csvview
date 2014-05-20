@@ -193,9 +193,9 @@ class CsvView extends View {
 		if ($this->viewVars['_bom'] === null) {
 			$this->viewVars['_bom'] = false;
 		}
-		
+
 		if ($this->viewVars['_setSeparator'] === null) {
-		    $this->viewVars['_setSeparator'] = false;
+			$this->viewVars['_setSeparator'] = false;
 		}
 
 		if ($this->viewVars['_extract'] !== null) {
@@ -275,12 +275,11 @@ class CsvView extends View {
 			$fp = fopen('php://temp', 'r+');
 
 			if ($this->viewVars['_bom']) {
-				fputs($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
+				fwrite($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
 			}
 			if ($this->viewVars['_setSeparator']) {
-			    fputs($fp, "sep=" . $this->viewVars['_delimiter'] . "\n");
+				fwrite($fp, "sep=" . $this->viewVars['_delimiter'] . "\n");
 			}
-			
 		} else {
 			ftruncate($fp, 0);
 		}
