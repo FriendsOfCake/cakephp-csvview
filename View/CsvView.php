@@ -70,7 +70,7 @@ class CsvView extends View {
 /**
  * Constructor
  *
- * @param Controller $controller
+ * @param Controller $controller The currently active Controller.
  */
 	public function __construct(Controller $controller = null) {
 		parent::__construct($controller);
