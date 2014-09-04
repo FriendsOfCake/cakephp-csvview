@@ -225,8 +225,8 @@ class CsvView extends View {
 
 		foreach ($serialize as $viewVar) {
 
-			if (! is_array($this->viewVars[$viewVar])) {
-				throw new Exception($viewVar . "is not an array", 1);
+			if (!is_array($this->viewVars[$viewVar])) {
+				throw new Exception($viewVar . " is not an array", 1);
 			}
 
 			foreach ($this->viewVars[$viewVar] as $_data) {
