@@ -216,6 +216,7 @@ class CsvView extends View {
 /**
  * Renders the body of the data to the csv
  *
+ * @throws Exception
  * @return void
  **/
 	protected function _renderContent() {
@@ -223,6 +224,13 @@ class CsvView extends View {
 		$serialize = $this->viewVars['_serialize'];
 
 		foreach ($serialize as $viewVar) {
+
+			// check that the data is an array..
+			if (!is_array($this->viewVars[$viewVar])) {
+				// if it isn't, throw an error
+				throw new Exception($viewVar . "is not an array", 1);
+			}
+
 			foreach ($this->viewVars[$viewVar] as $_data) {
 				if ($extract === null) {
 					$this->_renderRow($_data);
