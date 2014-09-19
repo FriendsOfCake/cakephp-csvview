@@ -1,4 +1,4 @@
-# CsvView Plugin [![Build Status](https://travis-ci.org/josegonzalez/cakephp-csvview.png?branch=master)](https://travis-ci.org/josegonzalez/cakephp-csvview) [![Coverage Status](https://coveralls.io/repos/josegonzalez/cakephp-csvview/badge.png?branch=master)](https://coveralls.io/r/josegonzalez/cakephp-csvview?branch=master) [![Total Downloads](https://poser.pugx.org/josegonzalez/cakephp-csvview/d/total.png)](https://packagist.org/packages/josegonzalez/cakephp-csvview) [![Latest Stable Version](https://poser.pugx.org/josegonzalez/cakephp-csvview/v/stable.png)](https://packagist.org/packages/josegonzalez/cakephp-csvview)
+# CsvView Plugin [![Build Status](https://travis-ci.org/friendsofcake/cakephp-csvview.png?branch=master)](https://travis-ci.org/friendsofcake/cakephp-csvview) [![Coverage Status](https://coveralls.io/repos/friendsofcake/cakephp-csvview/badge.png?branch=master)](https://coveralls.io/r/friendsofcake/cakephp-csvview?branch=master) [![Total Downloads](https://poser.pugx.org/friendsofcake/cakephp-csvview/d/total.png)](https://packagist.org/packages/friendsofcake/cakephp-csvview) [![Latest Stable Version](https://poser.pugx.org/friendsofcake/cakephp-csvview/v/stable.png)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 
 
 Quickly enable CSV output of your model data.
@@ -19,12 +19,12 @@ this with a custom view class, like JsonView or XmlView.
 
 _[Using [Composer](http://getcomposer.org/)]_
 
-[View on Packagist](https://packagist.org/packages/josegonzalez/cakephp-csvview), and copy
+[View on Packagist](https://packagist.org/packages/friendsofcake/cakephp-csvview), and copy
 the JSON snippet for the latest version into your project's `composer.json`. Eg, v. 1.2.0 would look like this:
 
 	{
 		"require": {
-			"josegonzalez/cakephp-csvview": "1.2.0"
+			"friendsofcake/cakephp-csvview": "1.2.0"
 		}
 	}
 
@@ -32,7 +32,7 @@ Because this plugin has the type `cakephp-plugin` set in it's own `composer.json
 
 _[Manual]_
 
-* Download this: [http://github.com/josegonzalez/cakephp-csvview/zipball/master](http://github.com/josegonzalez/cakephp-csvview/zipball/master)
+* Download this: [http://github.com/friendsofcake/cakephp-csvview/zipball/master](http://github.com/friendsofcake/cakephp-csvview/zipball/master)
 * Unzip that download.
 * Copy the resulting folder to `app/Plugin`
 * Rename the folder you just copied to `CsvView`
@@ -41,7 +41,7 @@ _[GIT Submodule]_
 
 In your app directory type:
 
-	git submodule add -b master git://github.com/josegonzalez/cakephp-csvview.git Plugin/CsvView
+	git submodule add -b master git://github.com/friendsofcake/cakephp-csvview.git Plugin/CsvView
 	git submodule init
 	git submodule update
 
@@ -49,7 +49,7 @@ _[GIT Clone]_
 
 In your `Plugin` directory type:
 
-	git clone -b master git://github.com/josegonzalez/cakephp-csvview.git CsvView
+	git clone -b master git://github.com/friendsofcake/cakephp-csvview.git CsvView
 
 ### Enable plugin
 
