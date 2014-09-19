@@ -4,7 +4,7 @@ App::uses('Component', 'Controller');
 /**
  * A component to help export CSV's using CsvView.php
  *
- * @link https://github.com/friendsofcake/CsvView
+ * @link https://github.com/friendsofcake/cakephp-csvview
  */
 class CsvViewComponent extends Component {
 
