@@ -1,5 +1,5 @@
 {
-	"name": "josegonzalez/cakephp-csvview",
+	"name": "friendsofcake/cakephp-csvview",
 	"version": "1.2.0",
 	"description": "A CSV View class for CakePHP 2.x",
 	"type": "cakephp-plugin",
@@ -9,7 +9,7 @@
 		"view",
 		"export"
 	],
-	"homepage": "http://github.com/josegonzalez/cakephp-csvview",
+	"homepage": "http://github.com/friendsofcake/cakephp-csvview",
 	"license": "MIT",
 	"authors": [
 		{
@@ -49,8 +49,8 @@
 	},
 	"support": {
 		"email": "cakephp+csvview@josediazgonzalez.com",
-		"issues": "https://github.com/josegonzalez/cakephp-csvview/issues",
-		"source": "https://github.com/josegonzalez/cakephp-csvview"
+		"issues": "https://github.com/friendsofcake/cakephp-csvview/issues",
+		"source": "https://github.com/friendsofcake/cakephp-csvview"
 	},
 	"extra": {
 		"installer-name": "CsvView"
