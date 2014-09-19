@@ -48,7 +48,7 @@ App::uses('View', 'View');
  * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputscsv()
  * - string `$_eol`: (default '\n')       End-of-line character the csv
  *
- * @link https://github.com/josegonzalez/CsvView
+ * @link https://github.com/friendsofcake/cakephp-csvview
  */
 class CsvView extends View {
 
