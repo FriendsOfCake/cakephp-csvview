@@ -1,5 +1,4 @@
-# CsvView Plugin [![Build Status](https://travis-ci.org/friendsofcake/cakephp-csvview.png?branch=master)](https://travis-ci.org/friendsofcake/cakephp-csvview) [![Coverage Status](https://coveralls.io/repos/friendsofcake/cakephp-csvview/badge.png?branch=master)](https://coveralls.io/r/friendsofcake/cakephp-csvview?branch=master) [![Total Downloads](https://poser.pugx.org/friendsofcake/cakephp-csvview/d/total.png)](https://packagist.org/packages/friendsofcake/cakephp-csvview) [![Latest Stable Version](https://poser.pugx.org/friendsofcake/cakephp-csvview/v/stable.png)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
-
+# CsvView Plugin [![Build Status](https://travis-ci.org/FriendsOfCake/cakephp-csvview.png?branch=master)](https://travis-ci.org/FriendsOfCake/cakephp-csvview) [![Coverage Status](https://coveralls.io/repos/friendsofcake/cakephp-csvview/badge.png?branch=master)](https://coveralls.io/r/friendsofcake/cakephp-csvview?branch=master) [![Total Downloads](https://poser.pugx.org/friendsofcake/cakephp-csvview/d/total.png)](https://packagist.org/packages/friendsofcake/cakephp-csvview) [![Latest Stable Version](https://poser.pugx.org/friendsofcake/cakephp-csvview/v/stable.png)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 
 Quickly enable CSV output of your model data.
 
