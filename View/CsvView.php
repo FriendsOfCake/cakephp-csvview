@@ -63,7 +63,7 @@ class CsvView extends View {
 /**
  * Whether or not to reset static variables in use
  *
- * @var boolean
+ * @var bool
  */
 	protected $_resetStaticVariables = false;
 
