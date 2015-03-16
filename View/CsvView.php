@@ -217,12 +217,18 @@ class CsvView extends View {
  * Renders the body of the data to the csv
  *
  * @return void
+ * @throws Exception
  **/
 	protected function _renderContent() {
 		$extract = $this->viewVars['_extract'];
 		$serialize = $this->viewVars['_serialize'];
 
 		foreach ($serialize as $viewVar) {
+
+			if (!is_array($this->viewVars[$viewVar])) {
+				throw new Exception($viewVar . " is not an array", 1);
+			}
+
 			foreach ($this->viewVars[$viewVar] as $_data) {
 				if ($extract === null) {
 					$this->_renderRow($_data);
