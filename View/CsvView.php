@@ -293,7 +293,7 @@ class CsvView extends View {
 		$newline = $this->viewVars['_newline'];
 
 		$row = str_replace(array("\r\n", "\n", "\r"), $newline, $row);
-		if ($enclosure === null) {
+		if ($enclosure === '') {
 			// fputcsv does not supports empty enclosure
 			if (fputs($fp, implode($delimiter, $row)."\n") === false) {
 				return false;
