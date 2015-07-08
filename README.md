@@ -183,15 +183,19 @@ public $components = [
 
 public function export() {
 	$posts = $this->Post->find('all');
-	$_serialize = 'posts';
-	$_header = ['Post ID', 'Title', 'Created'];
-	$_extract = ['Post.id', 'Post.title', 'Post.created'];
+	$this->set(compact('post'));
 
-	$this->set(compact('posts', '_serialize', '_header', '_extract'));
+	if ($this->request->params['_ext'] == 'csv') {
+		$_serialize = 'posts';
+		$_header = array('Post ID', 'Title', 'Created');
+		$_extract = array('Post.id', 'Post.title', 'Post.created');
+
+		$this->set(compact('_serialize', '_header', '_extract'));
+	}
 }
 ```
 
-// Access /posts/export.csv to get the data as csv
+Access /posts/export.csv to get the data as csv and /posts/export to get normal page as usually.
 
 For really complex CSVs, you can also simply use your own view files. This is only supported in 2.1+. To do so, either leave `$_serialize` unspecified or set it to null. The view files will be located in the `csv` subdirectory of your current controller:
 
