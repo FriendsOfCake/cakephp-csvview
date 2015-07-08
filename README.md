@@ -27,9 +27,6 @@ the JSON snippet for the latest version into your project's `composer.json`. Eg,
 		}
 	}
 
-Because this plugin has the type `cakephp-plugin` set in it's own `composer.json`, composer knows to install it inside your `/vendor` directory.
-It is recommended that you add `/vendor/CsvView` to your .gitignore file. (Why? [Read this](http://getcomposer.org/doc/faqs/should-i-commit-the-dependencies-in-my-vendor-directory.md).)
-
 _[Manual]_
 
 * Download this: [http://github.com/friendsofcake/cakephp-csvview/zipball/master](http://github.com/friendsofcake/cakephp-csvview/zipball/master)
