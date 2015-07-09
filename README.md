@@ -185,7 +185,7 @@ public function export() {
 	$posts = $this->Post->find('all');
 	$this->set(compact('post'));
 
-	if ($this->request->params['_ext'] == 'csv') {
+	if ($this->request->params['_ext'] === 'csv') {
 		$_serialize = 'posts';
 		$_header = array('Post ID', 'Title', 'Created');
 		$_extract = array('Post.id', 'Post.title', 'Post.created');
