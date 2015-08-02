@@ -4,6 +4,7 @@ namespace CsvView\Test\TestCase\View;
 use Cake\Controller\Controller;
 use Cake\Network\Request;
 use Cake\Network\Response;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -11,6 +12,7 @@ use Cake\TestSuite\TestCase;
  */
 class CsvViewTest extends TestCase
 {
+    public $fixtures = ['core.Articles', 'core.Authors'];
 
     /**
      * testRenderWithoutView method
@@ -251,5 +253,36 @@ Newline","A\tTab"
 CSV;
         $this->assertTextEquals($expected, $output);
         $this->assertSame('text/csv', $Response->type());
+    }
+
+    /**
+     * [testPassingQueryAsData description]
+     *
+     * @return void
+     */
+    public function testPassingQueryAsData()
+    {
+        $Request = new Request();
+        $Response = new Response();
+        $Controller = new Controller($Request, $Response);
+
+        $articles = TableRegistry::get('Articles');
+        $query = $articles->find();
+
+        $Controller->set(['data' => $query, '_serialize' => 'data']);
+        $Controller->viewClass = 'CsvView.Csv';
+        $View = $Controller->createView();
+        $output = $View->render(false);
+
+        $articles->belongsTo('Authors');
+        $query = $articles->find('all', ['contain' => 'Authors']);
+        $_extract = ['title', 'body', 'author.name'];
+        $View->set(['data' => $query, '_extract' => $_extract, '_serialize' => 'data']);
+        $output = $View->render(false);
+
+        $expected = '"First Article","First Article Body",mariano' . PHP_EOL .
+            '"Second Article","Second Article Body",larry' . PHP_EOL .
+            '"Third Article","Third Article Body",mariano' . PHP_EOL;
+        $this->assertSame($expected, $output);
     }
 }

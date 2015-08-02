@@ -1,6 +1,7 @@
 <?php
 namespace CsvView\View;
 
+use Cake\Datasource\EntityInterface;
 use Cake\Event\EventManager;
 use Cake\Network\Request;
 use Cake\Network\Response;
@@ -263,6 +264,10 @@ class CsvView extends View
 
         foreach ($serialize as $viewVar) {
             foreach ($this->viewVars[$viewVar] as $_data) {
+                if ($_data instanceof EntityInterface) {
+                    $_data = $_data->toArray();
+                }
+
                 if ($extract === null) {
                     $this->_renderRow($_data);
                 } else {
