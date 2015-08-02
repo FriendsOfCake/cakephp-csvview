@@ -4,9 +4,10 @@ Quickly enable CSV output of your model data.
 
 ## Background
 
-I needed to quickly export CSVs of stuff in the database. Using a view class to iterate manually
-would be a chore to replicate for each export method, so I figured it would be much easier to do
-this with a custom view class, like JsonView or XmlView.
+I needed to quickly export CSVs of stuff in the database. Using a view class to
+iterate manually would be a chore to replicate for each export method, so I
+figured it would be much easier to do this with a custom view class,
+like JsonView or XmlView.
 
 ## Requirements
 
@@ -18,43 +19,15 @@ this with a custom view class, like JsonView or XmlView.
 
 _[Using [Composer](http://getcomposer.org/)]_
 
-[View on Packagist](https://packagist.org/packages/friendsofcake/cakephp-csvview), and copy
-the JSON snippet for the latest version into your project's `composer.json`. Eg, v. 2.0 would look like this:
-
-	{
-		"require": {
-			"friendsofcake/cakephp-csvview": "2.0"
-		}
-	}
-
-_[Manual]_
-
-* Download this: [http://github.com/friendsofcake/cakephp-csvview/zipball/master](http://github.com/friendsofcake/cakephp-csvview/zipball/master)
-* Unzip that download.
-* Copy the resulting folder to `app/Plugin`
-* Rename the folder you just copied to `CsvView`
-
-_[GIT Submodule]_
-
-In your app directory type:
-
-	git submodule add -b master git://github.com/friendsofcake/cakephp-csvview.git Plugin/CsvView
-	git submodule init
-	git submodule update
-
-_[GIT Clone]_
-
-In your `Plugin` directory type:
-
-	git clone -b master git://github.com/friendsofcake/cakephp-csvview.git CsvView
+```
+composer require friendsofcake/cakephp-csvview:~2.0
+```
 
 ### Enable plugin
 
-In 2.0 you need to enable the plugin your `app/Config/bootstrap.php` file:
+Load the plugin in your app's `config/bootstrap.php` file:
 
-	Plugin::load('CsvView', ['bootstrap' => false, 'routes' => false]);
-
-If you are already using `Plugin::loadAll();`, then this is not necessary.
+	Plugin::load('CsvView');
 
 ## Usage
 
@@ -74,7 +47,8 @@ public function export() {
 }
 ```
 
-All variables that are to be included in the csv must be specified in the `$_serialize` view variable, exactly how JsonView or XmlView work.
+All variables that are to be included in the csv must be specified in the
+`$_serialize` view variable, exactly how JsonView or XmlView work.
 
 It is possible to have multiple variables in the csv output:
 
@@ -91,7 +65,8 @@ public function export() {
 }
 ```
 
-If you want headers or footers in your CSV output, you can specify either a `$_header` or `$_footer` view variable. Both are completely optional:
+If you want headers or footers in your CSV output, you can specify either a
+`$_header` or `$_footer` view variable. Both are completely optional:
 
 ```php
 public function export() {
@@ -110,8 +85,9 @@ public function export() {
 }
 ```
 
-You can also specify the delimiter, end of line, newline, escape characters and byte order mark (BOM) sequence using
-`$_delimiter`, `$_eol`, `$_newline`, `$_enclosure` and `$_bom` respectively:
+You can also specify the delimiter, end of line, newline, escape characters and
+byte order mark (BOM) sequence using `$_delimiter`, `$_eol`, `$_newline`,
+`$_enclosure` and `$_bom` respectively:
 
 ```php
 public function export() {
@@ -143,14 +119,22 @@ The defaults for these variables are:
 * `_setSeparator`: false
 
 The `_eol` variable is the one used to generate newlines in the output.
-`_newline`, however, is the character that should replace the newline characters in the actual data.
-It is recommended to use the string representation of the newline character to avoid rendering invalid output.
+`_newline`, however, is the character that should replace the newline characters
+in the actual data. It is recommended to use the string representation of the
+newline character to avoid rendering invalid output.
 
-Some reader software incorrectly renders UTF-8 encoded files which do not contain byte order mark (BOM) byte sequence. The `_bom` variable is the one used to add byte order mark (BOM) byte sequence beginning of the generated CSV output stream. See [`Wikipedia article about byte order mark`](http://en.wikipedia.org/wiki/Byte_order_mark) for more information.
+Some reader software incorrectly renders UTF-8 encoded files which do not
+contain byte order mark (BOM) byte sequence. The `_bom` variable is the one used
+to add byte order mark (BOM) byte sequence beginning of the generated CSV output
+stream. See [`Wikipedia article about byte order mark`](http://en.wikipedia.org/wiki/Byte_order_mark)
+for more information.
 
-The `_setSeparator` flag can be used to set the separator explicitly in the first line of the CSV. Some readers need this in order to display the CSV correctly.
+The `_setSeparator` flag can be used to set the separator explicitly in the
+first line of the CSV. Some readers need this in order to display the CSV correctly.
 
-If you have complex model data, you can use the `$_extract` view variable to specify the individual paths for each record. This is an array of `Hash::extract()`-compatible syntax:
+If you have complex model data, you can use the `$_extract` view variable to
+specify the individual paths for each record. This is an array of
+`Hash::extract()`-compatible syntax:
 
 ```php
 public function export() {
@@ -164,11 +148,14 @@ public function export() {
 }
 ```
 
-If your model data contains some null values or missing keys, you can use the `$_null` variable, just like you'd use `$_delimiter`, `$_eol`, and `$_enclosure`, to set how null values should be displayed in the CSV.
+If your model data contains some null values or missing keys, you can use the
+`$_null` variable, just like you'd use `$_delimiter`, `$_eol`, and `$_enclosure`,
+to set how null values should be displayed in the CSV.
 
 `$_null` defaults to 'NULL'.
 
-You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to automatically have the CsvView class switched in as follows:
+You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to
+automatically have the CsvView class switched in as follows:
 
 ```php
 // In your routes.php file:
@@ -193,7 +180,9 @@ public function export() {
 
 // Access /posts/export.csv to get the data as csv
 
-For really complex CSVs, you can also simply use your own view files. This is only supported in 2.1+. To do so, either leave `$_serialize` unspecified or set it to null. The view files will be located in the `csv` subdirectory of your current controller:
+For really complex CSVs, you can also simply use your own view files.
+To do so, either leave `$_serialize` unspecified or set it to null.
+The view files will be located in the `csv` subdirectory of your current controller:
 
 ```php
 // View used will be in app/View/Posts/csv/export.ctp
@@ -206,9 +195,13 @@ public function export() {
 ```
 
 #### Setting the downloaded file name
-By default, the downloaded file will be named after the last segment of the URL used to generate it. Eg: `example.com/my_controller/my_action` would download `my_action.csv`, while `example.com/my_controller/my_action/first_param` would download `first_param.csv`.
+By default, the downloaded file will be named after the last segment of the URL
+used to generate it. Eg: `example.com/my_controller/my_action` would download
+`my_action.csv`, while `example.com/my_controller/my_action/first_param` would
+download `first_param.csv`.
 
-To set a custom file name, use the [`CakeResponse::download`](http://book.cakephp.org/2.0/en/controllers/request-response.html#sending-a-string-as-file) method. The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
+To set a custom file name, use the [`Response::download`](http://book.cakephp.org/3.0/en/controllers/request-response.html#sending-a-string-as-file) method.
+The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
 
 ```php
 public function export() {
@@ -226,9 +219,12 @@ public function export() {
 ```
 
 ### CsvView Component Usage
-The CsvView component provides a few methods to help you quickly export the results of complex Model `find('all')` calls.
+The CsvView component provides a few methods to help you quickly export the
+results of complex Model `find('all')` calls.
 
-*Note:* nested `belongsTo` associations are handled no problem. Others (eg. `hasMany`) will be ignored (I can't see why you'd want them in a CSV export, or how you'd include them gracefully).
+*Note:* nested `belongsTo` associations are handled no problem. Others
+(eg. `hasMany`) will be ignored (I can't see why you'd want them in a CSV export,
+or how you'd include them gracefully).
 
 To use the component, include it in your Components array:
 
@@ -240,17 +236,22 @@ public $components = ['CsvView.CsvView'];
 The component has the following methods:
 
 #### prepareExtractFromFindResults($data, $excludePaths = [])
-Recursively searches `$data` and returns an array of all unique `Hash::extract()`-compatible paths, suitable for the $_extract variable
+Recursively searches `$data` and returns an array of all unique
+`Hash::extract()`-compatible paths, suitable for the $_extract variable
 
 * *$data:* the results of a Model `find('all')` call.
-* *$excludePaths (optional):* an array of paths to exclude from the returned array, using `Hash::extract()`-compatible syntax. Eg. `['MyModel.column_name']`
+* *$excludePaths (optional):* an array of paths to exclude from the returned
+array, using `Hash::extract()`-compatible syntax. Eg. `['MyModel.column_name']`
 
 #### prepareHeaderFromExtract($extract, $customHeaders = [])
 
-Returns an array of user-friendly colum titles, suitable for use as the `$_header`, based on the paths in `$extract`. Eg, the path 'City.Country.name' becomes 'Country Name'.
+Returns an array of user-friendly colum titles, suitable for use as the `$_header`,
+based on the paths in `$extract`. Eg, the path 'City.Country.name' becomes 'Country Name'.
 
 * *$extract:* an array of paths, using `Hash::extract()`-compatible syntax.
-* *$customHeaders (optional):* an array of 'path' => 'Custom Title' pairs, eg. `['City.population' => 'No. of People']`. These custom headers, when specified, override the default generated headers.
+* *$customHeaders (optional):* an array of 'path' => 'Custom Title' pairs,
+eg. `['City.population' => 'No. of People']`. These custom headers,
+when specified, override the default generated headers.
 
 #### quickExport($data, $excludePaths = [], $customHeaders = [], $includeHeader = true)
 
