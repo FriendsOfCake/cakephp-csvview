@@ -83,6 +83,25 @@ class CsvView extends View
     protected $_resetStaticVariables = false;
 
     /**
+     * List of special view vars.
+     *
+     * @var array
+     */
+    protected $_specialVars = [
+        '_extract',
+        '_footer',
+        '_header',
+        '_serialize',
+        '_delimiter',
+        '_enclosure',
+        '_newline',
+        '_eol',
+        '_null',
+        '_bom',
+        '_setSeparator'
+    ];
+
+    /**
      * Constructor
      *
      * @param \Cake\Network\Request $request Request instance.
@@ -190,20 +209,7 @@ class CsvView extends View
      */
     protected function _setupViewVars()
     {
-        $required = [
-            '_extract',
-            '_footer',
-            '_header',
-            '_serialize',
-            '_delimiter',
-            '_enclosure',
-            '_newline',
-            '_eol',
-            '_null',
-            '_bom',
-            '_setSeparator'
-        ];
-        foreach ($required as $viewVar) {
+        foreach ($this->_specialVars as $viewVar) {
             if (!isset($this->viewVars[$viewVar])) {
                 $this->viewVars[$viewVar] = null;
             }
@@ -246,10 +252,6 @@ class CsvView extends View
                 }
             }
         }
-
-        if ($this->viewVars['_serialize'] !== null) {
-            $this->viewVars['_serialize'] = (array)$this->viewVars['_serialize'];
-        }
     }
 
     /**
@@ -262,7 +264,14 @@ class CsvView extends View
         $extract = $this->viewVars['_extract'];
         $serialize = $this->viewVars['_serialize'];
 
-        foreach ($serialize as $viewVar) {
+        if ($serialize === true) {
+            $serialize = array_diff(
+                array_keys($this->viewVars),
+                $this->_specialVars
+            );
+        }
+
+        foreach ((array)$serialize as $viewVar) {
             foreach ($this->viewVars[$viewVar] as $_data) {
                 if ($_data instanceof EntityInterface) {
                     $_data = $_data->toArray();

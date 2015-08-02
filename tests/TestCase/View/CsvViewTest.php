@@ -56,8 +56,13 @@ class CsvViewTest extends TestCase
         $View = $Controller->createView();
         $output = $View->render(false);
 
-        $this->assertSame('a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'you,and,me' . PHP_EOL, $output);
+        $expected = 'a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'you,and,me' . PHP_EOL;
+        $this->assertSame($expected, $output);
         $this->assertSame('text/csv', $Response->type());
+
+        $View->set('_serialize', true);
+        $output = $View->render(false);
+        $this->assertSame($expected, $output);
     }
 
     /**
