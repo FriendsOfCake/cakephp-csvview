@@ -6,13 +6,23 @@ use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CsvView\View\CsvView;
 
 /**
  * CsvViewTest
  */
 class CsvViewTest extends TestCase
 {
+
     public $fixtures = ['core.Articles', 'core.Authors'];
+
+    public function setUp()
+    {
+        $this->request = new Request();
+        $this->response = new Response();
+
+        $this->view = new CsvView($this->request, $this->response);
+    }
 
     /**
      * testRenderWithoutView method
@@ -21,17 +31,12 @@ class CsvViewTest extends TestCase
      */
     public function testRenderWithoutView()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
         $data = [['user', 'fake', 'list', 'item1', 'item2']];
-        $Controller->set(['data' => $data, '_serialize' => 'data']);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $output = $View->render(false);
+        $this->view->set(['data' => $data, '_serialize' => 'data']);
+        $output = $this->view->render(false);
 
         $this->assertSame('user,fake,list,item1,item2' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $Response->type());
+        $this->assertSame('text/csv', $this->response->type());
     }
 
     /**
@@ -41,27 +46,22 @@ class CsvViewTest extends TestCase
      */
     public function testRenderWithoutViewMultiple()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
         $data = [
             ['a', 'b', 'c'],
             [1, 2, 3],
             ['you', 'and', 'me'],
         ];
         $_serialize = 'data';
-        $Controller->set('data', $data);
-        $Controller->set(['_serialize' => 'data']);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $output = $View->render(false);
+        $this->view->set('data', $data);
+        $this->view->set(['_serialize' => 'data']);
+        $output = $this->view->render(false);
 
         $expected = 'a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'you,and,me' . PHP_EOL;
         $this->assertSame($expected, $output);
-        $this->assertSame('text/csv', $Response->type());
+        $this->assertSame('text/csv', $this->response->type());
 
-        $View->set('_serialize', true);
-        $output = $View->render(false);
+        $this->view->set('_serialize', true);
+        $output = $this->view->render(false);
         $this->assertSame($expected, $output);
     }
 
@@ -72,24 +72,19 @@ class CsvViewTest extends TestCase
      */
     public function testRenderWithCustomEol()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
         $data = [
             ['a', 'b', 'c'],
             [1, 2, 3],
             ['you', 'and', 'me'],
         ];
         $_serialize = 'data';
-        $Controller->set('data', $data);
-        $Controller->set(['_serialize' => 'data']);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $View->viewVars['_eol'] = '~';
-        $output = $View->render(false);
+        $this->view->set('data', $data);
+        $this->view->set(['_serialize' => 'data']);
+        $this->view->viewVars['_eol'] = '~';
+        $output = $this->view->render(false);
 
         $this->assertSame('a,b,c~1,2,3~you,and,me~', $output);
-        $this->assertSame('text/csv', $Response->type());
+        $this->assertSame('text/csv', $this->response->type());
     }
 
     /**
@@ -99,10 +94,7 @@ class CsvViewTest extends TestCase
      */
     public function testRenderWithView()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
-        $Controller->name = $Controller->viewPath = 'Posts';
+        $this->view->name = $this->view->viewPath = 'Posts';
 
         $data = [
             ['a', 'b', 'c'],
@@ -110,13 +102,11 @@ class CsvViewTest extends TestCase
             ['you', 'and', 'me'],
         ];
 
-        $Controller->set('user', $data);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $output = $View->render('index');
+        $this->view->set('user', $data);
+        $output = $this->view->render('index');
 
         $this->assertSame('TEST OUTPUT' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $Response->type());
+        $this->assertSame('text/csv', $this->response->type());
     }
 
     /**
@@ -126,10 +116,7 @@ class CsvViewTest extends TestCase
      */
     public function testRenderViaExtract()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
-        $Controller->name = $Controller->viewPath = 'Posts';
+        $this->view->name = $this->view->viewPath = 'Posts';
 
         $data = [
             [
@@ -150,14 +137,12 @@ class CsvViewTest extends TestCase
             ]
         ];
         $_extract = ['User.username', 'Item.name'];
-        $Controller->set(['user' => $data, '_extract' => $_extract]);
-        $Controller->set(['_serialize' => 'user']);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $output = $View->render(false);
+        $this->view->set(['user' => $data, '_extract' => $_extract]);
+        $this->view->set(['_serialize' => 'user']);
+        $output = $this->view->render(false);
 
         $this->assertSame('jose,beach' . PHP_EOL . 'drew,ball' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $Response->type());
+        $this->assertSame('text/csv', $this->response->type());
     }
 
     /**
@@ -167,10 +152,7 @@ class CsvViewTest extends TestCase
      */
     public function testRenderViaExtractOptionalField()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
-        $Controller->name = $Controller->viewPath = 'Posts';
+        $this->view->name = $this->view->viewPath = 'Posts';
 
         $data = [
             [
@@ -192,14 +174,12 @@ class CsvViewTest extends TestCase
             ]
         ];
         $_extract = ['User.username', 'Item.name', 'Item.type'];
-        $Controller->set(['user' => $data, '_extract' => $_extract]);
-        $Controller->set(['_serialize' => 'user']);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $output = $View->render(false);
+        $this->view->set(['user' => $data, '_extract' => $_extract]);
+        $this->view->set(['_serialize' => 'user']);
+        $output = $this->view->render(false);
 
         $this->assertSame('jose,NULL,beach' . PHP_EOL . 'drew,ball,fun' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $Response->type());
+        $this->assertSame('text/csv', $this->response->type());
     }
 
     /**
@@ -209,10 +189,7 @@ class CsvViewTest extends TestCase
      */
     public function testRenderWithSpecialCharacters()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
-        $Controller->name = $Controller->viewPath = 'Posts';
+        $this->view->name = $this->view->viewPath = 'Posts';
 
         $data = [
             [
@@ -243,11 +220,9 @@ class CsvViewTest extends TestCase
             ]
         ];
         $_extract = ['User.username', 'Item.name', 'Item.type'];
-        $Controller->set(['user' => $data, '_extract' => $_extract]);
-        $Controller->set(['_serialize' => 'user']);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $output = $View->render(false);
+        $this->view->set(['user' => $data, '_extract' => $_extract]);
+        $this->view->set(['_serialize' => 'user']);
+        $output = $this->view->render(false);
 
         $expected = <<<CSV
 José,NULL,äöü
@@ -257,7 +232,7 @@ Newline","A\tTab"
 
 CSV;
         $this->assertTextEquals($expected, $output);
-        $this->assertSame('text/csv', $Response->type());
+        $this->assertSame('text/csv', $this->response->type());
     }
 
     /**
@@ -267,23 +242,17 @@ CSV;
      */
     public function testPassingQueryAsData()
     {
-        $Request = new Request();
-        $Response = new Response();
-        $Controller = new Controller($Request, $Response);
-
         $articles = TableRegistry::get('Articles');
         $query = $articles->find();
 
-        $Controller->set(['data' => $query, '_serialize' => 'data']);
-        $Controller->viewClass = 'CsvView.Csv';
-        $View = $Controller->createView();
-        $output = $View->render(false);
+        $this->view->set(['data' => $query, '_serialize' => 'data']);
+        $output = $this->view->render(false);
 
         $articles->belongsTo('Authors');
         $query = $articles->find('all', ['contain' => 'Authors']);
         $_extract = ['title', 'body', 'author.name'];
-        $View->set(['data' => $query, '_extract' => $_extract, '_serialize' => 'data']);
-        $output = $View->render(false);
+        $this->view->set(['data' => $query, '_extract' => $_extract, '_serialize' => 'data']);
+        $output = $this->view->render(false);
 
         $expected = '"First Article","First Article Body",mariano' . PHP_EOL .
             '"Second Article","Second Article Body",larry' . PHP_EOL .
