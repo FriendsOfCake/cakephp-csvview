@@ -165,10 +165,9 @@ class CsvView extends View
     /**
      * Serialize view vars.
      *
-     * @param array|string $serialize The name(s) of the view variable(s) that need(s) to be serialized
      * @return string The serialized data
      */
-    protected function _serialize($serialize)
+    protected function _serialize()
     {
         $this->_renderRow($this->viewVars['_header']);
         $this->_renderContent();
