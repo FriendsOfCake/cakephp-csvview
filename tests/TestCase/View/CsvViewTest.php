@@ -265,17 +265,16 @@ CSV;
      *
      * @return void
      */
-    public function testRenderEnclosure() 
+    public function testRenderEnclosure()
     {
         $Request = new Request();
         $Response = new Response();
-        $Controller = new Controller($Request, $Response);
-        $data = array(array('user', 'fake apple', 'list', 'a b c', 'item2'));
-        $testData = array(
+        $data = [['user', 'fake apple', 'list', 'a b c', 'item2']];
+        $testData = [
             '"' => 'user,"fake apple",list,"a b c",item2' . PHP_EOL,
             "'" => "user,'fake apple',list,'a b c',item2" . PHP_EOL,
             '' => "user,fake apple,list,a b c,item2" . PHP_EOL,
-        );
+        ];
 
         foreach ($testData as $enclosure => $expected) {
             $_serialize = 'data';
