@@ -350,8 +350,15 @@ class CsvView extends View
         $newline = $this->viewVars['_newline'];
 
         $row = str_replace(["\r\n", "\n", "\r"], $newline, $row);
-        if (fputcsv($fp, $row, $delimiter, $enclosure) === false) {
-            return false;
+        if ($enclosure === '') {
+            // fputcsv does not supports empty enclosure
+            if (fputs($fp, implode($delimiter, $row) . "\n") === false) {
+                return false;
+            }
+        } else {
+            if (fputcsv($fp, $row, $delimiter, $enclosure) === false) {
+                return false;
+            }
         }
 
         rewind($fp);

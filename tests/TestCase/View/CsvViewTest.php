@@ -259,4 +259,32 @@ CSV;
             '"Third Article","Third Article Body",mariano' . PHP_EOL;
         $this->assertSame($expected, $output);
     }
+    
+    /**
+     * CsvViewTest::testRenderEnclosure()
+     *
+     * @return void
+     */
+    public function testRenderEnclosure()
+    {
+        $Request = new Request();
+        $Response = new Response();
+        $data = [['user', 'fake apple', 'list', 'a b c', 'item2']];
+        $testData = [
+            '"' => 'user,"fake apple",list,"a b c",item2' . PHP_EOL,
+            "'" => "user,'fake apple',list,'a b c',item2" . PHP_EOL,
+            '' => "user,fake apple,list,a b c,item2" . PHP_EOL,
+        ];
+
+        foreach ($testData as $enclosure => $expected) {
+            $_serialize = 'data';
+            $this->view->set('data', $data);
+            $this->view->set(['_serialize' => 'data']);
+            $this->view->viewVars['_enclosure'] = $enclosure;
+            $output = $this->view->render(false);
+
+            $this->assertSame($expected, $output);
+            $this->assertSame('text/csv', $this->response->type());
+        }
+    }
 }
