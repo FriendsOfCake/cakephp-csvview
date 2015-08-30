@@ -358,6 +358,7 @@ class CsvView extends View
         } else {
             if (fputcsv($fp, $row, $delimiter, $enclosure) === false) {
                 return false;
+            }
         }
 
         rewind($fp);

@@ -265,24 +265,24 @@ CSV;
      *
      * @return void
      */
-   public function testRenderEnclosure() 
-   {
-       $Request = new CakeRequest();
-       $Response = new CakeResponse();
-       $Controller = new Controller($Request, $Response);
-       $data = array(array('user', 'fake apple', 'list', 'a b c', 'item2'));
-       $testData = array(
-           '"' => 'user,"fake apple",list,"a b c",item2' . PHP_EOL,
-           "'" => "user,'fake apple',list,'a b c',item2" . PHP_EOL,
-           '' => "user,fake apple,list,a b c,item2" . PHP_EOL,
-       );
+    public function testRenderEnclosure() 
+    {
+        $Request = new CakeRequest();
+        $Response = new CakeResponse();
+        $Controller = new Controller($Request, $Response);
+        $data = array(array('user', 'fake apple', 'list', 'a b c', 'item2'));
+        $testData = array(
+            '"' => 'user,"fake apple",list,"a b c",item2' . PHP_EOL,
+            "'" => "user,'fake apple',list,'a b c',item2" . PHP_EOL,
+            '' => "user,fake apple,list,a b c,item2" . PHP_EOL,
+        );
 
-       foreach ($testData as $enclosure => $output) {
-           $Controller->set(array('data' => $data, '_serialize' => 'data', '_enclosure' => $enclosure));
-           $View = new CsvView($Controller);
-           $renderOutput = $View->render(false);
-           $this->assertSame($renderOutput, $output);
-           $this->assertSame('text/csv', $Response->type());
-       }
+        foreach ($testData as $enclosure => $output) {
+            $Controller->set(array('data' => $data, '_serialize' => 'data', '_enclosure' => $enclosure));
+            $View = new CsvView($Controller);
+            $renderOutput = $View->render(false);
+            $this->assertSame($renderOutput, $output);
+            $this->assertSame('text/csv', $Response->type());
+        }
     }
 }
