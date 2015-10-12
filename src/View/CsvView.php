@@ -242,6 +242,14 @@ class CsvView extends View
             $this->viewVars['_setSeparator'] = false;
         }
 
+        if ($this->viewVars['_dataEncoding'] === null) {
+            $this->viewVars['_dataEncoding'] = 'UTF-8';
+        }
+
+        if ($this->viewVars['_csvEncoding'] === null) {
+            $this->viewVars['_csvEncoding'] = 'UTF-8';
+        }
+
         if ($this->viewVars['_extract'] !== null) {
             $this->viewVars['_extract'] = (array)$this->viewVars['_extract'];
             foreach ($this->viewVars['_extract'] as $i => $extract) {
@@ -371,6 +379,12 @@ class CsvView extends View
         $eol = $this->viewVars['_eol'];
         if ($eol !== "\n") {
             $csv = str_replace("\n", $eol, $csv);
+        }
+
+        $dataEncoding = $this->viewVars['_dataEncoding'];
+        $csvEncoding = $this->viewVars['_csvEncoding'];
+        if ($dataEncoding != $csvEncoding) {
+            $csv = iconv($dataEncoding, $csvEncoding, $csv);
         }
 
         return $csv;
