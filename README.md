@@ -193,6 +193,18 @@ public function export() {
 	$this->set(compact('posts', '_serialize');
 }
 ```
+#### Setting a different encoding to the file
+
+if you need to have a different encoding in you csv file you have to set the encoding of your data
+you are passing to the view and also set the encoding you want for the csv file.
+This can be done by using `_dataEncoding` and `_csvEncoding`:
+
+The defaults are:
+ 
+* `_dataEncoding`: `UTF-8`
+* `_csvEncoding`: `UTF-8`
+
+** Only if those two variable are different your data will be converted to another encoding.
 
 #### Setting the downloaded file name
 By default, the downloaded file will be named after the last segment of the URL
