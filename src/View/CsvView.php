@@ -98,7 +98,9 @@ class CsvView extends View
         '_eol',
         '_null',
         '_bom',
-        '_setSeparator'
+        '_setSeparator',
+        '_csvEncoding',
+        '_dataEncoding'
     ];
 
     /**
