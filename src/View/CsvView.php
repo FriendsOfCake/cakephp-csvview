@@ -385,7 +385,7 @@ class CsvView extends View
 
         $dataEncoding = $this->viewVars['_dataEncoding'];
         $csvEncoding = $this->viewVars['_csvEncoding'];
-        if ($dataEncoding != $csvEncoding) {
+        if ($dataEncoding !== $csvEncoding) {
             $csv = iconv($dataEncoding, $csvEncoding, $csv);
         }
 
