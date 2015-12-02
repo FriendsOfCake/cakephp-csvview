@@ -1,5 +1,5 @@
-[![Build Status](https://img.shields.io/travis/friendsofcake/cakephp-csvview/master.svg?style=flat-square)](https://travis-ci.org/friendsofcake/cakephp-csvview)
-[![Coverage Status](https://img.shields.io/coveralls/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://coveralls.io/r/friendsofcake/cakephp-csvview?branch=master)
+[![Build Status](https://img.shields.io/travis/FriendsOfCake/cakephp-csvview/master.svg?style=flat-square)](https://travis-ci.org/FriendsOfCake/cakephp-csvview)
+[![Coverage Status](https://img.shields.io/coveralls/FriendsOfCake/cakephp-csvview.svg?style=flat-square)](https://coveralls.io/r/FriendsOfCake/cakephp-csvview?branch=master)
 [![Total Downloads](https://img.shields.io/packagist/dt/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 [![Latest Stable Version](https://img.shields.io/packagist/v/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 
