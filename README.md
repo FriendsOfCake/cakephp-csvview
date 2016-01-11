@@ -47,7 +47,7 @@ public function export() {
 	];
 	$_serialize = 'data';
 
-	$this->viewClass = 'CsvView.Csv';
+	$this->viewBuilder()->className('CsvView.Csv');
 	$this->set(compact('data', '_serialize'));
 }
 ```
@@ -65,7 +65,7 @@ public function export() {
 
 	$_serialize = ['data', 'data_two', 'data_three'];
 
-	$this->viewClass = 'CsvView.Csv';
+	$this->viewBuilder()->className('CsvView.Csv');
 	$this->set(compact('data', 'data_two', 'data_three', '_serialize'));
 }
 ```
@@ -85,7 +85,7 @@ public function export() {
 	$_header = ['Column 1', 'Column 2', 'Column 3'];
 	$_footer = ['Totals', '400', '$3000'];
 
-	$this->viewClass = 'CsvView.Csv';
+	$this->viewBuilder()->className('CsvView.Csv');
 	$this->set(compact('data', '_serialize', '_header', '_footer'));
 }
 ```
@@ -109,7 +109,7 @@ public function export() {
 	$_eol = '~';
 	$_bom = true;
 
-	$this->viewClass = 'CsvView.Csv';
+	$this->viewBuilder()->className('CsvView.Csv');
 	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol'));
 }
 ```
@@ -194,12 +194,12 @@ To do so, either leave `$_serialize` unspecified or set it to null.
 The view files will be located in the `csv` subdirectory of your current controller:
 
 ```php
-// View used will be in app/View/Posts/csv/export.ctp
+// View used will be in src/Template/Posts/csv/export.ctp
 public function export() {
 	$posts = $this->Post->find('all');
 	$_serialize = null;
-	$this->viewClass = 'CsvView.Csv';
-	$this->set(compact('posts', '_serialize');
+	$this->viewBuilder()->className('CsvView.Csv');
+	$this->set(compact('posts', '_serialize'));
 }
 ```
 #### Setting a different encoding to the file
@@ -234,7 +234,7 @@ public function export() {
 	$_serialize = 'data';
 
 	$this->response->download('my_file.csv'); // <= setting the file name
-	$this->viewClass = 'CsvView.Csv';
+	$this->viewBuilder()->className('CsvView.Csv');
 	$this->set(compact('data', '_serialize'));
 }
 ```

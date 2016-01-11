@@ -1,6 +1,6 @@
 {
     "name": "friendsofcake/cakephp-csvview",
-    "description": "A CSV View class for CakePHP 2.x",
+    "description": "A CSV View class for CakePHP 3.x",
     "type": "cakephp-plugin",
     "keywords": [
         "cakephp",
