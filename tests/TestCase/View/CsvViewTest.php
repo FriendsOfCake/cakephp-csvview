@@ -259,7 +259,7 @@ CSV;
             '"Third Article","Third Article Body",mariano' . PHP_EOL;
         $this->assertSame($expected, $output);
     }
-    
+
     /**
      * CsvViewTest::testRenderEnclosure()
      *
@@ -286,5 +286,17 @@ CSV;
             $this->assertSame($expected, $output);
             $this->assertSame('text/csv', $this->response->type());
         }
+    }
+
+    /**
+     * CsvViewTest::testInvalidViewVarThrowsException()
+     *
+     * @expectedException Exception
+     * @return void
+     */
+    public function testInvalidViewVarThrowsException()
+    {
+        $this->view->set(['data' => 'invaliddata', '_serialize' => 'data']);
+        $output = $this->view->render(false);
     }
 }

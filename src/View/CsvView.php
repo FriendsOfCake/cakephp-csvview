@@ -7,6 +7,7 @@ use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\Utility\Hash;
 use Cake\View\View;
+use Exception;
 
 /**
  * A view class that is used for CSV responses.
@@ -267,6 +268,7 @@ class CsvView extends View
      * Renders the body of the data to the csv
      *
      * @return void
+     * @throws \Exception
      */
     protected function _renderContent()
     {
@@ -281,6 +283,10 @@ class CsvView extends View
         }
 
         foreach ((array)$serialize as $viewVar) {
+            if (is_scalar($this->viewVars[$viewVar])) {
+                throw new Exception("'" . $viewVar . "' is not an array or iteratable object.");
+            }
+
             foreach ($this->viewVars[$viewVar] as $_data) {
                 if ($_data instanceof EntityInterface) {
                     $_data = $_data->toArray();
