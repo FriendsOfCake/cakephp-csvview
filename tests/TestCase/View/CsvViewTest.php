@@ -2,6 +2,7 @@
 namespace CsvView\Test\TestCase\View;
 
 use Cake\Controller\Controller;
+use Cake\I18n\Time;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\ORM\TableRegistry;
@@ -121,7 +122,8 @@ class CsvViewTest extends TestCase
         $data = [
             [
                 'User' => [
-                    'username' => 'jose'
+                    'username' => 'jose',
+                    'created' => new Time('2010-01-05')
                 ],
                 'Item' => [
                     'name' => 'beach',
@@ -129,19 +131,20 @@ class CsvViewTest extends TestCase
             ],
             [
                 'User' => [
-                    'username' => 'drew'
+                    'username' => 'drew',
+                    'created' => null
                 ],
                 'Item' => [
                     'name' => 'ball',
                 ]
             ]
         ];
-        $_extract = ['User.username', 'Item.name'];
+        $_extract = ['User.username', 'User.created', 'Item.name'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
         $this->view->set(['_serialize' => 'user']);
         $output = $this->view->render(false);
 
-        $this->assertSame('jose,beach' . PHP_EOL . 'drew,ball' . PHP_EOL, $output);
+        $this->assertSame('jose,"2010-01-05 00:00:00",beach' . PHP_EOL . 'drew,NULL,ball' . PHP_EOL, $output);
         $this->assertSame('text/csv', $this->response->type());
     }
 
