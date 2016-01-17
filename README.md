@@ -110,7 +110,7 @@ public function export() {
 	$_bom = true;
 
 	$this->viewBuilder()->className('CsvView.Csv');
-	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol'));
+	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol', '_bom'));
 }
 ```
 
