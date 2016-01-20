@@ -298,11 +298,9 @@ class CsvView extends View
                     $values = [];
                     foreach ($extract as $e) {
                         list($path, $format) = $e;
-                        $value = Hash::extract($_data, $path);
-                        if (isset($value[0])) {
-                            $values[] = sprintf($format, $value[0]);
-                        } elseif (isset($value['date'])) {
-                            $values[] = $value['date'];
+                        $value = Hash::get($_data, $path);
+                        if (isset($value)) {
+                            $values[] = sprintf($format, $value);
                         } else {
                             $values[] = $this->viewVars['_null'];
                         }
