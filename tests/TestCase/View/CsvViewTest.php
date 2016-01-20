@@ -19,6 +19,8 @@ class CsvViewTest extends TestCase
 
     public function setUp()
     {
+        Time::setToStringFormat('yyyy-MM-dd HH:mm:ss');
+
         $this->request = new Request();
         $this->response = new Response();
 
