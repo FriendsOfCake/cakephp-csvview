@@ -234,7 +234,7 @@ class CsvView extends View
         }
 
         if ($this->viewVars['_null'] === null) {
-            $this->viewVars['_null'] = 'NULL';
+            $this->viewVars['_null'] = '';
         }
 
         if ($this->viewVars['_bom'] === null) {
@@ -338,7 +338,7 @@ class CsvView extends View
      * returning it's contents
      *
      * @param array $row Row data
-     * @return mixed string with the row in csv-syntax, false on fputscv failure
+     * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
     protected function _generateRow($row = null)
     {
@@ -359,6 +359,14 @@ class CsvView extends View
 
         if ($row === false || $row === null) {
             return '';
+        }
+
+        if ($this->viewVars['_null'] !== '') {
+            foreach ($row as &$field) {
+                if ($field === null) {
+                    $field = $this->viewVars['_null'];
+                }
+            }
         }
 
         $delimiter = $this->viewVars['_delimiter'];

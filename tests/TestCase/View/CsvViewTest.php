@@ -146,7 +146,7 @@ class CsvViewTest extends TestCase
         $this->view->set(['_serialize' => 'user']);
         $output = $this->view->render(false);
 
-        $this->assertSame('jose,"2010-01-05 00:00:00",beach' . PHP_EOL . 'drew,NULL,ball' . PHP_EOL, $output);
+        $this->assertSame('jose,"2010-01-05 00:00:00",beach' . PHP_EOL . 'drew,,ball' . PHP_EOL, $output);
         $this->assertSame('text/csv', $this->response->type());
     }
 
@@ -183,7 +183,7 @@ class CsvViewTest extends TestCase
         $this->view->set(['_serialize' => 'user']);
         $output = $this->view->render(false);
 
-        $this->assertSame('jose,NULL,beach' . PHP_EOL . 'drew,ball,fun' . PHP_EOL, $output);
+        $this->assertSame('jose,,beach' . PHP_EOL . 'drew,ball,fun' . PHP_EOL, $output);
         $this->assertSame('text/csv', $this->response->type());
     }
 
@@ -230,7 +230,7 @@ class CsvViewTest extends TestCase
         $output = $this->view->render(false);
 
         $expected = <<<CSV
-José,NULL,äöü
+José,,äöü
 "Including,Comma","Containing""char",Containing'char
 "Some Space","A
 Newline","A\tTab"
@@ -291,6 +291,29 @@ CSV;
             $this->assertSame($expected, $output);
             $this->assertSame('text/csv', $this->response->type());
         }
+    }
+
+    /**
+     * Test render with a custom NULL option.
+     *
+     * @return void
+     */
+    public function testRenderWithCustomNull()
+    {
+        $data = [
+            ['a', 'b', 'c'],
+            [1, 2, null],
+            ['you', null, 'me'],
+        ];
+        $_serialize = 'data';
+        $this->view->set('data', $data);
+        $this->view->set(['_serialize' => 'data']);
+        $this->view->viewVars['_null'] = 'NULL';
+        $this->view->viewVars['_eol'] = '~';
+        $output = $this->view->render(false);
+
+        $this->assertSame('a,b,c~1,2,NULL~you,NULL,me~', $output);
+        $this->assertSame('text/csv', $this->response->type());
     }
 
     /**
