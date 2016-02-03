@@ -157,7 +157,7 @@ If your model data contains some null values or missing keys, you can use the
 `$_null` variable, just like you'd use `$_delimiter`, `$_eol`, and `$_enclosure`,
 to set how null values should be displayed in the CSV.
 
-`$_null` defaults to ''.
+`$_null` defaults to `''`.
 
 You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to
 automatically have the CsvView class switched in as follows:
