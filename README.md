@@ -16,15 +16,14 @@ like JsonView or XmlView.
 
 ## Requirements
 
-* CakePHP 3.x
-* PHP 5.4.16 or greater
+* CakePHP 3.0.0 or greater.
 * Patience
 
 ## Installation
 
-_[Using [Composer](http://getcomposer.org/)]_
-
-```
+* _[Using [Composer](http://getcomposer.org/)]_
+Install the plugin with composer from your CakePHP Project's ROOT directory, i.e. where composer.json file is located:
+```shell
 composer require friendsofcake/cakephp-csvview:~2.0
 ```
 
@@ -33,6 +32,11 @@ composer require friendsofcake/cakephp-csvview:~2.0
 Load the plugin in your app's `config/bootstrap.php` file:
 
 	Plugin::load('CsvView');
+
+... or by running the cake command
+```shell
+./bin/cake plugin load CsvView
+```
 
 ## Usage
 
