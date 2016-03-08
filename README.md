@@ -139,7 +139,7 @@ first line of the CSV. Some readers need this in order to display the CSV correc
 
 If you have complex model data, you can use the `$_extract` view variable to
 specify the individual paths for each record. This is an array of
-[`Hash::extract()`-compatible syntax]():
+[`Hash::extract()`-compatible syntax](http://book.cakephp.org/3.0/en/core-libraries/hash.html):
 
 ```php
 public function export() {
