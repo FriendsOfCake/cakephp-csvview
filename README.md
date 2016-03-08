@@ -139,14 +139,14 @@ first line of the CSV. Some readers need this in order to display the CSV correc
 
 If you have complex model data, you can use the `$_extract` view variable to
 specify the individual paths for each record. This is an array of
-`Hash::extract()`-compatible syntax:
+[`Hash::extract()`-compatible syntax](http://book.cakephp.org/3.0/en/core-libraries/hash.html):
 
 ```php
 public function export() {
 	$posts = $this->Post->find('all');
 	$_serialize = 'posts';
 	$_header = ['Post ID', 'Title', 'Created'];
-	$_extract = ['Post.id', 'Post.title', 'Post.created'];
+	$_extract = ['id', 'title', 'created'];
 
 	$this->viewClass = 'CsvView.Csv';
 	$this->set(compact('posts', '_serialize', '_header', '_extract'));
@@ -164,7 +164,7 @@ automatically have the CsvView class switched in as follows:
 
 ```php
 // In your routes.php file:
-Router::parseExtensions('csv');
+Router::extensions('csv');
 
 // In your controller:
 public $components = [
@@ -180,7 +180,7 @@ public function export() {
 	if ($this->request->params['_ext'] === 'csv') {
 		$_serialize = 'posts';
 		$_header = array('Post ID', 'Title', 'Created');
-		$_extract = array('Post.id', 'Post.title', 'Post.created');
+		$_extract = array('id', 'title', 'created');
 
 		$this->set(compact('_serialize', '_header', '_extract'));
 	}
