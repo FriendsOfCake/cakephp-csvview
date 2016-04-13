@@ -91,6 +91,62 @@ class CsvViewTest extends TestCase
     }
 
     /**
+     * Test render with a custom encoding.
+     *
+     * @return void
+     */
+    public function testRenderWithCustomEncoding()
+    {
+        $data = [
+            ['a', 'b', 'c'],
+            [1, 2, 3],
+            ['あなた', 'と', '私'],
+        ];
+        $_serialize = 'data';
+        $this->view->set('data', $data);
+        $this->view->set(['_serialize' => 'data']);
+        $this->view->viewVars['_dataEncoding'] = 'UTF-8';
+        $this->view->viewVars['_csvEncoding'] = 'SJIS';
+        $output = $this->view->render(false);
+
+        $expected = iconv('UTF-8', 'SJIS', 'a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'あなた,と,私' . PHP_EOL);
+
+        $this->assertSame($expected, $output);
+        $this->assertSame('text/csv', $this->response->type());
+    }
+
+    /**
+     * Test render with mbstring extension.
+     *
+     * @return void
+     */
+    public function testRenderWithMbstring()
+    {
+        if (!extension_loaded('mbstring')) {
+            $this->markTestSkipped(
+                'The mbstring extension is not available.'
+            );
+        }
+        $data = [
+            ['a', 'b', 'c'],
+            [1, 2, 3],
+            ['あなた', 'と', '私'],
+        ];
+        $_serialize = 'data';
+        $this->view->set('data', $data);
+        $this->view->set(['_serialize' => 'data']);
+        $this->view->viewVars['_dataEncoding'] = 'UTF-8';
+        $this->view->viewVars['_csvEncoding'] = 'SJIS';
+        $this->view->viewVars['_extension'] = 'mbstring';
+        $output = $this->view->render(false);
+
+        $expected = mb_convert_encoding('a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'あなた,と,私' . PHP_EOL, 'SJIS', 'UTF-8');
+
+        $this->assertSame($expected, $output);
+        $this->assertSame('text/csv', $this->response->type());
+    }
+
+    /**
      * testRenderWithView method
      *
      * @return void

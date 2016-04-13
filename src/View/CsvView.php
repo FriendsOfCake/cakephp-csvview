@@ -83,6 +83,9 @@ class CsvView extends View
      */
     protected $_resetStaticVariables = false;
 
+    const EXTENSION_ICONV = 'iconv';
+    const EXTENSION_MBSTRING = 'mbstring';
+
     /**
      * List of special view vars.
      *
@@ -101,7 +104,8 @@ class CsvView extends View
         '_bom',
         '_setSeparator',
         '_csvEncoding',
-        '_dataEncoding'
+        '_dataEncoding',
+        '_extension'
     ];
 
     /**
@@ -253,6 +257,10 @@ class CsvView extends View
             $this->viewVars['_csvEncoding'] = 'UTF-8';
         }
 
+        if ($this->viewVars['_extension'] === null) {
+            $this->viewVars['_extension'] = self::EXTENSION_ICONV;
+        }
+
         if ($this->viewVars['_extract'] !== null) {
             $this->viewVars['_extract'] = (array)$this->viewVars['_extract'];
             foreach ($this->viewVars['_extract'] as $i => $extract) {
@@ -400,7 +408,12 @@ class CsvView extends View
         $dataEncoding = $this->viewVars['_dataEncoding'];
         $csvEncoding = $this->viewVars['_csvEncoding'];
         if ($dataEncoding !== $csvEncoding) {
-            $csv = iconv($dataEncoding, $csvEncoding, $csv);
+            $extension = $this->viewVars['_extension'];
+            if ($extension === self::EXTENSION_ICONV) {
+                $csv = iconv($dataEncoding, $csvEncoding, $csv);
+            } elseif ($extension === self::EXTENSION_MBSTRING) {
+                $csv = mb_convert_encoding($csv, $csvEncoding, $dataEncoding);
+            }
         }
 
         return $csv;
