@@ -63,14 +63,14 @@ class CsvView extends View {
 /**
  * Whether or not to reset static variables in use
  *
- * @var boolean
+ * @var bool
  */
 	protected $_resetStaticVariables = false;
 
 /**
  * Constructor
  *
- * @param Controller $controller The currently active Controller.
+ * @param Controller|null $controller The currently active Controller.
  */
 	public function __construct(Controller $controller = null) {
 		parent::__construct($controller);
@@ -90,8 +90,8 @@ class CsvView extends View {
  * Also has support for specifying headers and footers in '_header'
  * and '_footer' variables, respectively.
  *
- * @param string $view The view being rendered.
- * @param string $layout The layout being rendered.
+ * @param string|null $view The view being rendered.
+ * @param string|null $layout The layout being rendered.
  * @return string The rendered view.
  * @throws Exception
  */
@@ -246,7 +246,7 @@ class CsvView extends View {
 /**
  * Aggregates the rows into a single csv
  *
- * @param array $row Row data
+ * @param array|null $row Row data
  * @return CSV with all data to date
  **/
 	protected function _renderRow($row = null) {
@@ -266,7 +266,7 @@ class CsvView extends View {
  * data by writing the array to a temporary file and
  * returning it's contents
  *
- * @param array $row Row data
+ * @param array|null $row Row data
  * @return mixed string with the row in csv-syntax, false on fputscv failure
  **/
 	protected function _generateRow($row = null) {
