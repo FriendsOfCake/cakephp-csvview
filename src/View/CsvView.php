@@ -111,9 +111,9 @@ class CsvView extends View
     /**
      * Constructor
      *
-     * @param \Cake\Network\Request $request Request instance.
-     * @param \Cake\Network\Response $response Response instance.
-     * @param \Cake\Event\EventManager $eventManager EventManager instance.
+     * @param \Cake\Network\Request|null $request Request instance.
+     * @param \Cake\Network\Response|null $response Response instance.
+     * @param \Cake\Event\EventManager|null $eventManager EventManager instance.
      * @param array $viewOptions An array of view options
      */
     public function __construct(
@@ -153,8 +153,8 @@ class CsvView extends View
      * Also has support for specifying headers and footers in '_header'
      * and '_footer' variables, respectively.
      *
-     * @param string $view The view being rendered.
-     * @param string $layout The layout being rendered.
+     * @param string|null $view The view being rendered.
+     * @param string|null $layout The layout being rendered.
      * @return string The rendered view.
      */
     public function render($view = null, $layout = null)
@@ -322,7 +322,7 @@ class CsvView extends View
     /**
      * Aggregates the rows into a single csv
      *
-     * @param array $row Row data
+     * @param array|null $row Row data
      * @return null|string CSV with all data to date
      */
     protected function _renderRow($row = null)
@@ -345,7 +345,7 @@ class CsvView extends View
      * data by writing the array to a temporary file and
      * returning it's contents
      *
-     * @param array $row Row data
+     * @param array|null $row Row data
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
     protected function _generateRow($row = null)
