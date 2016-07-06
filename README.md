@@ -221,6 +221,8 @@ used to generate it. Eg: `example.com/my_controller/my_action` would download
 `my_action.csv`, while `example.com/my_controller/my_action/first_param` would
 download `first_param.csv`.
 
+> In IE you are required to set the filename, otherwise it will download as a text file.
+
 To set a custom file name, use the [`Response::download`](http://book.cakephp.org/3.0/en/controllers/request-response.html#sending-a-string-as-file) method.
 The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
 
