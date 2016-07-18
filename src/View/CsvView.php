@@ -182,6 +182,7 @@ class CsvView extends View
         $content = $this->_renderRow(false);
         $this->_resetStaticVariables = true;
         $this->_renderRow();
+
         return $content;
     }
 
@@ -332,6 +333,7 @@ class CsvView extends View
         if ($this->_resetStaticVariables) {
             $csv = '';
             $this->_resetStaticVariables = false;
+
             return null;
         }
 
