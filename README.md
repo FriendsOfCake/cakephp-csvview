@@ -3,7 +3,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 [![Latest Stable Version](https://img.shields.io/packagist/v/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 
-# CsvView Plugin 
+# CsvView Plugin
 
 Quickly enable CSV output of your model data.
 
@@ -159,7 +159,7 @@ to set how null values should be displayed in the CSV.
 
 `$_null` defaults to `''`.
 
-You can use `Router::parseExtensions()` and the `RequestHandlerComponent` to
+You can use `Router::extensions()` and the `RequestHandlerComponent` to
 automatically have the CsvView class switched in as follows:
 
 ```php
@@ -209,13 +209,13 @@ you are passing to the view and also set the encoding you want for the csv file.
 This can be done by using `_dataEncoding` and `_csvEncoding`:
 
 The defaults are:
- 
+
 * `_dataEncoding`: `UTF-8`
 * `_csvEncoding`: `UTF-8`
 
 ** Only if those two variable are different your data will be converted to another encoding.
 
-CsvView uses the `iconv` extension by default to encode your data. You can change the php 
+CsvView uses the `iconv` extension by default to encode your data. You can change the php
 extension used to encode your data by setting the `_extension` option:
 
 ```php
