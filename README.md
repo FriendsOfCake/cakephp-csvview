@@ -25,7 +25,7 @@ like JsonView or XmlView.
 _[Using [Composer](http://getcomposer.org/)]_
 
 ```
-composer require friendsofcake/cakephp-csvview:~2.0
+composer require friendsofcake/cakephp-csvview:~3.0
 ```
 
 ### Enable plugin
