@@ -14,7 +14,6 @@ $findRoot = function ($root) {
         $lastRoot = $root;
         $root = dirname($root);
         if (is_dir($root . '/vendor/cakephp/cakephp')) {
-
             return $root;
         }
     } while ($root !== $lastRoot);
