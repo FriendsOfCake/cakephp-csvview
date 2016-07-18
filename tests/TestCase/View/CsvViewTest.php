@@ -1,7 +1,6 @@
 <?php
 namespace CsvView\Test\TestCase\View;
 
-use Cake\Controller\Controller;
 use Cake\I18n\Time;
 use Cake\Network\Request;
 use Cake\Network\Response;
@@ -54,7 +53,6 @@ class CsvViewTest extends TestCase
             [1, 2, 3],
             ['you', 'and', 'me'],
         ];
-        $_serialize = 'data';
         $this->view->set('data', $data);
         $this->view->set(['_serialize' => 'data']);
         $output = $this->view->render(false);
@@ -80,7 +78,6 @@ class CsvViewTest extends TestCase
             [1, 2, 3],
             ['you', 'and', 'me'],
         ];
-        $_serialize = 'data';
         $this->view->set('data', $data);
         $this->view->set(['_serialize' => 'data']);
         $this->view->viewVars['_eol'] = '~';
@@ -102,7 +99,6 @@ class CsvViewTest extends TestCase
             [1, 2, 3],
             ['あなた', 'と', '私'],
         ];
-        $_serialize = 'data';
         $this->view->set('data', $data);
         $this->view->set(['_serialize' => 'data']);
         $this->view->viewVars['_dataEncoding'] = 'UTF-8';
@@ -132,7 +128,6 @@ class CsvViewTest extends TestCase
             [1, 2, 3],
             ['あなた', 'と', '私'],
         ];
-        $_serialize = 'data';
         $this->view->set('data', $data);
         $this->view->set(['_serialize' => 'data']);
         $this->view->viewVars['_dataEncoding'] = 'UTF-8';
@@ -328,8 +323,6 @@ CSV;
      */
     public function testRenderEnclosure()
     {
-        $Request = new Request();
-        $Response = new Response();
         $data = [['user', 'fake apple', 'list', 'a b c', 'item2']];
         $testData = [
             '"' => 'user,"fake apple",list,"a b c",item2' . PHP_EOL,
@@ -338,7 +331,6 @@ CSV;
         ];
 
         foreach ($testData as $enclosure => $expected) {
-            $_serialize = 'data';
             $this->view->set('data', $data);
             $this->view->set(['_serialize' => 'data']);
             $this->view->viewVars['_enclosure'] = $enclosure;
@@ -361,7 +353,6 @@ CSV;
             [1, 2, null],
             ['you', null, 'me'],
         ];
-        $_serialize = 'data';
         $this->view->set('data', $data);
         $this->view->set(['_serialize' => 'data']);
         $this->view->viewVars['_null'] = 'NULL';
@@ -381,6 +372,6 @@ CSV;
     public function testInvalidViewVarThrowsException()
     {
         $this->view->set(['data' => 'invaliddata', '_serialize' => 'data']);
-        $output = $this->view->render(false);
+        $this->view->render(false);
     }
 }
