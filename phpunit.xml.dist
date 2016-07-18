@@ -32,6 +32,8 @@
     <!-- Prevent coverage reports from looking in tests and vendors -->
     <filter>
         <blacklist>
+            <directory suffix=".php">./config/</directory>
+
             <directory suffix=".php">./vendor/</directory>
             <directory suffix=".ctp">./vendor/</directory>
 
