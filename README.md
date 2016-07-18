@@ -215,7 +215,20 @@ The defaults are:
 
 ** Only if those two variable are different your data will be converted to another encoding.
 
+CsvView uses the `iconv` extension by default to encode your data. You can change the php 
+extension used to encode your data by setting the `_extension` option:
+
+```php
+$this->set('_extension', 'mbstring');
+```
+
+The currently supported encoding extensions are as follows:
+
+- `iconv`
+- `mbstring`
+
 #### Setting the downloaded file name
+
 By default, the downloaded file will be named after the last segment of the URL
 used to generate it. Eg: `example.com/my_controller/my_action` would download
 `my_action.csv`, while `example.com/my_controller/my_action/first_param` would
