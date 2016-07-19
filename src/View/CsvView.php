@@ -29,10 +29,9 @@ use Exception;
  *
  * ```
  * $_extract = [
- *   [id', '%d'],       // Hash-compatible path, sprintf-compatible format
- *   ['title'],         // Uses `%s` for sprintf-formatting
- *   'description',     // Uses `%s` for sprintf-formatting
- *   function ($row) {  // Uses `%s` for sprintf-formatting
+ *   ['id', '%d'],       // Hash-compatible path, sprintf-compatible format
+ *   'description',     // Hash-compatible path
+ *   function ($row) {  // Callable
  *      //return value
  *   }
  * ];
@@ -280,12 +279,6 @@ class CsvView extends View
 
         if ($this->viewVars['_extract'] !== null) {
             $this->viewVars['_extract'] = (array)$this->viewVars['_extract'];
-            foreach ($this->viewVars['_extract'] as $i => $extract) {
-                $this->viewVars['_extract'][$i] = (array)$extract;
-                if (count($this->viewVars['_extract'][$i]) !== 2) {
-                    $this->viewVars['_extract'][$i][1] = '%s';
-                }
-            }
         }
     }
 
@@ -323,25 +316,28 @@ class CsvView extends View
                 }
 
                 $values = [];
-                foreach ($extract as $e) {
-                    list($formatter, $format) = $e;
-                    if (is_string($formatter)) {
-                        if (strpos($formatter, '.') === false) {
-                            $value = $_data[$formatter];
-                        } else {
-                            $value = Hash::get($_data, $formatter);
-                        }
-                    } elseif (is_callable($formatter)) {
+                foreach ($extract as $formatter) {
+                    if (!is_string($formatter) && is_callable($formatter)) {
                         $value = $formatter($_data);
                     } else {
-                        throw new Exception('Extractor must be a string or callable');
+                        $path = $formatter;
+                        $format = null;
+                        if (is_array($formatter)) {
+                            list($path, $format) = $formatter;
+                        }
+
+                        if (strpos($path, '.') === false) {
+                            $value = $_data[$path];
+                        } else {
+                            $value = Hash::get($_data, $path);
+                        }
+
+                        if ($format) {
+                            $value = sprintf($format, $value);
+                        }
                     }
 
-                    if ($value === null) {
-                        $values[] = $value;
-                    } else {
-                        $values[] = sprintf($format, $value);
-                    }
+                    $values[] = $value;
                 }
                 $this->_renderRow($values);
             }
