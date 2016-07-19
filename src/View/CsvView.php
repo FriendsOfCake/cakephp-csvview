@@ -337,10 +337,10 @@ class CsvView extends View
                         throw new Exception('Extractor must be a string or callable');
                     }
 
-                    if (isset($value)) {
-                        $values[] = sprintf($format, $value);
+                    if ($value === null) {
+                        $values[] = $value;
                     } else {
-                        $values[] = $this->viewVars['_null'];
+                        $values[] = sprintf($format, $value);
                     }
                 }
                 $this->_renderRow($values);
@@ -382,6 +382,10 @@ class CsvView extends View
     {
         static $fp = false;
 
+        if (empty($row)) {
+            return '';
+        }
+
         if ($fp === false) {
             $fp = fopen('php://temp', 'r+');
 
@@ -393,10 +397,6 @@ class CsvView extends View
             }
         } else {
             ftruncate($fp, 0);
-        }
-
-        if ($row === false || $row === null) {
-            return '';
         }
 
         if ($this->viewVars['_null'] !== '') {
