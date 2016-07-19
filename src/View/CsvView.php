@@ -306,8 +306,15 @@ class CsvView extends View
                 } else {
                     $values = [];
                     foreach ($extract as $e) {
-                        list($path, $format) = $e;
-                        $value = Hash::get($_data, $path);
+                        list($formatter, $format) = $e;
+                        if (is_string($formatter)) {
+                            $value = Hash::get($_data, $formatter);
+                        } elseif (is_callable($formatter)) {
+                            $value = $formatter($_data);
+                        } else {
+                            throw new Exception('Extractor must be a string or callable');
+                        }
+
                         if (isset($value)) {
                             $values[] = sprintf($format, $value);
                         } else {

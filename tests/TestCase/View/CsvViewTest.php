@@ -239,6 +239,76 @@ class CsvViewTest extends TestCase
     }
 
     /**
+     * CsvViewTest::testRenderViaExtractWithCallable()
+     *
+     * @return void
+     */
+    public function testRenderViaExtractWithCallable()
+    {
+        $this->view->name = $this->view->viewPath = 'Posts';
+
+        $data = [
+            [
+                'username' => 'jose',
+                'created' => new Time('2010-01-05'),
+                'item' => [
+                    'name' => 'beach',
+                ]
+            ],
+            [
+                'username' => 'drew',
+                'created' => null,
+                'item' => [
+                    'name' => 'ball',
+                ]
+            ]
+        ];
+        $_extract = [
+            'username',
+            'created',
+            function ($row) {
+                return 'my-' . $row['item']['name'];
+            }
+        ];
+        $this->view->set(['user' => $data, '_extract' => $_extract]);
+        $this->view->set(['_serialize' => 'user']);
+        $output = $this->view->render(false);
+
+        $this->assertSame('jose,"2010-01-05 00:00:00",my-beach' . PHP_EOL . 'drew,,my-ball' . PHP_EOL, $output);
+        $this->assertSame('text/csv', $this->response->type());
+    }
+
+    /**
+     * CsvViewTest::testRenderViaExtractException()
+     *
+     * @expectedException Exception
+     * @expectedExceptionMessage Extractor must be a string or callable
+     * @return void
+     */
+    public function testRenderViaExtractException()
+    {
+        $this->view->name = $this->view->viewPath = 'Posts';
+
+        $data = [
+            [
+                'username' => 'jose',
+                'created' => new Time('2010-01-05'),
+                'item' => [
+                    'name' => 'beach',
+                ]
+            ]
+        ];
+        $_extract = [
+            'username',
+            'created',
+            [$this, 'non-existent']
+        ];
+        $this->view->set(['user' => $data, '_extract' => $_extract]);
+        $this->view->set(['_serialize' => 'user']);
+        $output = $this->view->render(false);
+    }
+
+    /**
      * CsvViewTest::testRenderWithSpecialCharacters()
      *
      * @return void
