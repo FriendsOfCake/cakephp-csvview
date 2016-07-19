@@ -213,7 +213,8 @@ class CsvViewTest extends TestCase
         $data = [
             [
                 'User' => [
-                    'username' => 'jose'
+                    'id' => 1,
+                    'username' => 'jose',
                 ],
                 'Item' => [
                     'type' => 'beach',
@@ -221,6 +222,7 @@ class CsvViewTest extends TestCase
             ],
             [
                 'User' => [
+                    'id' => 2,
                     'username' => 'drew'
                 ],
                 'Item' => [
@@ -229,12 +231,12 @@ class CsvViewTest extends TestCase
                 ]
             ]
         ];
-        $_extract = ['User.username', 'Item.name', 'Item.type'];
+        $_extract = [['User.id', '%d'], 'User.username', 'Item.name', 'Item.type'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
         $this->view->set(['_serialize' => 'user']);
         $output = $this->view->render(false);
 
-        $this->assertSame('jose,,beach' . PHP_EOL . 'drew,ball,fun' . PHP_EOL, $output);
+        $this->assertSame('1,jose,,beach' . PHP_EOL . '2,drew,ball,fun' . PHP_EOL, $output);
         $this->assertSame('text/csv', $this->response->type());
     }
 
