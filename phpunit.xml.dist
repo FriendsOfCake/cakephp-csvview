@@ -29,17 +29,11 @@
         </listener>
     </listeners>
 
-    <!-- Prevent coverage reports from looking in tests and vendors -->
     <filter>
-        <blacklist>
-            <directory suffix=".php">./config/</directory>
-
-            <directory suffix=".php">./vendor/</directory>
-            <directory suffix=".ctp">./vendor/</directory>
-
-            <directory suffix=".php">./tests/</directory>
-            <directory suffix=".ctp">./tests/</directory>
-        </blacklist>
+        <whitelist>
+            <directory suffix=".php">./src/</directory>
+            <directory suffix=".ctp">./src/</directory>
+        </whitelist>
     </filter>
 
 </phpunit>
