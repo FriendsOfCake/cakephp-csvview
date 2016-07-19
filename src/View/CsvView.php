@@ -29,9 +29,12 @@ use Exception;
  *
  * ```
  * $_extract = [
- *   array('Post.id', '%d'),   // Hash-compatible path, sprintf-compatible format
- *   array('Post.title'),      // Uses `%s` for sprintf-formatting
- *   'Post.description',       // Uses `%s` for sprintf-formatting
+ *   [id', '%d'],       // Hash-compatible path, sprintf-compatible format
+ *   ['title'],         // Uses `%s` for sprintf-formatting
+ *   'description',     // Uses `%s` for sprintf-formatting
+ *   function ($row) {  // Uses `%s` for sprintf-formatting
+ *      //return value
+ *   }
  * ];
  * ```
  *
@@ -54,7 +57,7 @@ use Exception;
  * - array `$_footer`: (default null)    A flat array of footer column names
  * - string `$_delimiter`: (default ',') CSV Delimiter, defaults to comma
  * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputscsv()
- * - string `$_eol`: (default '\n')       End-of-line character the csv
+ * - string `$_eol`: (default '\n')      End-of-line character the csv
  *
  * @link https://github.com/friendsofcake/cakephp-csvview
  */
@@ -83,7 +86,18 @@ class CsvView extends View
      */
     protected $_resetStaticVariables = false;
 
+    /**
+     * Iconv extension.
+     *
+     * @var string
+     */
     const EXTENSION_ICONV = 'iconv';
+
+    /**
+     * Mbstring extension.
+     *
+     * @var string
+     */
     const EXTENSION_MBSTRING = 'mbstring';
 
     /**
@@ -194,14 +208,16 @@ class CsvView extends View
      *
      * - array '_header': (default null)  A flat array of header column names
      * - array '_footer': (default null)  A flat array of footer column names
-     * - array '_extract': (default null) An array of Hash-compatible 'paths' with
-     *                                    matching 'sprintf' $format as follows:
+     * - array '_extract': (default null) An array of Hash-compatible paths or
+     *                                    callable with matching 'sprintf'
+     *                                    $format as follows:
      *
-     *                                    $_extract = array(
-     *                                      array($path, $format),
-     *                                      array($path),
-     *                                      $path,
-     *                                    );
+     *                                    $_extract = [
+     *                                        [$path, $format],
+     *                                        [$path],
+     *                                        $path,
+     *                                        function () { ... } // Callable
+     *                                    ];
      *
      *                                    If a string or unspecified, the format
      *                                    default is '%s'.
