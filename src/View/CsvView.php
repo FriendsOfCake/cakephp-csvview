@@ -303,26 +303,31 @@ class CsvView extends View
 
                 if ($extract === null) {
                     $this->_renderRow($_data);
-                } else {
-                    $values = [];
-                    foreach ($extract as $e) {
-                        list($formatter, $format) = $e;
-                        if (is_string($formatter)) {
-                            $value = Hash::get($_data, $formatter);
-                        } elseif (is_callable($formatter)) {
-                            $value = $formatter($_data);
-                        } else {
-                            throw new Exception('Extractor must be a string or callable');
-                        }
-
-                        if (isset($value)) {
-                            $values[] = sprintf($format, $value);
-                        } else {
-                            $values[] = $this->viewVars['_null'];
-                        }
-                    }
-                    $this->_renderRow($values);
+                    continue;
                 }
+
+                $values = [];
+                foreach ($extract as $e) {
+                    list($formatter, $format) = $e;
+                    if (is_string($formatter)) {
+                        if (strpos($formatter, '.') === false) {
+                            $value = $_data[$formatter];
+                        } else {
+                            $value = Hash::get($_data, $formatter);
+                        }
+                    } elseif (is_callable($formatter)) {
+                        $value = $formatter($_data);
+                    } else {
+                        throw new Exception('Extractor must be a string or callable');
+                    }
+
+                    if (isset($value)) {
+                        $values[] = sprintf($format, $value);
+                    } else {
+                        $values[] = $this->viewVars['_null'];
+                    }
+                }
+                $this->_renderRow($values);
             }
         }
     }
