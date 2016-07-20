@@ -1,5 +1,5 @@
 [![Build Status](https://img.shields.io/travis/FriendsOfCake/cakephp-csvview/master.svg?style=flat-square)](https://travis-ci.org/FriendsOfCake/cakephp-csvview)
-[![Coverage Status](https://img.shields.io/coveralls/FriendsOfCake/cakephp-csvview.svg?style=flat-square)](https://coveralls.io/r/FriendsOfCake/cakephp-csvview?branch=master)
+[![Coverage Status](https://img.shields.io/codecov/c/github/FriendsOfCake/cakephp-csvview.svg?style=flat-square)](https://codecov.io/gh/FriendsOfCake/cakephp-csvview)
 [![Total Downloads](https://img.shields.io/packagist/dt/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 [![Latest Stable Version](https://img.shields.io/packagist/v/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 
@@ -39,16 +39,17 @@ Load the plugin in your app's `config/bootstrap.php` file:
 To export a flat array as a CSV, one could write the following code:
 
 ```php
-public function export() {
-	$data = [
-		['a', 'b', 'c'],
-		[1, 2, 3],
-		['you', 'and', 'me'],
-	];
-	$_serialize = 'data';
+public function export()
+{
+    $data = [
+        ['a', 'b', 'c'],
+        [1, 2, 3],
+        ['you', 'and', 'me'],
+    ];
+    $_serialize = 'data';
 
-	$this->viewBuilder()->className('CsvView.Csv');
-	$this->set(compact('data', '_serialize'));
+    $this->viewBuilder()->className('CsvView.Csv');
+    $this->set(compact('data', '_serialize'));
 }
 ```
 
@@ -58,15 +59,16 @@ All variables that are to be included in the csv must be specified in the
 It is possible to have multiple variables in the csv output:
 
 ```php
-public function export() {
-	$data = [['a', 'b', 'c']];
-	$data_two = [[1, 2, 3]];
-	$data_three = [['you', 'and', 'me']];
+public function export()
+{
+    $data = [['a', 'b', 'c']];
+    $data_two = [[1, 2, 3]];
+    $data_three = [['you', 'and', 'me']];
 
-	$_serialize = ['data', 'data_two', 'data_three'];
+    $_serialize = ['data', 'data_two', 'data_three'];
 
-	$this->viewBuilder()->className('CsvView.Csv');
-	$this->set(compact('data', 'data_two', 'data_three', '_serialize'));
+    $this->viewBuilder()->className('CsvView.Csv');
+    $this->set(compact('data', 'data_two', 'data_three', '_serialize'));
 }
 ```
 
@@ -74,19 +76,20 @@ If you want headers or footers in your CSV output, you can specify either a
 `$_header` or `$_footer` view variable. Both are completely optional:
 
 ```php
-public function export() {
-	$data = [
-		['a', 'b', 'c'],
-		[1, 2, 3],
-		['you', 'and', 'me'],
-	];
+public function export()
+{
+    $data = [
+        ['a', 'b', 'c'],
+        [1, 2, 3],
+        ['you', 'and', 'me'],
+    ];
 
-	$_serialize = 'data';
-	$_header = ['Column 1', 'Column 2', 'Column 3'];
-	$_footer = ['Totals', '400', '$3000'];
+    $_serialize = 'data';
+    $_header = ['Column 1', 'Column 2', 'Column 3'];
+    $_footer = ['Totals', '400', '$3000'];
 
-	$this->viewBuilder()->className('CsvView.Csv');
-	$this->set(compact('data', '_serialize', '_header', '_footer'));
+    $this->viewBuilder()->className('CsvView.Csv');
+    $this->set(compact('data', '_serialize', '_header', '_footer'));
 }
 ```
 
@@ -95,22 +98,23 @@ byte order mark (BOM) sequence using `$_delimiter`, `$_eol`, `$_newline`,
 `$_enclosure` and `$_bom` respectively:
 
 ```php
-public function export() {
-	$data = [
-		['a', 'b', 'c'],
-		[1, 2, 3],
-		['you', 'and', 'me'],
-	];
+public function export()
+{
+    $data = [
+        ['a', 'b', 'c'],
+        [1, 2, 3],
+        ['you', 'and', 'me'],
+    ];
 
-	$_serialize = 'data';
-	$_delimiter = chr(9); //tab
-	$_enclosure = '"';
-	$_newline = '\r\n';
-	$_eol = '~';
-	$_bom = true;
+    $_serialize = 'data';
+    $_delimiter = chr(9); //tab
+    $_enclosure = '"';
+    $_newline = '\r\n';
+    $_eol = '~';
+    $_bom = true;
 
-	$this->viewBuilder()->className('CsvView.Csv');
-	$this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol', '_bom'));
+    $this->viewBuilder()->className('CsvView.Csv');
+    $this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol', '_bom'));
 }
 ```
 
@@ -138,18 +142,25 @@ The `_setSeparator` flag can be used to set the separator explicitly in the
 first line of the CSV. Some readers need this in order to display the CSV correctly.
 
 If you have complex model data, you can use the `$_extract` view variable to
-specify the individual paths for each record. This is an array of
-[`Hash::extract()`-compatible syntax](http://book.cakephp.org/3.0/en/core-libraries/hash.html):
+specify the individual [`Hash::extract()`-compatible](http://book.cakephp.org/3.0/en/core-libraries/hash.html) paths
+or a callable for each record:
 
 ```php
-public function export() {
-	$posts = $this->Post->find('all');
-	$_serialize = 'posts';
-	$_header = ['Post ID', 'Title', 'Created'];
-	$_extract = ['id', 'title', 'created'];
+public function export()
+{
+    $posts = $this->Post->find('all');
+    $_serialize = 'posts';
+    $_header = ['Post ID', 'Title', 'Created'];
+    $_extract = [
+        'id',
+        function ($row) {
+            return $row['title];
+        },
+        'created'
+    ];
 
-	$this->viewClass = 'CsvView.Csv';
-	$this->set(compact('posts', '_serialize', '_header', '_extract'));
+    $this->viewBuilder->className('CsvView.Csv');
+    $this->set(compact('posts', '_serialize', '_header', '_extract'));
 }
 ```
 
@@ -168,22 +179,23 @@ Router::extensions('csv');
 
 // In your controller:
 public $components = [
-	'RequestHandler' => [
-		'viewClassMap' => ['csv' => 'CsvView.Csv']
-	]
+    'RequestHandler' => [
+        'viewClassMap' => ['csv' => 'CsvView.Csv']
+    ]
 ];
 
-public function export() {
-	$posts = $this->Post->find('all');
-	$this->set(compact('post'));
+public function export()
+{
+    $posts = $this->Post->find('all');
+    $this->set(compact('post'));
 
-	if ($this->request->params['_ext'] === 'csv') {
-		$_serialize = 'posts';
-		$_header = array('Post ID', 'Title', 'Created');
-		$_extract = array('id', 'title', 'created');
+    if ($this->request->params['_ext'] === 'csv') {
+        $_serialize = 'posts';
+        $_header = array('Post ID', 'Title', 'Created');
+        $_extract = array('id', 'title', 'created');
 
-		$this->set(compact('_serialize', '_header', '_extract'));
-	}
+        $this->set(compact('_serialize', '_header', '_extract'));
+    }
 }
 ```
 
@@ -195,11 +207,12 @@ The view files will be located in the `csv` subdirectory of your current control
 
 ```php
 // View used will be in src/Template/Posts/csv/export.ctp
-public function export() {
-	$posts = $this->Post->find('all');
-	$_serialize = null;
-	$this->viewBuilder()->className('CsvView.Csv');
-	$this->set(compact('posts', '_serialize'));
+public function export()
+{
+    $posts = $this->Post->find('all');
+    $_serialize = null;
+    $this->viewBuilder()->className('CsvView.Csv');
+    $this->set(compact('posts', '_serialize'));
 }
 ```
 #### Setting a different encoding to the file
@@ -240,17 +253,18 @@ To set a custom file name, use the [`Response::download`](http://book.cakephp.or
 The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
 
 ```php
-public function export() {
-	$data = [
-		['a', 'b', 'c'],
-		[1, 2, 3],
-		['you', 'and', 'me'],
-	];
-	$_serialize = 'data';
+public function export()
+{
+    $data = [
+        ['a', 'b', 'c'],
+        [1, 2, 3],
+        ['you', 'and', 'me'],
+    ];
+    $_serialize = 'data';
 
-	$this->response->download('my_file.csv'); // <= setting the file name
-	$this->viewBuilder()->className('CsvView.Csv');
-	$this->set(compact('data', '_serialize'));
+    $this->response->download('my_file.csv'); // <= setting the file name
+    $this->viewBuilder()->className('CsvView.Csv');
+    $this->set(compact('data', '_serialize'));
 }
 ```
 

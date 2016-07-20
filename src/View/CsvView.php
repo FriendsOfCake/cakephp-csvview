@@ -29,9 +29,11 @@ use Exception;
  *
  * ```
  * $_extract = [
- *   array('Post.id', '%d'),   // Hash-compatible path, sprintf-compatible format
- *   array('Post.title'),      // Uses `%s` for sprintf-formatting
- *   'Post.description',       // Uses `%s` for sprintf-formatting
+ *   ['id', '%d'],       // Hash-compatible path, sprintf-compatible format
+ *   'description',     // Hash-compatible path
+ *   function ($row) {  // Callable
+ *      //return value
+ *   }
  * ];
  * ```
  *
@@ -54,7 +56,7 @@ use Exception;
  * - array `$_footer`: (default null)    A flat array of footer column names
  * - string `$_delimiter`: (default ',') CSV Delimiter, defaults to comma
  * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputscsv()
- * - string `$_eol`: (default '\n')       End-of-line character the csv
+ * - string `$_eol`: (default '\n')      End-of-line character the csv
  *
  * @link https://github.com/friendsofcake/cakephp-csvview
  */
@@ -83,7 +85,18 @@ class CsvView extends View
      */
     protected $_resetStaticVariables = false;
 
+    /**
+     * Iconv extension.
+     *
+     * @var string
+     */
     const EXTENSION_ICONV = 'iconv';
+
+    /**
+     * Mbstring extension.
+     *
+     * @var string
+     */
     const EXTENSION_MBSTRING = 'mbstring';
 
     /**
@@ -194,14 +207,16 @@ class CsvView extends View
      *
      * - array '_header': (default null)  A flat array of header column names
      * - array '_footer': (default null)  A flat array of footer column names
-     * - array '_extract': (default null) An array of Hash-compatible 'paths' with
-     *                                    matching 'sprintf' $format as follows:
+     * - array '_extract': (default null) An array of Hash-compatible paths or
+     *                                    callable with matching 'sprintf'
+     *                                    $format as follows:
      *
-     *                                    $_extract = array(
-     *                                      array($path, $format),
-     *                                      array($path),
-     *                                      $path,
-     *                                    );
+     *                                    $_extract = [
+     *                                        [$path, $format],
+     *                                        [$path],
+     *                                        $path,
+     *                                        function () { ... } // Callable
+     *                                    ];
      *
      *                                    If a string or unspecified, the format
      *                                    default is '%s'.
@@ -264,12 +279,6 @@ class CsvView extends View
 
         if ($this->viewVars['_extract'] !== null) {
             $this->viewVars['_extract'] = (array)$this->viewVars['_extract'];
-            foreach ($this->viewVars['_extract'] as $i => $extract) {
-                $this->viewVars['_extract'][$i] = (array)$extract;
-                if (count($this->viewVars['_extract'][$i]) !== 2) {
-                    $this->viewVars['_extract'][$i][1] = '%s';
-                }
-            }
         }
     }
 
@@ -303,19 +312,34 @@ class CsvView extends View
 
                 if ($extract === null) {
                     $this->_renderRow($_data);
-                } else {
-                    $values = [];
-                    foreach ($extract as $e) {
-                        list($path, $format) = $e;
-                        $value = Hash::get($_data, $path);
-                        if (isset($value)) {
-                            $values[] = sprintf($format, $value);
+                    continue;
+                }
+
+                $values = [];
+                foreach ($extract as $formatter) {
+                    if (!is_string($formatter) && is_callable($formatter)) {
+                        $value = $formatter($_data);
+                    } else {
+                        $path = $formatter;
+                        $format = null;
+                        if (is_array($formatter)) {
+                            list($path, $format) = $formatter;
+                        }
+
+                        if (strpos($path, '.') === false) {
+                            $value = $_data[$path];
                         } else {
-                            $values[] = $this->viewVars['_null'];
+                            $value = Hash::get($_data, $path);
+                        }
+
+                        if ($format) {
+                            $value = sprintf($format, $value);
                         }
                     }
-                    $this->_renderRow($values);
+
+                    $values[] = $value;
                 }
+                $this->_renderRow($values);
             }
         }
     }
@@ -354,6 +378,10 @@ class CsvView extends View
     {
         static $fp = false;
 
+        if (empty($row)) {
+            return '';
+        }
+
         if ($fp === false) {
             $fp = fopen('php://temp', 'r+');
 
@@ -365,10 +393,6 @@ class CsvView extends View
             }
         } else {
             ftruncate($fp, 0);
-        }
-
-        if ($row === false || $row === null) {
-            return '';
         }
 
         if ($this->viewVars['_null'] !== '') {
