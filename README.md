@@ -159,7 +159,7 @@ public function export()
         'created'
     ];
 
-    $this->viewBuilder->className('CsvView.Csv');
+    $this->viewBuilder()->className('CsvView.Csv');
     $this->set(compact('posts', '_serialize', '_header', '_extract'));
 }
 ```
