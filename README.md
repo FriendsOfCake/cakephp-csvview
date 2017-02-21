@@ -154,7 +154,7 @@ public function export()
     $_extract = [
         'id',
         function ($row) {
-            return $row['title];
+            return $row['title'];
         },
         'created'
     ];
