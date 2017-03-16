@@ -268,6 +268,45 @@ public function export()
 }
 ```
 
+#### Using a specific View Builder
+
+In some cases, it is better not to use the current model's View Builder `$this->viewBuilder` as any call to `$this->render()` will compromise any subsequent rendering.
+
+For example, in the course of your current controller's action, if you need to render some data as CSV in order to simply save it into a file on the server.
+
+Do not forget to add to your controller:
+
+```php
+use Cake\View\View;
+use Cake\View\ViewBuilder;
+```
+So you can create a specific View Builder:
+
+```php
+
+// Your data array
+$data = [];
+
+// Params
+$_serialize = 'data';
+$_delimiter = ',';
+$_enclosure = '"';
+$_newline = '\r\n';
+
+// Create the builder
+$builder = new ViewBuilder;
+$builder->layout = false;
+$builder->setClassName('CsvView.Csv');
+
+// Then the view
+$view = $builder->build($data);
+$view->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline'));
+
+// And Save the file
+$file = new File('/full/path/to/file.csv', true, 0644);
+$file->write($view->render());
+```
+
 ## License
 
 The MIT License (MIT)
