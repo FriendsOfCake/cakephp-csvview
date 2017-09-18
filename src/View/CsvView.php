@@ -100,6 +100,12 @@ class CsvView extends View
     const EXTENSION_MBSTRING = 'mbstring';
 
     /**
+     * List of bom signs for encodings.
+     * @var array
+     */
+    private $BOM_MAP;
+
+    /**
      * List of special view vars.
      *
      * @var array
@@ -135,6 +141,14 @@ class CsvView extends View
         EventManager $eventManager = null,
         array $viewOptions = []
     ) {
+        $this->BOM_MAP = [
+            'UTF-32BE' => chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF),
+            'UTF-32LE' => chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00),
+            'UTF-16BE' => chr(0xFE) . chr(0xFF),
+            'UTF-16LE' => chr(0xFF) . chr(0xFE),
+            'UTF-8' => chr(0xEF) . chr(0xBB) . chr(0xBF),
+        ];
+
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
         if ($response && $response instanceof Response) {
@@ -385,9 +399,6 @@ class CsvView extends View
         if ($fp === false) {
             $fp = fopen('php://temp', 'r+');
 
-            if ($this->viewVars['_bom']) {
-                fwrite($fp, chr(0xEF) . chr(0xBB) . chr(0xBF));
-            }
             if ($this->viewVars['_setSeparator']) {
                 fwrite($fp, "sep=" . $this->viewVars['_delimiter'] . "\n");
             }
@@ -442,6 +453,22 @@ class CsvView extends View
             }
         }
 
+        //bom must be added after encoding
+        if ($this->viewVars['_bom'] === true) {
+            $csv = $this->getBom($this->viewVars['_csvEncoding']) . $csv;
+        }
+
         return $csv;
+    }
+
+    /**
+     * Returns the BOM for the encoding given.
+     * @param $csvEncoding
+     * @return string
+     */
+    private function getBom($csvEncoding)
+    {
+        $csvEncoding = strtoupper($csvEncoding);
+        return array_key_exists($csvEncoding, $this->BOM_MAP) ? $this->BOM_MAP[$csvEncoding] : '';
     }
 }
