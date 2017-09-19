@@ -464,6 +464,7 @@ class CsvView extends View
 
     /**
      * Returns the BOM for the encoding given.
+     *
      * @param string $csvEncoding
      * @return string
      */
