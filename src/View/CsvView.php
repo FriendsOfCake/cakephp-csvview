@@ -101,6 +101,7 @@ class CsvView extends View
 
     /**
      * List of bom signs for encodings.
+     *
      * @var array
      */
     protected $bomMap;
