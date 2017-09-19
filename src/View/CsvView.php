@@ -103,7 +103,7 @@ class CsvView extends View
      * List of bom signs for encodings.
      * @var array
      */
-    private $BOM_MAP;
+    protected $bomMap;
 
     /**
      * List of special view vars.
@@ -141,7 +141,7 @@ class CsvView extends View
         EventManager $eventManager = null,
         array $viewOptions = []
     ) {
-        $this->BOM_MAP = [
+        $this->bomMap = [
             'UTF-32BE' => chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF),
             'UTF-32LE' => chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00),
             'UTF-16BE' => chr(0xFE) . chr(0xFF),
@@ -463,12 +463,12 @@ class CsvView extends View
 
     /**
      * Returns the BOM for the encoding given.
-     * @param $csvEncoding
+     * @param string $csvEncoding
      * @return string
      */
-    private function getBom($csvEncoding)
+    protected function getBom($csvEncoding)
     {
         $csvEncoding = strtoupper($csvEncoding);
-        return array_key_exists($csvEncoding, $this->BOM_MAP) ? $this->BOM_MAP[$csvEncoding] : '';
+        return isset($this->bomMap[$csvEncoding]) ? $this->bomMap[$csvEncoding] : '';
     }
 }
