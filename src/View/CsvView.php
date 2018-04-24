@@ -465,12 +465,13 @@ class CsvView extends View
     /**
      * Returns the BOM for the encoding given.
      *
-     * @param string $csvEncoding
+     * @param string $csvEncoding The encoding you want the BOM for
      * @return string
      */
     protected function getBom($csvEncoding)
     {
         $csvEncoding = strtoupper($csvEncoding);
+
         return isset($this->bomMap[$csvEncoding]) ? $this->bomMap[$csvEncoding] : '';
     }
 }
