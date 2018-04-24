@@ -455,7 +455,7 @@ class CsvView extends View
         }
 
         //bom must be added after encoding
-        if ($this->viewVars['_bom'] === true) {
+        if ($this->viewVars['_bom'] == true) {
             $csv = $this->getBom($this->viewVars['_csvEncoding']) . $csv;
         }
 
