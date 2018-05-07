@@ -32,7 +32,7 @@ Because this plugin has the type `cakephp-plugin` set in it's own `composer.json
 
 _[Manual]_
 
-* Download this: [http://github.com/friendsofcake/cakephp-csvview/zipball/master](http://github.com/friendsofcake/cakephp-csvview/zipball/master)
+* Download this: [http://github.com/friendsofcake/cakephp-csvview/zipball/cake2](http://github.com/friendsofcake/cakephp-csvview/zipball/cake2)
 * Unzip that download.
 * Copy the resulting folder to `app/Plugin`
 * Rename the folder you just copied to `CsvView`
