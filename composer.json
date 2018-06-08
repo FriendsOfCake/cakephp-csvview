@@ -47,20 +47,34 @@
         "php": ">=5.4.16",
         "cakephp/cakephp": "~3.0"
     },
+    "require-dev": {
+        "cakephp/cakephp-codesniffer": "^3.0",
+        "phpunit/phpunit": "^5.7.14|^6.0"
+    },
     "autoload": {
         "psr-4": {
-            "CsvView\\": "src"
+            "CsvView\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "CsvView\\Test\\": "tests",
-            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+            "CsvView\\Test\\": "tests/",
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
         }
     },
     "support": {
         "email": "cakephp+csvview@josediazgonzalez.com",
         "issues": "https://github.com/friendsofcake/cakephp-csvview/issues",
         "source": "https://github.com/friendsofcake/cakephp-csvview"
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs --colors -p src/ tests/",
+        "cs-fix": "phpcbf --colors src/ tests/",
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-clover=clover.xml"
     }
 }

@@ -1,10 +1,12 @@
 language: php
 
 php:
-  - 7.0
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
 
 env:
   global:
@@ -20,7 +22,6 @@ matrix:
 install:
   - if [[ $TRAVIS_PHP_VERSION != 7.* ]]; then phpenv config-rm xdebug.ini; fi
 
-  - composer self-update
   - composer install --prefer-dist --no-interaction
 
 before_script:
@@ -28,7 +29,7 @@ before_script:
 
 script:
   - if [[ $DEFAULT = 1 && $TRAVIS_PHP_VERSION = 7.* ]]; then export CODECOVERAGE=1; phpunit --coverage-clover=clover.xml; fi
-  - if [[ $DEFAULT = 1 && $TRAVIS_PHP_VERSION != 7.* ]]; then phpunit; fi
+  - if [[ $DEFAULT = 1 && $TRAVIS_PHP_VERSION != 7.* ]]; then vendor/bin/phpunit; fi
 
   - if [[ $PHPCS = 1 ]]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests; fi
 
