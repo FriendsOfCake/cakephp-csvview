@@ -1,8 +1,6 @@
 language: php
 
 php:
-  - 5.4
-  - 5.5
   - 5.6
   - 7.0
   - 7.1
@@ -25,7 +23,6 @@ install:
   - composer install --prefer-dist --no-interaction
 
 before_script:
-  - if [[ $PHPCS = 1 ]]; then composer require cakephp/cakephp-codesniffer:~2.1; fi
 
 script:
   - if [[ $DEFAULT = 1 && $TRAVIS_PHP_VERSION = 7.* ]]; then export CODECOVERAGE=1; phpunit --coverage-clover=clover.xml; fi
