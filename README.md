@@ -2,6 +2,7 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/FriendsOfCake/cakephp-csvview.svg?style=flat-square)](https://codecov.io/gh/FriendsOfCake/cakephp-csvview)
 [![Total Downloads](https://img.shields.io/packagist/dt/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
 [![Latest Stable Version](https://img.shields.io/packagist/v/friendsofcake/cakephp-csvview.svg?style=flat-square)](https://packagist.org/packages/friendsofcake/cakephp-csvview)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
 
 # CsvView Plugin
 
