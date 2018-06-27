@@ -35,6 +35,10 @@ Load the plugin in your app's `config/bootstrap.php` file:
 
 	Plugin::load('CsvView');
 
+In CakePHP version 3.5 or newer you should use:
+
+    Plugin::load('CsvView', ['routes' => true]);
+
 ## Usage
 
 To export a flat array as a CSV, one could write the following code:
