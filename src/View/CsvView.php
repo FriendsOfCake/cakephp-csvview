@@ -3,8 +3,8 @@ namespace CsvView\View;
 
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventManager;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest as Request;
+use Cake\Http\Response;
 use Cake\Utility\Hash;
 use Cake\View\View;
 use Exception;
@@ -138,7 +138,8 @@ class CsvView extends View
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
         if ($response && $response instanceof Response) {
-            $response->type('csv');
+            $response->type(['csv' => 'text/csv']);
+            $response = $response->withType('csv');
         }
     }
 
