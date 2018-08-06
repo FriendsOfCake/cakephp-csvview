@@ -45,7 +45,7 @@
     ],
     "require": {
         "php": ">=5.4.16",
-        "cakephp/cakephp": "~3.3",
+        "cakephp/cakephp": "~3.3"
     },
     "require-dev": {
         "cakephp/cakephp-codesniffer": "^2.1",
