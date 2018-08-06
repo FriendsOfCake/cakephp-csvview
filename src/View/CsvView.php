@@ -124,10 +124,10 @@ class CsvView extends View
     /**
      * Constructor
      *
-     * @param \Cake\Http\ServerRequest|null $request Request instance.
-     * @param \Cake\Http\Response|null      $response Response instance.
+     * @param \Cake\Http\ServerRequest|null $request      Request instance.
+     * @param \Cake\Http\Response|null      $response     Response instance.
      * @param \Cake\Event\EventManager|null $eventManager EventManager instance.
-     * @param array                         $viewOptions An array of view options
+     * @param array                         $viewOptions  An array of view options
      */
     public function __construct(
         Request $request = null,
