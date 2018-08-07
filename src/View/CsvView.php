@@ -3,8 +3,8 @@ namespace CsvView\View;
 
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventManager;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest as Request;
 use Cake\Utility\Hash;
 use Cake\View\View;
 use Exception;
@@ -124,10 +124,10 @@ class CsvView extends View
     /**
      * Constructor
      *
-     * @param \Cake\Network\Request|null $request Request instance.
-     * @param \Cake\Network\Response|null $response Response instance.
+     * @param \Cake\Http\ServerRequest|null $request      Request instance.
+     * @param \Cake\Http\Response|null      $response     Response instance.
      * @param \Cake\Event\EventManager|null $eventManager EventManager instance.
-     * @param array $viewOptions An array of view options
+     * @param array                         $viewOptions  An array of view options
      */
     public function __construct(
         Request $request = null,
@@ -166,8 +166,9 @@ class CsvView extends View
      * Also has support for specifying headers and footers in '_header'
      * and '_footer' variables, respectively.
      *
-     * @param string|null $view The view being rendered.
+     * @param string|null $view   The view being rendered.
      * @param string|null $layout The layout being rendered.
+     *
      * @return string The rendered view.
      */
     public function render($view = null, $layout = null)
@@ -348,6 +349,7 @@ class CsvView extends View
      * Aggregates the rows into a single csv
      *
      * @param array|null $row Row data
+     *
      * @return null|string CSV with all data to date
      */
     protected function _renderRow($row = null)
@@ -372,6 +374,7 @@ class CsvView extends View
      * returning it's contents
      *
      * @param array|null $row Row data
+     *
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
     protected function _generateRow($row = null)

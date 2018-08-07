@@ -17,7 +17,7 @@ like JsonView or XmlView.
 
 ## Requirements
 
-* CakePHP 3.x
+* CakePHP 3.5.5 or greater
 * PHP 5.4.16 or greater
 * Patience
 
@@ -254,7 +254,7 @@ download `first_param.csv`.
 
 > In IE you are required to set the filename, otherwise it will download as a text file.
 
-To set a custom file name, use the [`Response::download`](http://book.cakephp.org/3.0/en/controllers/request-response.html#sending-a-string-as-file) method.
+To set a custom file name, use the [`Response::withDownload`](https://api.cakephp.org/3.6/class-Cake.Http.Response.html#_withDownload).
 The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
 
 ```php
@@ -267,7 +267,7 @@ public function export()
     ];
     $_serialize = 'data';
 
-    $this->response->download('my_file.csv'); // <= setting the file name
+    $this->response = $this->response->withDownload('my_file.csv');
     $this->viewBuilder()->className('CsvView.Csv');
     $this->set(compact('data', '_serialize'));
 }
