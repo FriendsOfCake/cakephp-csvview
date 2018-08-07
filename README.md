@@ -17,7 +17,7 @@ like JsonView or XmlView.
 
 ## Requirements
 
-* CakePHP 3.x
+* CakePHP 3.5.5 or greater
 * PHP 5.4.16 or greater
 * Patience
 
