@@ -42,6 +42,27 @@ class CsvViewTest extends TestCase
     }
 
     /**
+     * testBom method
+     *
+     * @return void
+     */
+    public function testBom()
+    {
+        if (!extension_loaded('mbstring')) {
+            $this->markTestSkipped(
+                'The mbstring extension is not available.'
+            );
+        }
+
+        $data = [['test']];
+        $this->view->set(['data' => $data, '_serialize' => 'data', '_bom' => true, '_csvEncoding' => 'UTF-16LE']);
+        $output = $this->view->render(false);
+
+        $expected = chr(0xFF) . chr(0xFE) . mb_convert_encoding('test' . PHP_EOL, 'UTF-16LE', 'UTF-8');
+        $this->assertSame($expected, $output);
+    }
+
+    /**
      * Test render with an array in _serialize
      *
      * @return void
