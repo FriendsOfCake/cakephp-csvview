@@ -48,7 +48,7 @@
         "cakephp/cakephp": "^3.5.5"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^2.1",
+        "cakephp/cakephp-codesniffer": "^3.0",
         "phpunit/phpunit": "^5.7.14|^6.0"
     },
     "autoload": {
@@ -72,8 +72,8 @@
             "@cs-check",
             "@test"
         ],
-        "cs-check": "phpcs --colors -p src/ tests/",
-        "cs-fix": "phpcbf --colors src/ tests/",
+        "cs-check": "phpcs -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "test": "phpunit",
         "test-coverage": "phpunit --coverage-clover=clover.xml"
     }
