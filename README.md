@@ -33,7 +33,7 @@ composer require friendsofcake/cakephp-csvview
 
 Load the plugin by running command
 
-    ./bin/cake plugin load CsvView
+    bin/cake plugin load CsvView
 
 ## Usage
 
@@ -154,7 +154,7 @@ public function export()
     $_header = ['Post ID', 'Title', 'Created'];
     $_extract = [
         'id',
-        function ($row) {
+        function (\App\Model\Entity\Post $row) {
             return $row->title;
         },
         'created'
