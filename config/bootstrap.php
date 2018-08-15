@@ -6,7 +6,7 @@ use Cake\Http\ServerRequest;
 EventManager::instance()->on('Controller.initialize', function (Event $event) {
     $controller = $event->getSubject();
     if ($controller->components()->has('RequestHandler')) {
-        $controller->RequestHandler->config('viewClassMap.csv', 'CsvView.Csv');
+        $controller->RequestHandler->setConfig('viewClassMap.csv', 'CsvView.Csv');
     }
 });
 
