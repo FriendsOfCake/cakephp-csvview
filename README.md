@@ -18,7 +18,7 @@ like JsonView or XmlView.
 ## Requirements
 
 * CakePHP 3.5.5 or greater
-* PHP 5.4.16 or greater
+* PHP 5.6 or greater
 * Patience
 
 ## Installation
@@ -26,18 +26,14 @@ like JsonView or XmlView.
 _[Using [Composer](http://getcomposer.org/)]_
 
 ```
-composer require friendsofcake/cakephp-csvview:~3.0
+composer require friendsofcake/cakephp-csvview
 ```
 
 ### Enable plugin
 
-Load the plugin in your app's `config/bootstrap.php` file:
+Load the plugin by running command
 
-	Plugin::load('CsvView');
-
-In CakePHP version 3.5 or newer you should use:
-
-    Plugin::load('CsvView', ['routes' => true]);
+    ./bin/cake plugin load CsvView
 
 ## Usage
 
@@ -53,7 +49,7 @@ public function export()
     ];
     $_serialize = 'data';
 
-    $this->viewBuilder()->className('CsvView.Csv');
+    $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('data', '_serialize'));
 }
 ```
@@ -72,7 +68,7 @@ public function export()
 
     $_serialize = ['data', 'data_two', 'data_three'];
 
-    $this->viewBuilder()->className('CsvView.Csv');
+    $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('data', 'data_two', 'data_three', '_serialize'));
 }
 ```
@@ -93,7 +89,7 @@ public function export()
     $_header = ['Column 1', 'Column 2', 'Column 3'];
     $_footer = ['Totals', '400', '$3000'];
 
-    $this->viewBuilder()->className('CsvView.Csv');
+    $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('data', '_serialize', '_header', '_footer'));
 }
 ```
@@ -118,7 +114,7 @@ public function export()
     $_eol = '~';
     $_bom = true;
 
-    $this->viewBuilder()->className('CsvView.Csv');
+    $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol', '_bom'));
 }
 ```
@@ -153,18 +149,18 @@ or a callable for each record:
 ```php
 public function export()
 {
-    $posts = $this->Post->find('all');
+    $posts = $this->Posts->find();
     $_serialize = 'posts';
     $_header = ['Post ID', 'Title', 'Created'];
     $_extract = [
         'id',
         function ($row) {
-            return $row['title'];
+            return $row->title;
         },
         'created'
     ];
 
-    $this->viewBuilder()->className('CsvView.Csv');
+    $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('posts', '_serialize', '_header', '_extract'));
 }
 ```
@@ -182,19 +178,18 @@ automatically have the CsvView class switched in as follows:
 // In your routes.php file:
 Router::extensions('csv');
 
-// In your controller:
-public $components = [
-    'RequestHandler' => [
-        'viewClassMap' => ['csv' => 'CsvView.Csv']
-    ]
-];
+// In your controller's initialize() method:
+$this->loadComponent('RequestHandler', [
+    'viewClassMap' => ['csv' => 'CsvView.Csv'
+]]);
 
+// In your controller
 public function export()
 {
-    $posts = $this->Post->find('all');
-    $this->set(compact('post'));
+    $posts = $this->Posts->find();
+    $this->set(compact('posts'));
 
-    if ($this->request->params['_ext'] === 'csv') {
+    if ($this->getRequest()->getParam('_ext') === 'csv') {
         $_serialize = 'posts';
         $_header = array('Post ID', 'Title', 'Created');
         $_extract = array('id', 'title', 'created');
@@ -214,9 +209,9 @@ The view files will be located in the `csv` subdirectory of your current control
 // View used will be in src/Template/Posts/csv/export.ctp
 public function export()
 {
-    $posts = $this->Post->find('all');
+    $posts = $this->Posts->find();
     $_serialize = null;
-    $this->viewBuilder()->className('CsvView.Csv');
+    $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('posts', '_serialize'));
 }
 ```
@@ -267,22 +262,21 @@ public function export()
     ];
     $_serialize = 'data';
 
-    $this->response = $this->response->withDownload('my_file.csv');
-    $this->viewBuilder()->className('CsvView.Csv');
+    $this->setResponse($this->getResponse()->withDownload('my_file.csv'));
+    $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('data', '_serialize'));
 }
 ```
 
 #### Using a specific View Builder
 
-In some cases, it is better not to use the current model's View Builder `$this->viewBuilder` as any call to `$this->render()` will compromise any subsequent rendering.
+In some cases, it is better not to use the current controller's View Builder `$this->viewBuilder()` as any call to `$this->render()` will compromise any subsequent rendering.
 
 For example, in the course of your current controller's action, if you need to render some data as CSV in order to simply save it into a file on the server.
 
 Do not forget to add to your controller:
 
 ```php
-use Cake\View\View;
 use Cake\View\ViewBuilder;
 ```
 So you can create a specific View Builder:
@@ -300,8 +294,9 @@ $_newline = '\r\n';
 
 // Create the builder
 $builder = new ViewBuilder;
-$builder->layout = false;
-$builder->setClassName('CsvView.Csv');
+$builder
+    ->setLayout(false);
+    ->setClassName('CsvView.Csv');
 
 // Then the view
 $view = $builder->build($data);
