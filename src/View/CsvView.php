@@ -55,7 +55,7 @@ use Exception;
  * - array `$_header`: (default null)    A flat array of header column names
  * - array `$_footer`: (default null)    A flat array of footer column names
  * - string `$_delimiter`: (default ',') CSV Delimiter, defaults to comma
- * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputscsv()
+ * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputcsv()
  * - string `$_eol`: (default '\n')      End-of-line character the csv
  *
  * @link https://github.com/friendsofcake/cakephp-csvview
@@ -222,8 +222,8 @@ class CsvView extends View
      *                                    If a string or unspecified, the format
      *                                    default is '%s'.
      * - '_delimiter': (default ',')      CSV Delimiter, defaults to comma
-     * - '_enclosure': (default '"')      CSV Enclosure for use with fputscsv()
-     * - '_newline': (default '\n')       CSV Newline replacement for use with fputscsv()
+     * - '_enclosure': (default '"')      CSV Enclosure for use with fputcsv()
+     * - '_newline': (default '\n')       CSV Newline replacement for use with fputcsv()
      * - '_eol': (default '\n')           End-of-line character the csv
      * - '_bom': (default false)          Adds BOM (byte order mark) header
      * - '_setSeparator: (default false)  Adds sep=[_delimiter] in the first line
