@@ -1,9 +1,9 @@
 <?php
 namespace CsvView\Test\TestCase\View;
 
-use Cake\I18n\Time;
-use Cake\Http\ServerRequest as Request;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest as Request;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CsvView\View\CsvView;
