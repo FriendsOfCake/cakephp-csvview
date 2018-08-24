@@ -295,7 +295,7 @@ $_newline = '\r\n';
 // Create the builder
 $builder = new ViewBuilder;
 $builder
-    ->setLayout(false);
+    ->setLayout(false)
     ->setClassName('CsvView.Csv');
 
 // Then the view
