@@ -107,6 +107,13 @@ class CsvView extends View
     protected $bomMap;
 
     /**
+     * BOM first appearance
+     *
+     * @var boolean
+     */
+    protected $isFirstBom;
+
+    /**
      * List of special view vars.
      *
      * @var array
@@ -153,6 +160,7 @@ class CsvView extends View
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
         $this->response = $this->response->withType('csv');
+        $this->isFirstBom = true;
     }
 
     /**
@@ -456,8 +464,9 @@ class CsvView extends View
         }
 
         //bom must be added after encoding
-        if ($this->viewVars['_bom']) {
+        if ($this->viewVars['_bom'] && $this->isFirstBom) {
             $csv = $this->getBom($this->viewVars['_csvEncoding']) . $csv;
+            $this->isFirstBom = false;
         }
 
         return $csv;

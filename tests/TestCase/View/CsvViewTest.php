@@ -63,6 +63,58 @@ class CsvViewTest extends TestCase
     }
 
     /**
+     * Test BOM appears only in the first row.
+     *
+     * @return void
+     */
+    public function testBomMultipleContentRows()
+    {
+        if (!extension_loaded('mbstring')) {
+            $this->markTestSkipped(
+                'The mbstring extension is not available.'
+            );
+        }
+
+        $data = [
+            ['test'],
+            ['test2'],
+            ['test3'],
+        ];
+        $this->view->set(['data' => $data, '_serialize' => 'data', '_bom' => true, '_csvEncoding' => 'UTF-8']);
+        $output = $this->view->render(false);
+
+        $bom = chr(0xEF) . chr(0xBB) . chr(0xBF);
+        $expected = $bom . 'test' . PHP_EOL . 'test2' . PHP_EOL . 'test3' . PHP_EOL;
+        $this->assertSame($expected, $output);
+    }
+
+    /**
+     * Test BOM appears only in the first row even it has a header.
+     *
+     * @return void
+     */
+    public function testBomMultipleContentRowsWithHeader()
+    {
+        if (!extension_loaded('mbstring')) {
+            $this->markTestSkipped(
+                'The mbstring extension is not available.'
+            );
+        }
+
+        $header = ['column1'];
+        $data = [
+            ['test'],
+            ['test2'],
+        ];
+        $this->view->set(['data' => $data, '_header' => $header, '_serialize' => 'data', '_bom' => true, '_csvEncoding' => 'UTF-8']);
+        $output = $this->view->render(false);
+
+        $bom = chr(0xEF) . chr(0xBB) . chr(0xBF);
+        $expected = $bom . 'column1' . PHP_EOL . 'test' . PHP_EOL . 'test2' . PHP_EOL;
+        $this->assertSame($expected, $output);
+    }
+
+    /**
      * Test render with an array in _serialize
      *
      * @return void
