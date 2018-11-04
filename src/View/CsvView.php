@@ -109,7 +109,7 @@ class CsvView extends View
     /**
      * BOM first appearance
      *
-     * @var boolean
+     * @var bool
      */
     protected $isFirstBom;
 
