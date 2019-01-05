@@ -19,7 +19,6 @@ like JsonView or XmlView.
 
 * CakePHP 3.5.5 or greater
 * PHP 5.6 or greater
-* Patience
 
 ## Installation
 
@@ -243,14 +242,14 @@ The currently supported encoding extensions are as follows:
 #### Setting the downloaded file name
 
 By default, the downloaded file will be named after the last segment of the URL
-used to generate it. Eg: `example.com/my_controller/my_action` would download
-`my_action.csv`, while `example.com/my_controller/my_action/first_param` would
-download `first_param.csv`.
+used to generate it. Eg: `example.com/my-controller/my-action` would download
+`my-action.csv`, while `example.com/my-controller/my-action/first-param` would
+download `first-param.csv`.
 
 > In IE you are required to set the filename, otherwise it will download as a text file.
 
 To set a custom file name, use the [`Response::withDownload`](https://api.cakephp.org/3.6/class-Cake.Http.Response.html#_withDownload).
-The following snippet can be used to change the downloaded file from `export.csv` to `my_file.csv`:
+The following snippet can be used to change the downloaded file from `export.csv` to `my-file.csv`:
 
 ```php
 public function export()
@@ -262,7 +261,7 @@ public function export()
     ];
     $_serialize = 'data';
 
-    $this->setResponse($this->getResponse()->withDownload('my_file.csv'));
+    $this->setResponse($this->getResponse()->withDownload('my-file.csv'));
     $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('data', '_serialize'));
 }
@@ -282,7 +281,6 @@ use Cake\View\ViewBuilder;
 So you can create a specific View Builder:
 
 ```php
-
 // Your data array
 $data = [];
 
@@ -309,24 +307,4 @@ $file->write($view->render());
 
 ## License
 
-The MIT License (MIT)
-
-Copyright (c) 2012 Jose Diaz-Gonzalez
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+[The MIT License (MIT)](LICENSE.txt)
