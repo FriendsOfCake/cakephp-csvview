@@ -29,9 +29,13 @@ if (file_exists($root . '/config/bootstrap.php')) {
     require $root . '/config/bootstrap.php';
 }
 
+// Ensure default test connection is defined
+if (!getenv('db_dsn')) {
+    putenv('db_dsn=sqlite:///:memory:');
+}
 Configure::write('App', [
+    'namespace' => 'CsvView\Test\App',
     'paths' => [
         'templates' => [dirname(__FILE__) . DS . 'test_app' . DS . 'TestApp' . DS . 'Template' . DS],
     ]
-]);
-Plugin::load('CsvView', ['path' => dirname(dirname(__FILE__)) . DS]);
+ ]);

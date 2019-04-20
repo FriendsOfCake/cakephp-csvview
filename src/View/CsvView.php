@@ -168,7 +168,7 @@ class CsvView extends View
      *
      * @return void
      */
-    public function loadHelpers()
+    public function loadHelpers(): void
     {
         if (isset($this->viewVars['_serialize'])) {
             return;
@@ -192,7 +192,7 @@ class CsvView extends View
      *
      * @return string The rendered view.
      */
-    public function render($view = null, $layout = null)
+    public function render($view = null, $layout = null): string
     {
         $this->_setupViewVars();
 
@@ -209,12 +209,12 @@ class CsvView extends View
      *
      * @return string The serialized data
      */
-    protected function _serialize()
+    protected function _serialize(): ?string
     {
         $this->_renderRow($this->viewVars['_header']);
         $this->_renderContent();
         $this->_renderRow($this->viewVars['_footer']);
-        $content = $this->_renderRow(false);
+        $content = $this->_renderRow();
         $this->_resetStaticVariables = true;
         $this->_renderRow();
 
@@ -251,7 +251,7 @@ class CsvView extends View
      *
      * @return void
      */
-    protected function _setupViewVars()
+    protected function _setupViewVars(): void
     {
         foreach ($this->_specialVars as $viewVar) {
             if (!isset($this->viewVars[$viewVar])) {
@@ -310,7 +310,7 @@ class CsvView extends View
      * @return void
      * @throws \Exception
      */
-    protected function _renderContent()
+    protected function _renderContent(): void
     {
         $extract = $this->viewVars['_extract'];
         $serialize = $this->viewVars['_serialize'];
@@ -373,7 +373,7 @@ class CsvView extends View
      *
      * @return null|string CSV with all data to date
      */
-    protected function _renderRow($row = null)
+    protected function _renderRow(?array $row = null): ?string
     {
         static $csv = '';
 
@@ -398,7 +398,7 @@ class CsvView extends View
      *
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
-    protected function _generateRow($row = null)
+    protected function _generateRow(?array $row = null)
     {
         static $fp = false;
 
@@ -478,7 +478,7 @@ class CsvView extends View
      * @param string $csvEncoding The encoding you want the BOM for
      * @return string
      */
-    protected function getBom($csvEncoding)
+    protected function getBom(string $csvEncoding): string
     {
         $csvEncoding = strtoupper($csvEncoding);
 
