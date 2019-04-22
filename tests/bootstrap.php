@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 
@@ -36,6 +37,6 @@ if (!getenv('db_dsn')) {
 Configure::write('App', [
     'namespace' => 'CsvView\Test\App',
     'paths' => [
-        'templates' => [dirname(__FILE__) . DS . 'test_app' . DS . 'TestApp' . DS . 'Template' . DS],
+        'templates' => [dirname(__FILE__) . DS . 'test_app' . DS . 'templates' . DS],
     ]
  ]);

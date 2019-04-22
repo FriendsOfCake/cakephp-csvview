@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace CsvView\Test\TestCase\View;
 
 use Cake\Http\Response;
