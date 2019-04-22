@@ -168,7 +168,7 @@ class CsvView extends View
     /**
      * Skip loading helpers if this is a _serialize based view.
      *
-     * @return $this 
+     * @return $this
      */
     public function loadHelpers()
     {
