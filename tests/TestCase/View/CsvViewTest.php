@@ -14,7 +14,6 @@ use CsvView\View\CsvView;
  */
 class CsvViewTest extends TestCase
 {
-
     public $fixtures = ['core.Articles', 'core.Authors'];
 
     /**
@@ -269,21 +268,21 @@ class CsvViewTest extends TestCase
             [
                 'User' => [
                     'username' => 'jose',
-                    'created' => new Time('2010-01-05')
+                    'created' => new Time('2010-01-05'),
                 ],
                 'Item' => [
                     'name' => 'beach',
-                ]
+                ],
             ],
             [
                 'User' => [
                     'username' => 'drew',
-                    'created' => null
+                    'created' => null,
                 ],
                 'Item' => [
                     'name' => 'ball',
-                ]
-            ]
+                ],
+            ],
         ];
         $_extract = ['User.username', 'User.created', 'Item.name'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
@@ -311,18 +310,18 @@ class CsvViewTest extends TestCase
                 ],
                 'Item' => [
                     'type' => 'beach',
-                ]
+                ],
             ],
             [
                 'User' => [
                     'id' => 2,
-                    'username' => 'drew'
+                    'username' => 'drew',
                 ],
                 'Item' => [
                     'name' => 'ball',
-                    'type' => 'fun'
-                ]
-            ]
+                    'type' => 'fun',
+                ],
+            ],
         ];
         $_extract = [['User.id', '%d'], 'User.username', 'Item.name', 'Item.type'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
@@ -348,22 +347,22 @@ class CsvViewTest extends TestCase
                 'created' => new Time('2010-01-05'),
                 'item' => [
                     'name' => 'beach',
-                ]
+                ],
             ],
             [
                 'username' => 'drew',
                 'created' => null,
                 'item' => [
                     'name' => 'ball',
-                ]
-            ]
+                ],
+            ],
         ];
         $_extract = [
             'username',
             'created',
             function ($row) {
                 return 'my-' . $row['item']['name'];
-            }
+            },
         ];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
         $this->view->set(['_serialize' => 'user']);
@@ -385,30 +384,30 @@ class CsvViewTest extends TestCase
         $data = [
             [
                 'User' => [
-                    'username' => 'José'
+                    'username' => 'José',
                 ],
                 'Item' => [
                     'type' => 'äöü',
-                ]
+                ],
             ],
             [
                 'User' => [
-                    'username' => 'Including,Comma'
+                    'username' => 'Including,Comma',
                 ],
                 'Item' => [
                     'name' => 'Containing"char',
-                    'type' => 'Containing\'char'
-                ]
+                    'type' => 'Containing\'char',
+                ],
             ],
             [
                 'User' => [
-                    'username' => 'Some Space'
+                    'username' => 'Some Space',
                 ],
                 'Item' => [
                     'name' => "A\nNewline",
-                    'type' => "A\tTab"
-                ]
-            ]
+                    'type' => "A\tTab",
+                ],
+            ],
         ];
         $_extract = ['User.username', 'Item.name', 'Item.type'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);

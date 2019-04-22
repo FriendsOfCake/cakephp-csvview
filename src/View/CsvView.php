@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 namespace CsvView\View;
 
 use Cake\Datasource\EntityInterface;
@@ -64,7 +63,6 @@ use Exception;
  */
 class CsvView extends View
 {
-
     /**
      * CSV layouts are located in the csv sub directory of `Layouts/`
      *
@@ -92,14 +90,14 @@ class CsvView extends View
      *
      * @var string
      */
-    const EXTENSION_ICONV = 'iconv';
+    public const EXTENSION_ICONV = 'iconv';
 
     /**
      * Mbstring extension.
      *
      * @var string
      */
-    const EXTENSION_MBSTRING = 'mbstring';
+    public const EXTENSION_MBSTRING = 'mbstring';
 
     /**
      * List of bom signs for encodings.
@@ -134,7 +132,7 @@ class CsvView extends View
         '_setSeparator',
         '_csvEncoding',
         '_dataEncoding',
-        '_extension'
+        '_extension',
     ];
 
     /**
@@ -146,9 +144,9 @@ class CsvView extends View
      * @param array                         $viewOptions  An array of view options
      */
     public function __construct(
-        Request $request = null,
-        Response $response = null,
-        EventManager $eventManager = null,
+        ?Request $request = null,
+        ?Response $response = null,
+        ?EventManager $eventManager = null,
         array $viewOptions = []
     ) {
         $this->bomMap = [
@@ -348,7 +346,7 @@ class CsvView extends View
                         $path = $formatter;
                         $format = null;
                         if (is_array($formatter)) {
-                            list($path, $format) = $formatter;
+                            [$path, $format] = $formatter;
                         }
 
                         if (strpos($path, '.') === false) {
@@ -485,6 +483,6 @@ class CsvView extends View
     {
         $csvEncoding = strtoupper($csvEncoding);
 
-        return isset($this->bomMap[$csvEncoding]) ? $this->bomMap[$csvEncoding] : '';
+        return $this->bomMap[$csvEncoding] ?? '';
     }
 }

@@ -1,8 +1,5 @@
 <?php
 declare(strict_types=1);
-use Cake\Core\Configure;
-use Cake\Core\Plugin;
-
 /**
  * Test suite bootstrap
  *
@@ -10,6 +7,9 @@ use Cake\Core\Plugin;
  * has been installed as a dependency of the plugin, or the plugin is itself
  * installed as a dependency of an application.
  */
+
+use Cake\Core\Configure;
+
 $findRoot = function ($root) {
     do {
         $lastRoot = $root;
@@ -38,5 +38,5 @@ Configure::write('App', [
     'namespace' => 'CsvView\Test\App',
     'paths' => [
         'templates' => [dirname(__FILE__) . DS . 'test_app' . DS . 'templates' . DS],
-    ]
- ]);
+    ],
+]);
