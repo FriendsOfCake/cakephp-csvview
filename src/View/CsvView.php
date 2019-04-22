@@ -168,14 +168,15 @@ class CsvView extends View
     /**
      * Skip loading helpers if this is a _serialize based view.
      *
-     * @return void
+     * @return $this 
      */
-    public function loadHelpers(): void
+    public function loadHelpers()
     {
         if (isset($this->viewVars['_serialize'])) {
-            return;
+            return $this;
         }
-        parent::loadHelpers();
+
+        return parent::loadHelpers();
     }
 
     /**

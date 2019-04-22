@@ -1,10 +1,9 @@
 language: php
 
 php:
-  - 5.6
-  - 7.0
   - 7.1
   - 7.2
+  - 7.3
 
 env:
   global:
@@ -14,13 +13,13 @@ matrix:
   fast_finish: true
 
   include:
-    - php: 5.6
+    - php: 7.1
       env: PREFER_LOWEST=1
 
-    - php: 7.0
+    - php: 7.2
       env: PHPCS=1 DEFAULT=0
 
-    - php: 7.1
+    - php: 7.2
       env: CODECOVERAGE=1 DEFAULT=0
 
 before_script:
