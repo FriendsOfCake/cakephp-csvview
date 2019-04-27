@@ -7,7 +7,7 @@ use Cake\Event\EventManager;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest as Request;
 use Cake\Utility\Hash;
-use Cake\View\View;
+use Cake\View\SerializedView;
 use Exception;
 
 /**
@@ -61,7 +61,7 @@ use Exception;
  *
  * @link https://github.com/friendsofcake/cakephp-csvview
  */
-class CsvView extends View
+class CsvView extends SerializedView
 {
     /**
      * CSV layouts are located in the csv sub directory of `Layouts/`
@@ -77,6 +77,13 @@ class CsvView extends View
      * @var string
      */
     protected $subDir = 'csv';
+
+    /**
+     * Response type.
+     *
+     * @var string
+     */
+    protected $_responseType = 'text/csv';
 
     /**
      * Whether or not to reset static variables in use
@@ -157,24 +164,9 @@ class CsvView extends View
             'UTF-8' => chr(0xEF) . chr(0xBB) . chr(0xBF),
         ];
 
-        parent::__construct($request, $response, $eventManager, $viewOptions);
-
-        $this->response = $this->response->withType('csv');
         $this->isFirstBom = true;
-    }
 
-    /**
-     * Skip loading helpers if this is a _serialize based view.
-     *
-     * @return $this
-     */
-    public function loadHelpers()
-    {
-        if (isset($this->viewVars['_serialize'])) {
-            return $this;
-        }
-
-        return parent::loadHelpers();
+        parent::__construct($request, $response, $eventManager, $viewOptions);
     }
 
     /**
@@ -188,29 +180,26 @@ class CsvView extends View
      * Also has support for specifying headers and footers in '_header'
      * and '_footer' variables, respectively.
      *
-     * @param string|null $view   The view being rendered.
-     * @param string|null $layout The layout being rendered.
+     * @param string|null $template The template being rendered.
+     * @param string|false|null $layout The layout being rendered.
      *
      * @return string The rendered view.
      */
-    public function render(?string $view = null, $layout = null): string
+    public function render(?string $template = null, $layout = null): string
     {
         $this->_setupViewVars();
 
-        if (isset($this->viewVars['_serialize'])) {
-            return $this->_serialize();
-        }
-        if ($view !== false && $this->_getTemplateFileName($view)) {
-            return parent::render($view, false);
-        }
+        return parent::render($template, $layout);
     }
 
     /**
      * Serialize view vars.
      *
-     * @return string The serialized data
+     * @param array|string $serialize The name(s) of the view variable(s) that
+     *   need(s) to be serialized
+     * @return string|false The serialized data or false.
      */
-    protected function _serialize(): ?string
+    protected function _serialize($serialize)
     {
         $this->_renderRow($this->viewVars['_header']);
         $this->_renderContent();
