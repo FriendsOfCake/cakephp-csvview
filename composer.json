@@ -43,13 +43,13 @@
             "homepage":"https://github.com/chronon"
         }
     ],
-    "require": {
-        "php": ">=5.6",
-        "cakephp/cakephp": "^3.5.5"
+    "require":{
+        "cakephp/cakephp": "4.x-dev as 4.0.0",
+        "cakephp/plugin-installer": "*"
     },
     "require-dev": {
-        "cakephp/cakephp-codesniffer": "^3.0",
-        "phpunit/phpunit": "^5.7.14|^6.0"
+        "phpunit/phpunit": "^7",
+        "cakephp/cakephp-codesniffer": "dev-next"
     },
     "autoload": {
         "psr-4": {
@@ -59,7 +59,8 @@
     "autoload-dev": {
         "psr-4": {
             "CsvView\\Test\\": "tests/",
-            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/"
+            "Cake\\Test\\": "vendor/cakephp/cakephp/tests/",
+            "Cake\\Test\\Fixture\\": "./vendor/cakephp/cakephp/tests/Fixture"
         }
     },
     "support": {
@@ -67,6 +68,7 @@
         "issues": "https://github.com/friendsofcake/cakephp-csvview/issues",
         "source": "https://github.com/friendsofcake/cakephp-csvview"
     },
+    "minimum-stability": "dev",
     "scripts": {
         "check": [
             "@cs-check",
@@ -75,6 +77,9 @@
         "cs-check": "phpcs -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "test": "phpunit",
+        "stan": "phpstan analyse src/ && psalm --show-info=false",
+        "psalm": "psalm --show-info=false",
+        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^0.11 vimeo/psalm:^3.0 && mv composer.backup composer.json",
         "test-coverage": "phpunit --coverage-clover=clover.xml"
     }
 }

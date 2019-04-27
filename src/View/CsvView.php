@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace CsvView\View;
 
 use Cake\Datasource\EntityInterface;
@@ -62,7 +63,6 @@ use Exception;
  */
 class CsvView extends View
 {
-
     /**
      * CSV layouts are located in the csv sub directory of `Layouts/`
      *
@@ -90,14 +90,14 @@ class CsvView extends View
      *
      * @var string
      */
-    const EXTENSION_ICONV = 'iconv';
+    public const EXTENSION_ICONV = 'iconv';
 
     /**
      * Mbstring extension.
      *
      * @var string
      */
-    const EXTENSION_MBSTRING = 'mbstring';
+    public const EXTENSION_MBSTRING = 'mbstring';
 
     /**
      * List of bom signs for encodings.
@@ -132,7 +132,7 @@ class CsvView extends View
         '_setSeparator',
         '_csvEncoding',
         '_dataEncoding',
-        '_extension'
+        '_extension',
     ];
 
     /**
@@ -144,9 +144,9 @@ class CsvView extends View
      * @param array                         $viewOptions  An array of view options
      */
     public function __construct(
-        Request $request = null,
-        Response $response = null,
-        EventManager $eventManager = null,
+        ?Request $request = null,
+        ?Response $response = null,
+        ?EventManager $eventManager = null,
         array $viewOptions = []
     ) {
         $this->bomMap = [
@@ -166,14 +166,15 @@ class CsvView extends View
     /**
      * Skip loading helpers if this is a _serialize based view.
      *
-     * @return void
+     * @return $this
      */
     public function loadHelpers()
     {
         if (isset($this->viewVars['_serialize'])) {
-            return;
+            return $this;
         }
-        parent::loadHelpers();
+
+        return parent::loadHelpers();
     }
 
     /**
@@ -192,7 +193,7 @@ class CsvView extends View
      *
      * @return string The rendered view.
      */
-    public function render($view = null, $layout = null)
+    public function render($view = null, $layout = null): string
     {
         $this->_setupViewVars();
 
@@ -209,12 +210,12 @@ class CsvView extends View
      *
      * @return string The serialized data
      */
-    protected function _serialize()
+    protected function _serialize(): ?string
     {
         $this->_renderRow($this->viewVars['_header']);
         $this->_renderContent();
         $this->_renderRow($this->viewVars['_footer']);
-        $content = $this->_renderRow(false);
+        $content = $this->_renderRow();
         $this->_resetStaticVariables = true;
         $this->_renderRow();
 
@@ -251,7 +252,7 @@ class CsvView extends View
      *
      * @return void
      */
-    protected function _setupViewVars()
+    protected function _setupViewVars(): void
     {
         foreach ($this->_specialVars as $viewVar) {
             if (!isset($this->viewVars[$viewVar])) {
@@ -310,7 +311,7 @@ class CsvView extends View
      * @return void
      * @throws \Exception
      */
-    protected function _renderContent()
+    protected function _renderContent(): void
     {
         $extract = $this->viewVars['_extract'];
         $serialize = $this->viewVars['_serialize'];
@@ -345,7 +346,7 @@ class CsvView extends View
                         $path = $formatter;
                         $format = null;
                         if (is_array($formatter)) {
-                            list($path, $format) = $formatter;
+                            [$path, $format] = $formatter;
                         }
 
                         if (strpos($path, '.') === false) {
@@ -373,7 +374,7 @@ class CsvView extends View
      *
      * @return null|string CSV with all data to date
      */
-    protected function _renderRow($row = null)
+    protected function _renderRow(?array $row = null): ?string
     {
         static $csv = '';
 
@@ -398,7 +399,7 @@ class CsvView extends View
      *
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
-    protected function _generateRow($row = null)
+    protected function _generateRow(?array $row = null)
     {
         static $fp = false;
 
@@ -478,10 +479,10 @@ class CsvView extends View
      * @param string $csvEncoding The encoding you want the BOM for
      * @return string
      */
-    protected function getBom($csvEncoding)
+    protected function getBom(string $csvEncoding): string
     {
         $csvEncoding = strtoupper($csvEncoding);
 
-        return isset($this->bomMap[$csvEncoding]) ? $this->bomMap[$csvEncoding] : '';
+        return $this->bomMap[$csvEncoding] ?? '';
     }
 }
