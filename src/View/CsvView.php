@@ -68,7 +68,7 @@ class CsvView extends View
      *
      * @var string
      */
-    public $layoutPath = 'csv';
+    protected $layoutPath = 'csv';
 
     /**
      * CSV views are always located in the 'csv' sub directory for a
@@ -76,7 +76,7 @@ class CsvView extends View
      *
      * @var string
      */
-    public $subDir = 'csv';
+    protected $subDir = 'csv';
 
     /**
      * Whether or not to reset static variables in use
@@ -193,14 +193,14 @@ class CsvView extends View
      *
      * @return string The rendered view.
      */
-    public function render($view = null, $layout = null): string
+    public function render(?string $view = null, $layout = null): string
     {
         $this->_setupViewVars();
 
         if (isset($this->viewVars['_serialize'])) {
             return $this->_serialize();
         }
-        if ($view !== false && $this->_getViewFileName($view)) {
+        if ($view !== false && $this->_getTemplateFileName($view)) {
             return parent::render($view, false);
         }
     }
