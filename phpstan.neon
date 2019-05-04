@@ -1,4 +1,6 @@
 parameters:
-    level: 4
+    level: 6
     autoload_files:
         - tests/bootstrap.php
+    ignoreErrors:
+        - '#Parameter \#1 $fp of function fwrite expects resource, resource|false given#'
