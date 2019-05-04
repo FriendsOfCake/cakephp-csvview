@@ -200,7 +200,7 @@ class CsvView extends View
         if (isset($this->viewVars['_serialize'])) {
             return $this->_serialize();
         }
-        if ($view !== false && $this->_getViewFileName($view)) {
+        if ($view !== false && $this->_getTemplateFileName($view)) {
             return parent::render($view, false);
         }
     }
