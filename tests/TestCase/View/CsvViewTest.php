@@ -502,11 +502,12 @@ CSV;
     /**
      * CsvViewTest::testInvalidViewVarThrowsException()
      *
-     * @expectedException Exception
      * @return void
      */
     public function testInvalidViewVarThrowsException()
     {
+        $this->expectException(\Exception::class);
+
         $this->view->set(['data' => 'invaliddata', '_serialize' => 'data']);
         $this->view->render();
     }
