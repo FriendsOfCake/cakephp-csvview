@@ -49,7 +49,8 @@ class CsvViewTest extends TestCase
     public function testRenderWithoutView()
     {
         $data = [['user', 'fake', 'list', 'item1', 'item2']];
-        $this->view->set(['data' => $data, '_serialize' => 'data']);
+        $this->view->set(['data' => $data]);
+        $this->view->setConfig('serialize', 'data');
         $output = $this->view->render();
 
         $this->assertSame('user,fake,list,item1,item2' . PHP_EOL, $output);
@@ -70,7 +71,9 @@ class CsvViewTest extends TestCase
         }
 
         $data = [['test']];
-        $this->view->set(['data' => $data, '_serialize' => 'data', '_bom' => true, '_csvEncoding' => 'UTF-16LE']);
+        $this->view->set(['data' => $data, '_bom' => true, '_csvEncoding' => 'UTF-16LE']);
+        $this->view->setConfig('serialize', 'data');
+
         $output = $this->view->render();
 
         $expected = chr(0xFF) . chr(0xFE) . mb_convert_encoding('test' . PHP_EOL, 'UTF-16LE', 'UTF-8');
@@ -95,7 +98,9 @@ class CsvViewTest extends TestCase
             ['test2'],
             ['test3'],
         ];
-        $this->view->set(['data' => $data, '_serialize' => 'data', '_bom' => true, '_csvEncoding' => 'UTF-8']);
+        $this->view->set(['data' => $data, '_bom' => true, '_csvEncoding' => 'UTF-8']);
+        $this->view->setConfig('serialize', 'data');
+
         $output = $this->view->render();
 
         $bom = chr(0xEF) . chr(0xBB) . chr(0xBF);
@@ -121,7 +126,9 @@ class CsvViewTest extends TestCase
             ['test'],
             ['test2'],
         ];
-        $this->view->set(['data' => $data, '_header' => $header, '_serialize' => 'data', '_bom' => true, '_csvEncoding' => 'UTF-8']);
+        $this->view->set(['data' => $data, '_header' => $header, '_bom' => true, '_csvEncoding' => 'UTF-8']);
+        $this->view->setConfig('serialize', 'data');
+
         $output = $this->view->render();
 
         $bom = chr(0xEF) . chr(0xBB) . chr(0xBF);
@@ -130,7 +137,7 @@ class CsvViewTest extends TestCase
     }
 
     /**
-     * Test render with an array in _serialize
+     * Test render with an array in serialize
      *
      * @return void
      */
@@ -142,14 +149,15 @@ class CsvViewTest extends TestCase
             ['you', 'and', 'me'],
         ];
         $this->view->set('data', $data);
-        $this->view->set(['_serialize' => 'data']);
+        $this->view->setConfig('serialize', 'data');
+
         $output = $this->view->render();
 
         $expected = 'a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'you,and,me' . PHP_EOL;
         $this->assertSame($expected, $output);
         $this->assertSame('text/csv', $this->view->getResponse()->getType());
 
-        $this->view->set('_serialize', true);
+        $this->view->setConfig('serialize', true);
         $output = $this->view->render();
         $this->assertSame($expected, $output);
     }
@@ -168,7 +176,7 @@ class CsvViewTest extends TestCase
         ];
         $this->view
             ->set('data', $data)
-            ->set('_serialize', 'data')
+            ->setConfig('serialize', 'data')
             ->set('_eol', '~');
 
         $output = $this->view->render();
@@ -191,7 +199,7 @@ class CsvViewTest extends TestCase
         ];
         $this->view
             ->set('data', $data)
-            ->set('_serialize', 'data')
+            ->setConfig('serialize', 'data')
             ->set('_dataEncoding', 'UTF-8')
             ->set('_csvEncoding', 'SJIS');
         $output = $this->view->render();
@@ -221,7 +229,7 @@ class CsvViewTest extends TestCase
         ];
         $this->view
             ->set('data', $data)
-            ->set('_serialize', 'data')
+            ->setConfig('serialize', 'data')
             ->set('_dataEncoding', 'UTF-8')
             ->set('_csvEncoding', 'SJIS')
             ->set('_extension', 'mbstring');
@@ -286,7 +294,8 @@ class CsvViewTest extends TestCase
         ];
         $_extract = ['User.username', 'User.created', 'Item.name'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
-        $this->view->set(['_serialize' => 'user']);
+        $this->view->setConfig('serialize', 'user');
+
         $output = $this->view->render();
 
         $this->assertSame('jose,"2010-01-05 00:00:00",beach' . PHP_EOL . 'drew,,ball' . PHP_EOL, $output);
@@ -325,7 +334,8 @@ class CsvViewTest extends TestCase
         ];
         $_extract = [['User.id', '%d'], 'User.username', 'Item.name', 'Item.type'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
-        $this->view->set(['_serialize' => 'user']);
+        $this->view->setConfig('serialize', 'user');
+
         $output = $this->view->render();
 
         $this->assertSame('1,jose,,beach' . PHP_EOL . '2,drew,ball,fun' . PHP_EOL, $output);
@@ -365,7 +375,7 @@ class CsvViewTest extends TestCase
             },
         ];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
-        $this->view->set(['_serialize' => 'user']);
+        $this->view->setConfig('serialize', 'user');
         $output = $this->view->render();
 
         $this->assertSame('jose,"2010-01-05 00:00:00",my-beach' . PHP_EOL . 'drew,,my-ball' . PHP_EOL, $output);
@@ -411,7 +421,7 @@ class CsvViewTest extends TestCase
         ];
         $_extract = ['User.username', 'Item.name', 'Item.type'];
         $this->view->set(['user' => $data, '_extract' => $_extract]);
-        $this->view->set(['_serialize' => 'user']);
+        $this->view->setConfig('serialize', 'user');
         $output = $this->view->render();
 
         $expected = <<<CSV
@@ -435,13 +445,16 @@ CSV;
         $articles = TableRegistry::getTableLocator()->get('Articles');
         $query = $articles->find();
 
-        $this->view->set(['data' => $query, '_serialize' => 'data']);
+        $this->view->set(['data' => $query]);
+        $this->view->setConfig('serialize', 'data');
+        
         $output = $this->view->render();
 
         $articles->belongsTo('Authors');
         $query = $articles->find('all', ['contain' => 'Authors']);
         $_extract = ['title', 'body', 'author.name'];
-        $this->view->set(['data' => $query, '_extract' => $_extract, '_serialize' => 'data']);
+        $this->view->set(['data' => $query, '_extract' => $_extract]);
+        $this->view->setConfig('serialize', 'data');
         $output = $this->view->render();
 
         $expected = '"First Article","First Article Body",mariano' . PHP_EOL .
@@ -467,7 +480,7 @@ CSV;
         foreach ($testData as $enclosure => $expected) {
             $this->view
                 ->set('data', $data)
-                ->set('_serialize', 'data')
+                ->setConfig('serialize', 'data')
                 ->set('_enclosure', $enclosure);
             $output = $this->view->render();
 
@@ -490,7 +503,7 @@ CSV;
         ];
         $this->view
             ->set('data', $data)
-            ->set('_serialize', 'data')
+            ->setConfig('serialize', 'data')
             ->set('_null', 'NULL')
             ->set('_eol', '~');
         $output = $this->view->render();
@@ -507,7 +520,10 @@ CSV;
      */
     public function testInvalidViewVarThrowsException()
     {
-        $this->view->set(['data' => 'invaliddata', '_serialize' => 'data']);
+        $this->view
+            ->set(['data' => 'invaliddata'])
+            ->setConfig('serialize', 'data');
+            
         $this->view->render();
     }
 }

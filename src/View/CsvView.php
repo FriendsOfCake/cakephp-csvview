@@ -303,7 +303,7 @@ class CsvView extends SerializedView
     protected function _renderContent(): void
     {
         $extract = $this->viewVars['_extract'];
-        $serialize = $this->viewVars['_serialize'];
+        $serialize = $this->getConfig('serialize');
 
         if ($serialize === true) {
             $serialize = array_diff(
