@@ -448,7 +448,7 @@ CSV;
 
         $this->view->set(['data' => $query]);
         $this->view->setConfig('serialize', 'data');
-        
+
         $output = $this->view->render();
 
         $articles->belongsTo('Authors');
@@ -525,7 +525,7 @@ CSV;
         $this->view
             ->set(['data' => 'invaliddata'])
             ->setConfig('serialize', 'data');
-            
+
         $this->view->render();
     }
 }
