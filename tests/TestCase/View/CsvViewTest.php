@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace CsvView\Test\TestCase\View;
 
 use Cake\Http\Response;
@@ -515,11 +516,12 @@ CSV;
     /**
      * CsvViewTest::testInvalidViewVarThrowsException()
      *
-     * @expectedException Exception
      * @return void
      */
     public function testInvalidViewVarThrowsException()
     {
+        $this->expectException(\Exception::class);
+
         $this->view
             ->set(['data' => 'invaliddata'])
             ->setConfig('serialize', 'data');

@@ -1,6 +1,7 @@
 /composer.lock
 /phpunit.xml
 /vendor
+.phpunit.result.cache
 
 ## IntelliJ project files
 .idea
