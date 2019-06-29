@@ -15,11 +15,6 @@ iterate manually would be a chore to replicate for each export method, so I
 figured it would be much easier to do this with a custom view class,
 like JsonView or XmlView.
 
-## Requirements
-
-* CakePHP 3.5.5 or greater
-* PHP 5.6 or greater
-
 ## Installation
 
 _[Using [Composer](http://getcomposer.org/)]_
@@ -46,15 +41,16 @@ public function export()
         [1, 2, 3],
         ['you', 'and', 'me'],
     ];
-    $_serialize = 'data';
 
-    $this->viewBuilder()->setClassName('CsvView.Csv');
-    $this->set(compact('data', '_serialize'));
+    $this->set(compact('data'));
+    $this->viewBuilder()
+        ->setClassName('CsvView.Csv')
+        ->setOption('serialize', 'data');
 }
 ```
 
 All variables that are to be included in the csv must be specified in the
-`$_serialize` view variable, exactly how JsonView or XmlView work.
+`serialize` view option, exactly how `JsonView` or `XmlView` work.
 
 It is possible to have multiple variables in the csv output:
 
@@ -65,15 +61,17 @@ public function export()
     $data_two = [[1, 2, 3]];
     $data_three = [['you', 'and', 'me']];
 
-    $_serialize = ['data', 'data_two', 'data_three'];
+    $serialize = ['data', 'data_two', 'data_three'];
 
-    $this->viewBuilder()->setClassName('CsvView.Csv');
-    $this->set(compact('data', 'data_two', 'data_three', '_serialize'));
+    $this->set(compact('data', 'data_two', 'data_three'));
+    $this->viewBuilder()
+        ->setClassName('CsvView.Csv')
+        ->setOption('serialize', $serialize);
 }
 ```
 
 If you want headers or footers in your CSV output, you can specify either a
-`$_header` or `$_footer` view variable. Both are completely optional:
+`header` or `footer` view option. Both are completely optional:
 
 ```php
 public function export()
@@ -84,18 +82,23 @@ public function export()
         ['you', 'and', 'me'],
     ];
 
-    $_serialize = 'data';
-    $_header = ['Column 1', 'Column 2', 'Column 3'];
-    $_footer = ['Totals', '400', '$3000'];
+    $header = ['Column 1', 'Column 2', 'Column 3'];
+    $footer = ['Totals', '400', '$3000'];
 
-    $this->viewBuilder()->setClassName('CsvView.Csv');
-    $this->set(compact('data', '_serialize', '_header', '_footer'));
+    $this->set(compact('data'));
+    $this->viewBuilder()
+        ->setClassName('CsvView.Csv')
+        ->setOptions([
+            'serialize' => 'data',
+            'header' => $header,
+            'footer' => $footer,
+        ]);
 }
 ```
 
 You can also specify the delimiter, end of line, newline, escape characters and
-byte order mark (BOM) sequence using `$_delimiter`, `$_eol`, `$_newline`,
-`$_enclosure` and `$_bom` respectively:
+byte order mark (BOM) sequence using `delimiter`, `eol`, `newline`, `enclosure`
+and `bom` respectively:
 
 ```php
 public function export()
@@ -106,42 +109,44 @@ public function export()
         ['you', 'and', 'me'],
     ];
 
-    $_serialize = 'data';
-    $_delimiter = chr(9); //tab
-    $_enclosure = '"';
-    $_newline = '\r\n';
-    $_eol = '~';
-    $_bom = true;
-
-    $this->viewBuilder()->setClassName('CsvView.Csv');
-    $this->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline', '_eol', '_bom'));
+    $this->set(compact('data'));
+    $this->viewBuilder()
+        ->setClassName('CsvView.Csv')
+        ->setOptions([
+            'serialize' => 'data',
+            'delimiter' => chr(9),
+            'enclosure' => '"',
+            'newline' => '\r\n',
+            'eol' => '~',
+            'bom' => true,
+        ]);
 }
 ```
 
-The defaults for these variables are:
+The defaults for these options are:
 
-* `_delimiter`: `,`
-* `_enclosure`: `"`
-* `_newline`: `\n`
-* `_eol`: `\n`
-* `_bom`: false
-* `_setSeparator`: false
+* `delimiter`: `,`
+* `enclosure`: `"`
+* `newline`: `\n`
+* `eol`: `\n`
+* `bom`: false
+* `setSeparator`: false
 
-The `_eol` variable is the one used to generate newlines in the output.
-`_newline`, however, is the character that should replace the newline characters
+The `eol` option is the one used to generate newlines in the output.
+`newline`, however, is the character that should replace the newline characters
 in the actual data. It is recommended to use the string representation of the
 newline character to avoid rendering invalid output.
 
 Some reader software incorrectly renders UTF-8 encoded files which do not
-contain byte order mark (BOM) byte sequence. The `_bom` variable is the one used
+contain byte order mark (BOM) byte sequence. The `bom` option is the one used
 to add byte order mark (BOM) byte sequence beginning of the generated CSV output
 stream. See [`Wikipedia article about byte order mark`](http://en.wikipedia.org/wiki/Byte_order_mark)
 for more information.
 
-The `_setSeparator` flag can be used to set the separator explicitly in the
+The `setSeparator` option can be used to set the separator explicitly in the
 first line of the CSV. Some readers need this in order to display the CSV correctly.
 
-If you have complex model data, you can use the `$_extract` view variable to
+If you have complex model data, you can use the `extract` view option to
 specify the individual [`Hash::extract()`-compatible](http://book.cakephp.org/3.0/en/core-libraries/hash.html) paths
 or a callable for each record:
 
@@ -149,9 +154,8 @@ or a callable for each record:
 public function export()
 {
     $posts = $this->Posts->find();
-    $_serialize = 'posts';
-    $_header = ['Post ID', 'Title', 'Created'];
-    $_extract = [
+    $header = ['Post ID', 'Title', 'Created'];
+    $extract = [
         'id',
         function (\App\Model\Entity\Post $row) {
             return $row->title;
@@ -159,16 +163,22 @@ public function export()
         'created'
     ];
 
-    $this->viewBuilder()->setClassName('CsvView.Csv');
-    $this->set(compact('posts', '_serialize', '_header', '_extract'));
+    $this->set(compact('posts'));
+    $this->viewBuilder()
+        ->setClassName('CsvView.Csv')
+        ->setOptions([
+            'serialize' => 'posts',
+            'header' => $header,
+            'extract' => $extract,
+        ]);
 }
 ```
 
 If your model data contains some null values or missing keys, you can use the
-`$_null` variable, just like you'd use `$_delimiter`, `$_eol`, and `$_enclosure`,
+`null` option, just like you'd use `delimiter`, `eol`, and `enclosure`,
 to set how null values should be displayed in the CSV.
 
-`$_null` defaults to `''`.
+`null` defaults to `''`.
 
 You can use `Router::extensions()` and the `RequestHandlerComponent` to
 automatically have the CsvView class switched in as follows:
@@ -179,8 +189,8 @@ Router::extensions('csv');
 
 // In your controller's initialize() method:
 $this->loadComponent('RequestHandler', [
-    'viewClassMap' => ['csv' => 'CsvView.Csv'
-]]);
+    'viewClassMap' => ['csv' => 'CsvView.Csv']
+]);
 
 // In your controller
 public function export()
@@ -189,11 +199,11 @@ public function export()
     $this->set(compact('posts'));
 
     if ($this->getRequest()->getParam('_ext') === 'csv') {
-        $_serialize = 'posts';
-        $_header = array('Post ID', 'Title', 'Created');
-        $_extract = array('id', 'title', 'created');
+        $serialize = 'posts';
+        $header = array('Post ID', 'Title', 'Created');
+        $extract = array('id', 'title', 'created');
 
-        $this->set(compact('_serialize', '_header', '_extract'));
+        $this->viewBuilder()->setOptions(compact('serialize', 'header', 'extract'));
     }
 }
 ```
@@ -201,7 +211,7 @@ public function export()
 Access /posts/export.csv to get the data as csv and /posts/export to get normal page as usually.
 
 For really complex CSVs, you can also simply use your own view files.
-To do so, either leave `$_serialize` unspecified or set it to null.
+To do so, either leave `serialize` unspecified or set it to null.
 The view files will be located in the `csv` subdirectory of your current controller:
 
 ```php
@@ -209,29 +219,30 @@ The view files will be located in the `csv` subdirectory of your current control
 public function export()
 {
     $posts = $this->Posts->find();
-    $_serialize = null;
-    $this->viewBuilder()->setClassName('CsvView.Csv');
-    $this->set(compact('posts', '_serialize'));
+    $this->set(compact('posts'));
+    $this->viewBuilder()
+        ->setClassName('CsvView.Csv')
+        ->setOption('serialize', null);
 }
 ```
 #### Setting a different encoding to the file
 
 if you need to have a different encoding in you csv file you have to set the encoding of your data
 you are passing to the view and also set the encoding you want for the csv file.
-This can be done by using `_dataEncoding` and `_csvEncoding`:
+This can be done by using `dataEncoding` and `csvEncoding`:
 
 The defaults are:
 
-* `_dataEncoding`: `UTF-8`
-* `_csvEncoding`: `UTF-8`
+* `dataEncoding`: `UTF-8`
+* `csvEncoding`: `UTF-8`
 
 ** Only if those two variable are different your data will be converted to another encoding.
 
 CsvView uses the `iconv` extension by default to encode your data. You can change the php
-extension used to encode your data by setting the `_extension` option:
+extension used to encode your data by setting the `extension` option:
 
 ```php
-$this->set('_extension', 'mbstring');
+$this->viewBuilder()->setOption('extension', 'mbstring');
 ```
 
 The currently supported encoding extensions are as follows:
@@ -259,11 +270,12 @@ public function export()
         [1, 2, 3],
         ['you', 'and', 'me'],
     ];
-    $_serialize = 'data';
 
     $this->setResponse($this->getResponse()->withDownload('my-file.csv'));
-    $this->viewBuilder()->setClassName('CsvView.Csv');
-    $this->set(compact('data', '_serialize'));
+    $this->set(compact('data'));
+    $this->viewBuilder()
+        ->setClassName('CsvView.Csv')
+        ->setOption('serialize', 'data');
 }
 ```
 
@@ -284,21 +296,22 @@ So you can create a specific View Builder:
 // Your data array
 $data = [];
 
-// Params
-$_serialize = 'data';
-$_delimiter = ',';
-$_enclosure = '"';
-$_newline = '\r\n';
+// Options
+$serialize = 'data';
+$delimiter = ',';
+$enclosure = '"';
+$newline = '\r\n';
 
 // Create the builder
-$builder = new ViewBuilder;
+$builder = new ViewBuilder();
 $builder
     ->setLayout(false)
-    ->setClassName('CsvView.Csv');
+    ->setClassName('CsvView.Csv')
+    ->setOptions(compact('serialize', 'delimiter', 'enclosure', 'newline'));
 
 // Then the view
 $view = $builder->build($data);
-$view->set(compact('data', '_serialize', '_delimiter', '_enclosure', '_newline'));
+$view->set(compact('data'));
 
 // And Save the file
 $file = new File('/full/path/to/file.csv', true, 0644);
