@@ -484,4 +484,16 @@ class CsvView extends View
 
         return isset($this->bomMap[$csvEncoding]) ? $this->bomMap[$csvEncoding] : '';
     }
+
+    /**
+     * Gets the response instance.
+     *
+     * Added for compatibility with CakePHP 3.7+.
+     *
+     * @return \Cake\Http\Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
 }
