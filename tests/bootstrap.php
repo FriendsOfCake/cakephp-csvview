@@ -1,6 +1,5 @@
 <?php
 use Cake\Core\Configure;
-use Cake\Core\Plugin;
 
 /**
  * Test suite bootstrap
@@ -34,4 +33,3 @@ Configure::write('App', [
         'templates' => [dirname(__FILE__) . DS . 'test_app' . DS . 'TestApp' . DS . 'Template' . DS],
     ]
 ]);
-Plugin::load('CsvView', ['path' => dirname(dirname(__FILE__)) . DS]);

@@ -38,7 +38,7 @@ class CsvViewTest extends TestCase
         $output = $this->view->render(false);
 
         $this->assertSame('user,fake,list,item1,item2' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -132,7 +132,7 @@ class CsvViewTest extends TestCase
 
         $expected = 'a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'you,and,me' . PHP_EOL;
         $this->assertSame($expected, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
 
         $this->view->set('_serialize', true);
         $output = $this->view->render(false);
@@ -157,7 +157,7 @@ class CsvViewTest extends TestCase
         $output = $this->view->render(false);
 
         $this->assertSame('a,b,c~1,2,3~you,and,me~', $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -181,7 +181,7 @@ class CsvViewTest extends TestCase
         $expected = iconv('UTF-8', 'SJIS', 'a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'あなた,と,私' . PHP_EOL);
 
         $this->assertSame($expected, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -211,7 +211,7 @@ class CsvViewTest extends TestCase
         $expected = mb_convert_encoding('a,b,c' . PHP_EOL . '1,2,3' . PHP_EOL . 'あなた,と,私' . PHP_EOL, 'SJIS', 'UTF-8');
 
         $this->assertSame($expected, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -233,7 +233,7 @@ class CsvViewTest extends TestCase
         $output = $this->view->render('index');
 
         $this->assertSame('TEST OUTPUT' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -271,7 +271,7 @@ class CsvViewTest extends TestCase
         $output = $this->view->render(false);
 
         $this->assertSame('jose,"2010-01-05 00:00:00",beach' . PHP_EOL . 'drew,,ball' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -310,7 +310,7 @@ class CsvViewTest extends TestCase
         $output = $this->view->render(false);
 
         $this->assertSame('1,jose,,beach' . PHP_EOL . '2,drew,ball,fun' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -350,7 +350,7 @@ class CsvViewTest extends TestCase
         $output = $this->view->render(false);
 
         $this->assertSame('jose,"2010-01-05 00:00:00",my-beach' . PHP_EOL . 'drew,,my-ball' . PHP_EOL, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -403,7 +403,7 @@ Newline","A\tTab"
 
 CSV;
         $this->assertTextEquals($expected, $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
@@ -452,7 +452,7 @@ CSV;
             $output = $this->view->render(false);
 
             $this->assertSame($expected, $output);
-            $this->assertSame('text/csv', $this->view->response->getType());
+            $this->assertSame('text/csv', $this->view->getResponse()->getType());
         }
     }
 
@@ -475,7 +475,7 @@ CSV;
         $output = $this->view->render(false);
 
         $this->assertSame('a,b,c~1,2,NULL~you,NULL,me~', $output);
-        $this->assertSame('text/csv', $this->view->response->getType());
+        $this->assertSame('text/csv', $this->view->getResponse()->getType());
     }
 
     /**
