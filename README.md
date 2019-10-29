@@ -261,7 +261,7 @@ public function export()
     ];
     $_serialize = 'data';
 
-    $this->response = $this->response->withDownload('my-file.csv'));
+    $this->response = $this->response->withDownload('my-file.csv');
     $this->viewBuilder()->setClassName('CsvView.Csv');
     $this->set(compact('data', '_serialize'));
 }
