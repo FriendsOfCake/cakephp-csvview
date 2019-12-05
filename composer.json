@@ -1,6 +1,6 @@
 {
     "name": "friendsofcake/cakephp-csvview",
-    "description": "A CSV View class for CakePHP 3.x",
+    "description": "A CSV View class for CakePHP",
     "type": "cakephp-plugin",
     "keywords": [
         "cakephp",
@@ -8,13 +8,13 @@
         "view",
         "export"
     ],
-    "homepage": "http://github.com/friendsofcake/cakephp-csvview",
+    "homepage": "https://github.com/friendsofcake/cakephp-csvview",
     "license": "MIT",
     "authors": [
         {
             "name": "Jose Diaz-Gonzalez",
             "email": "email@josediazgonzalez.com",
-            "homepage": "http://josediazgonzalez.com",
+            "homepage": "https://josediazgonzalez.com",
             "role": "Maintainer"
         },
         {
@@ -63,7 +63,6 @@
         }
     },
     "support": {
-        "email": "cakephp+csvview@josediazgonzalez.com",
         "issues": "https://github.com/friendsofcake/cakephp-csvview/issues",
         "source": "https://github.com/friendsofcake/cakephp-csvview"
     },
