@@ -44,11 +44,11 @@
         }
     ],
     "require":{
-        "cakephp/cakephp": "^4.0.0"
+        "cakephp/cakephp": "^4.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0",
-        "cakephp/cakephp-codesniffer": "dev-next"
+        "phpunit/phpunit": "~8.5.0",
+        "cakephp/cakephp-codesniffer": "^4.0"
     },
     "autoload": {
         "psr-4": {
@@ -66,8 +66,6 @@
         "issues": "https://github.com/friendsofcake/cakephp-csvview/issues",
         "source": "https://github.com/friendsofcake/cakephp-csvview"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "scripts": {
         "check": [
             "@cs-check",
