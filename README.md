@@ -157,8 +157,8 @@ public function export()
     $header = ['Post ID', 'Title', 'Created'];
     $extract = [
         'id',
-        function (\App\Model\Entity\Post $row) {
-            return $row->title;
+        function (array $row) {
+            return $row['title'];
         },
         'created'
     ];

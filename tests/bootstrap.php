@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use Cake\Core\Configure;
+
 /**
  * Test suite bootstrap
  *
@@ -8,8 +10,6 @@ declare(strict_types=1);
  * has been installed as a dependency of the plugin, or the plugin is itself
  * installed as a dependency of an application.
  */
-
-use Cake\Core\Configure;
 
 $findRoot = function ($root) {
     do {
