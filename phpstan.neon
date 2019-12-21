@@ -1,6 +1,5 @@
 parameters:
     level: 6
+    checkMissingIterableValueType: false
     autoload_files:
         - tests/bootstrap.php
-    ignoreErrors:
-        - '#Parameter \#1 $fp of function fwrite expects resource, resource|false given#'

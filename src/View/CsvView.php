@@ -194,7 +194,7 @@ class CsvView extends SerializedView
      *
      * @param array|string $serialize The name(s) of the view variable(s) that
      *   need(s) to be serialized
-     * @return string|false The serialized data or false.
+     * @return string The serialized data or false.
      */
     protected function _serialize($serialize): string
     {
@@ -272,9 +272,9 @@ class CsvView extends SerializedView
      *
      * @param array|null $row Row data
      *
-     * @return null|string CSV with all data to date
+     * @return string CSV with all data to date
      */
-    protected function _renderRow(?array $row = null): ?string
+    protected function _renderRow(?array $row = null): string
     {
         static $csv = '';
 
@@ -282,7 +282,7 @@ class CsvView extends SerializedView
             $csv = '';
             $this->_resetStaticVariables = false;
 
-            return null;
+            return '';
         }
 
         $csv .= (string)$this->_generateRow($row);
