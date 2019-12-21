@@ -17,8 +17,6 @@ like JsonView or XmlView.
 
 ## Installation
 
-_[Using [Composer](http://getcomposer.org/)]_
-
 ```
 composer require friendsofcake/cakephp-csvview
 ```
