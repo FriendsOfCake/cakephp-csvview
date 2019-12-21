@@ -196,7 +196,7 @@ class CsvView extends SerializedView
      *   need(s) to be serialized
      * @return string|false The serialized data or false.
      */
-    protected function _serialize($serialize)
+    protected function _serialize($serialize): string
     {
         $this->_renderRow($this->getConfig('header'));
         $this->_renderContent();
