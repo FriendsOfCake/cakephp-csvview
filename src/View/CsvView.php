@@ -132,7 +132,7 @@ class CsvView extends View
         '_setSeparator',
         '_csvEncoding',
         '_dataEncoding',
-        '_extension'
+        '_extension',
     ];
 
     /**
