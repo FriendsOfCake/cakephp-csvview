@@ -27,6 +27,10 @@ _[Using [Composer](http://getcomposer.org/)]_
 ```
 composer require friendsofcake/cakephp-csvview
 ```
+Note: if you run CakePHP 4+
+```
+composer require --dev friendsofcake/cakephp-csvview "~4.0"
+```
 
 ### Enable plugin
 
