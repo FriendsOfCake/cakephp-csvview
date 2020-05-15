@@ -6,7 +6,7 @@ namespace CsvView\View;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventManager;
 use Cake\Http\Response;
-use Cake\Http\ServerRequest as Request;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Cake\View\SerializedView;
 use Exception;
@@ -171,7 +171,7 @@ class CsvView extends SerializedView
      * @param array                         $viewOptions  An array of view options
      */
     public function __construct(
-        ?Request $request = null,
+        ?ServerRequest $request = null,
         ?Response $response = null,
         ?EventManager $eventManager = null,
         array $viewOptions = []
