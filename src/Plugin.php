@@ -8,8 +8,6 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
 class Plugin extends BasePlugin
 {

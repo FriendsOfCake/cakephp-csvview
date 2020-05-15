@@ -271,7 +271,6 @@ class CsvView extends SerializedView
      * Aggregates the rows into a single csv
      *
      * @param array|null $row Row data
-     *
      * @return string CSV with all data to date
      */
     protected function _renderRow(?array $row = null): string
@@ -296,7 +295,6 @@ class CsvView extends SerializedView
      * returning it's contents
      *
      * @param array|null $row Row data
-     *
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
     protected function _generateRow(?array $row = null)
