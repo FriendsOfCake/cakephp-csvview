@@ -19,6 +19,20 @@ class Plugin extends BasePlugin
     protected $name = 'CsvView';
 
     /**
+     * Load routes or not
+     *
+     * @var bool
+     */
+    protected $routesEnabled = false;
+
+    /**
+     * Console middleware
+     *
+     * @var bool
+     */
+    protected $consoleEnabled = false;
+
+    /**
      * @inheritDoc
      */
     public function bootstrap(PluginApplicationInterface $app): void
