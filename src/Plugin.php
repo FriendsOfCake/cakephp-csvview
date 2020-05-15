@@ -52,12 +52,4 @@ class Plugin extends BasePlugin
             ]
         );
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function routes(RouteBuilder $routes): void
-    {
-        Router::extensions('csv');
-    }
 }
