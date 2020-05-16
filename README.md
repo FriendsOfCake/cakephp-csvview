@@ -145,7 +145,7 @@ The `setSeparator` option can be used to set the separator explicitly in the
 first line of the CSV. Some readers need this in order to display the CSV correctly.
 
 If you have complex model data, you can use the `extract` view option to
-specify the individual [`Hash::extract()`-compatible](http://book.cakephp.org/3.0/en/core-libraries/hash.html) paths
+specify the individual [`Hash::extract()`-compatible](http://book.cakephp.org/4/en/core-libraries/hash.html) paths
 or a callable for each record:
 
 ```php
@@ -178,25 +178,28 @@ to set how null values should be displayed in the CSV.
 
 `null` defaults to `''`.
 
-You can use `Router::extensions()` and the `RequestHandlerComponent` to
-automatically have the CsvView class switched in as follows:
+#### Automatic view class switching
+
+You can use router's extension parsing feature and the `RequestHandlerComponent` to
+automatically have the CsvView class switched in as follows.
+
+Enable `csv` extension parsing for all routes using `Router::extensions('csv')`
+in your app's `routes.php` or using `$routes->addExtensions()` within required
+scope.
 
 ```php
-// In your routes.php file:
-Router::extensions('csv');
+// PostsController.php
 
 // In your controller's initialize() method:
-$this->loadComponent('RequestHandler', [
-    'viewClassMap' => ['csv' => 'CsvView.Csv']
-]);
+$this->loadComponent('RequestHandler');
 
-// In your controller
-public function export()
+// Controller action
+public function index()
 {
     $posts = $this->Posts->find();
     $this->set(compact('posts'));
 
-    if ($this->getRequest()->getParam('_ext') === 'csv') {
+    if ($this->request->is('csv') {
         $serialize = 'posts';
         $header = array('Post ID', 'Title', 'Created');
         $extract = array('id', 'title', 'created');
@@ -206,14 +209,15 @@ public function export()
 }
 ```
 
-Access /posts/export.csv to get the data as csv and /posts/export to get normal page as usually.
+With the above controller you can now access `/posts.csv` or use `Accept` header
+`text/csv` to get the data as csv and use `/posts` to get normal HTML page.
 
-For really complex CSVs, you can also simply use your own view files.
-To do so, either leave `serialize` unspecified or set it to null.
-The view files will be located in the `csv` subdirectory of your current controller:
+For really complex CSVs, you can also use your own view files. To do so, either
+leave `serialize` unspecified or set it to null. The view files will be located
+in the `csv` subdirectory of your current controller:
 
 ```php
-// View used will be in src/Template/Posts/csv/export.ctp
+// View used will be in src/Template/Posts/csv/export.php
 public function export()
 {
     $posts = $this->Posts->find();
@@ -223,11 +227,12 @@ public function export()
         ->setOption('serialize', null);
 }
 ```
+
 #### Setting a different encoding to the file
 
-if you need to have a different encoding in you csv file you have to set the encoding of your data
-you are passing to the view and also set the encoding you want for the csv file.
-This can be done by using `dataEncoding` and `csvEncoding`:
+If you need to have a different encoding in you csv file you have to set the
+encoding of your data you are passing to the view and also set the encoding you
+want for the csv file. This can be done by using `dataEncoding` and `csvEncoding`:
 
 The defaults are:
 
@@ -236,8 +241,8 @@ The defaults are:
 
 ** Only if those two variable are different your data will be converted to another encoding.
 
-CsvView uses the `iconv` extension by default to encode your data. You can change the php
-extension used to encode your data by setting the `extension` option:
+CsvView uses the `iconv` extension by default to encode your data. You can change
+the php extension used to encode your data by setting the `extension` option:
 
 ```php
 $this->viewBuilder()->setOption('extension', 'mbstring');
@@ -257,8 +262,8 @@ download `first-param.csv`.
 
 > In IE you are required to set the filename, otherwise it will download as a text file.
 
-To set a custom file name, use the [`Response::withDownload`](https://api.cakephp.org/3.6/class-Cake.Http.Response.html#_withDownload).
-The following snippet can be used to change the downloaded file from `export.csv` to `my-file.csv`:
+To set a custom file name, use the `Response::withDownload()` method. The following
+snippet can be used to change the downloaded file from `export.csv` to `my-file.csv`:
 
 ```php
 public function export()
@@ -279,9 +284,12 @@ public function export()
 
 #### Using a specific View Builder
 
-In some cases, it is better not to use the current controller's View Builder `$this->viewBuilder()` as any call to `$this->render()` will compromise any subsequent rendering.
+In some cases, it is better not to use the current controller's View Builder
+`$this->viewBuilder()` as any call to `$this->render()` will compromise any
+subsequent rendering.
 
-For example, in the course of your current controller's action, if you need to render some data as CSV in order to simply save it into a file on the server.
+For example, in the course of your current controller's action, if you need to
+render some data as CSV in order to simply save it into a file on the server.
 
 Do not forget to add to your controller:
 

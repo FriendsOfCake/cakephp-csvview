@@ -8,8 +8,6 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
 class Plugin extends BasePlugin
 {
@@ -19,6 +17,20 @@ class Plugin extends BasePlugin
      * @var string
      */
     protected $name = 'CsvView';
+
+    /**
+     * Load routes or not
+     *
+     * @var bool
+     */
+    protected $routesEnabled = false;
+
+    /**
+     * Console middleware
+     *
+     * @var bool
+     */
+    protected $consoleEnabled = false;
 
     /**
      * @inheritDoc
@@ -51,13 +63,5 @@ class Plugin extends BasePlugin
                 'value' => 'csv',
             ]
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function routes(RouteBuilder $routes): void
-    {
-        Router::extensions('csv');
     }
 }

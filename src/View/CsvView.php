@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace CsvView\View;
 
 use Cake\Datasource\EntityInterface;
-use Cake\Event\EventManager;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest as Request;
 use Cake\Utility\Hash;
 use Cake\View\SerializedView;
 use Exception;
@@ -119,7 +116,7 @@ class CsvView extends SerializedView
      *
      * @var bool
      */
-    protected $isFirstBom;
+    protected $isFirstBom = true;
 
     /**
      * Default config.
@@ -163,19 +160,12 @@ class CsvView extends SerializedView
     ];
 
     /**
-     * Constructor
+     * Initalize View
      *
-     * @param \Cake\Http\ServerRequest|null $request      Request instance.
-     * @param \Cake\Http\Response|null      $response     Response instance.
-     * @param \Cake\Event\EventManager|null $eventManager EventManager instance.
-     * @param array                         $viewOptions  An array of view options
+     * @return void
      */
-    public function __construct(
-        ?Request $request = null,
-        ?Response $response = null,
-        ?EventManager $eventManager = null,
-        array $viewOptions = []
-    ) {
+    public function initialize(): void
+    {
         $this->bomMap = [
             'UTF-32BE' => chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF),
             'UTF-32LE' => chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00),
@@ -184,9 +174,11 @@ class CsvView extends SerializedView
             'UTF-8' => chr(0xEF) . chr(0xBB) . chr(0xBF),
         ];
 
-        $this->isFirstBom = true;
+        if (!extension_loaded(self::EXTENSION_ICONV)) {
+            $this->_defaultConfig['extension'] = self::EXTENSION_MBSTRING;
+        }
 
-        parent::__construct($request, $response, $eventManager, $viewOptions);
+        parent::initialize();
     }
 
     /**
@@ -271,7 +263,6 @@ class CsvView extends SerializedView
      * Aggregates the rows into a single csv
      *
      * @param array|null $row Row data
-     *
      * @return string CSV with all data to date
      */
     protected function _renderRow(?array $row = null): string
@@ -296,7 +287,6 @@ class CsvView extends SerializedView
      * returning it's contents
      *
      * @param array|null $row Row data
-     *
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
     protected function _generateRow(?array $row = null)
