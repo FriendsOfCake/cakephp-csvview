@@ -8,66 +8,66 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
-        <directory name="src" />
+        <directory name="src/"/>
         <ignoreFiles>
         </ignoreFiles>
     </projectFiles>
 
     <issueHandlers>
-        <LessSpecificReturnType errorLevel="info" />
+        <LessSpecificReturnType errorLevel="info"/>
 
         <!-- level 3 issues - slightly lazy code writing, but provably low false-negatives -->
 
-        <MissingClosureReturnType errorLevel="info" />
-        <MissingPropertyType errorLevel="info" />
+        <MissingClosureReturnType errorLevel="info"/>
+        <MissingPropertyType errorLevel="info"/>
 
-        <PropertyNotSetInConstructor errorLevel="info" />
+        <PropertyNotSetInConstructor errorLevel="info"/>
         <MissingConstructor>
         </MissingConstructor>
-        <MissingClosureParamType errorLevel="info" />
-        <MissingParamType errorLevel="info" />
+        <MissingClosureParamType errorLevel="info"/>
+        <MissingParamType errorLevel="info"/>
 
         <RedundantCondition>
             <errorLevel type="suppress">
             </errorLevel>
         </RedundantCondition>
 
-        <DocblockTypeContradiction errorLevel="info" />
-        <RedundantConditionGivenDocblockType errorLevel="info" />
+        <DocblockTypeContradiction errorLevel="info"/>
+        <RedundantConditionGivenDocblockType errorLevel="info"/>
 
-        <UnresolvableInclude errorLevel="info" />
+        <UnresolvableInclude errorLevel="info"/>
 
         <!-- level 4 issues - points to possible deficiencies in logic, higher false-positives -->
 
-        <MoreSpecificReturnType errorLevel="info" />
-        <LessSpecificReturnStatement errorLevel="info" />
-        <TypeCoercion errorLevel="info" />
+        <MoreSpecificReturnType errorLevel="info"/>
+        <LessSpecificReturnStatement errorLevel="info"/>
+        <TypeCoercion errorLevel="info"/>
 
-        <PossiblyInvalidArrayAccess errorLevel="info" />
-        <PossiblyInvalidArrayOffset errorLevel="info" />
-        <PossiblyInvalidFunctionCall errorLevel="info" />
-        <PossiblyInvalidIterator errorLevel="info" />
-        <PossiblyInvalidMethodCall errorLevel="info" />
-        <PossiblyInvalidOperand errorLevel="info" />
-        <PossiblyInvalidPropertyAssignment errorLevel="info" />
-        <PossiblyNullArgument errorLevel="info" />
-        <PossiblyNullArrayAccess errorLevel="info" />
-        <PossiblyNullArrayAssignment errorLevel="info" />
-        <PossiblyNullArrayOffset errorLevel="info" />
-        <PossiblyNullOperand errorLevel="info" />
-        <PossiblyNullPropertyAssignment errorLevel="info" />
-        <PossiblyNullPropertyAssignmentValue errorLevel="info" />
-        <PossiblyNullPropertyFetch errorLevel="info" />
-        <PossiblyNullReference errorLevel="info" />
+        <PossiblyInvalidArrayAccess errorLevel="info"/>
+        <PossiblyInvalidArrayOffset errorLevel="info"/>
+        <PossiblyInvalidFunctionCall errorLevel="info"/>
+        <PossiblyInvalidIterator errorLevel="info"/>
+        <PossiblyInvalidMethodCall errorLevel="info"/>
+        <PossiblyInvalidOperand errorLevel="info"/>
+        <PossiblyInvalidPropertyAssignment errorLevel="info"/>
+        <PossiblyNullArgument errorLevel="info"/>
+        <PossiblyNullArrayAccess errorLevel="info"/>
+        <PossiblyNullArrayAssignment errorLevel="info"/>
+        <PossiblyNullArrayOffset errorLevel="info"/>
+        <PossiblyNullOperand errorLevel="info"/>
+        <PossiblyNullPropertyAssignment errorLevel="info"/>
+        <PossiblyNullPropertyAssignmentValue errorLevel="info"/>
+        <PossiblyNullPropertyFetch errorLevel="info"/>
+        <PossiblyNullReference errorLevel="info"/>
 
         <!-- level 5 issues - should be avoided at mosts costs... -->
 
-        <InvalidScalarArgument errorLevel="info" />
-        <InvalidOperand errorLevel="info" />
-        <NoInterfaceProperties errorLevel="info" />
-        <TypeDoesNotContainType errorLevel="info" />
-        <TypeDoesNotContainNull errorLevel="info" />
-        <ImplementedReturnTypeMismatch errorLevel="info" />
+        <InvalidScalarArgument errorLevel="info"/>
+        <InvalidOperand errorLevel="info"/>
+        <NoInterfaceProperties errorLevel="info"/>
+        <TypeDoesNotContainType errorLevel="info"/>
+        <TypeDoesNotContainNull errorLevel="info"/>
+        <ImplementedReturnTypeMismatch errorLevel="info"/>
 
         <!-- level 6 issues - really bad things -->
 
@@ -76,11 +76,11 @@
             </errorLevel>
         </NullableReturnStatement>
 
-        <MoreSpecificImplementedParamType errorLevel="info" />
-        <LessSpecificImplementedReturnType errorLevel="info" />
+        <MoreSpecificImplementedParamType errorLevel="info"/>
+        <LessSpecificImplementedReturnType errorLevel="info"/>
 
         <!-- level 7 issues - even worse -->
-        <InvalidArgument errorLevel="info" />
+        <InvalidArgument errorLevel="info"/>
 
         <InvalidPropertyAssignmentValue>
             <errorLevel type="suppress">
@@ -96,7 +96,7 @@
         <PossiblyUndefinedArrayOffset>
         </PossiblyUndefinedArrayOffset>
 
-        <UndefinedConstant errorLevel="suppress" />
+        <UndefinedConstant errorLevel="suppress"/>
 
         <UndefinedPropertyAssignment>
         </UndefinedPropertyAssignment>
