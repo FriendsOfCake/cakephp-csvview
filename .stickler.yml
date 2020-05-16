@@ -1,8 +1,8 @@
 ---
 linters:
   phpcs:
-    standard: CakePHP
-    extensions: 'php,ctp'
+    standard: CakePHP4
+    extensions: 'php'
     fixer: true
 
 fixers:
