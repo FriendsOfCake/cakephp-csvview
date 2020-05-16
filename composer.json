@@ -20,22 +20,22 @@
         {
             "name":"ADmad",
             "role":"Contributor",
-            "homepage":"https://github.com/admad"
+            "homepage": "https://github.com/admad"
         },
         {
             "name":"Mark Scherer",
             "role":"Contributor",
-            "homepage":"https://github.com/dereuromark"
+            "homepage": "https://github.com/dereuromark"
         },
         {
             "name":"Joshua Paling",
             "role":"Contributor",
-            "homepage":"https://github.com/joshuapaling"
+            "homepage": "https://github.com/joshuapaling"
         },
         {
             "name":"Gaurish Sharma",
             "role":"Contributor",
-            "homepage":"https://github.com/gaurish"
+            "homepage": "https://github.com/gaurish"
         },
         {
             "name":"Gregory Gaskill",
@@ -75,6 +75,7 @@
         "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
         "test": "phpunit",
         "stan": "phpstan analyse src/ && psalm --show-info=false",
+        "phpstan": "phpstan analyse src/",
         "psalm": "psalm --show-info=false",
         "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^0.12 vimeo/psalm:^3.7 && mv composer.backup composer.json",
         "test-coverage": "phpunit --coverage-clover=clover.xml"
