@@ -22,7 +22,7 @@ matrix:
       env: CODECOVERAGE=1 DEFAULT=0
 
 before_install:
-  - phpenv config-rm xdebug.ini
+  - if [[ $CODECOVERAGE != 1 ]]; then phpenv config-rm xdebug.ini ; fi
 
 before_script:
   - if [[ $PREFER_LOWEST != 1 ]]; then composer install --prefer-source --no-interaction ; fi
@@ -31,8 +31,8 @@ before_script:
 script:
   - if [[ $DEFAULT == 1 ]]; then vendor/bin/phpunit ; fi
 
-  - if [[ $CHECKS == 1 ]]; then composer stan-setup &&  composer stan ; fi
-  - if [[ $CHECKS = 1 ]]; then composer cs-check ; fi
+  - if [[ $CHECKS == 1 ]]; then composer stan-setup && composer stan ; fi
+  - if [[ $CHECKS == 1 ]]; then composer cs-check ; fi
 
   - if [[ $CODECOVERAGE == 1 ]]; then vendor/bin/phpunit --coverage-clover=clover.xml ; fi
   - if [[ $CODECOVERAGE == 1 ]]; then wget -O codecov.sh https://codecov.io/bash ; fi
