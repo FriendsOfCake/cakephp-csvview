@@ -138,7 +138,10 @@ class CsvView extends SerializedView
      * - 'newline': (default '\n')       CSV Newline replacement for use with fputcsv()
      * - 'eol': (default '\n')           End-of-line character the csv
      * - 'bom': (default false)          Adds BOM (byte order mark) header
-     * - 'setSeparator: (default false)  Adds sep=[_delimiter] in the first line
+     * - 'setSeparator': (default false) Adds sep=[_delimiter] in the first line
+     * - 'csvEncoding': (default 'UTF-8') CSV file encoding
+     * - 'dataEncoding': (default 'UTF-8') Encoding of data to be serialized
+     * - 'extension': (default 'iconv') PHP extension to use for character encoding conversion
      *
      * @var array
      */
@@ -174,8 +177,11 @@ class CsvView extends SerializedView
             'UTF-8' => chr(0xEF) . chr(0xBB) . chr(0xBF),
         ];
 
-        if (!extension_loaded(self::EXTENSION_ICONV)) {
-            $this->_defaultConfig['extension'] = self::EXTENSION_MBSTRING;
+        if (
+            $this->getConfig('extension') === self::EXTENSION_ICONV &&
+            !extension_loaded(self::EXTENSION_ICONV)
+        ) {
+            $this->setConfig('extension', self::EXTENSION_MBSTRING);
         }
 
         parent::initialize();
