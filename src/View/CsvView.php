@@ -141,7 +141,7 @@ class CsvView extends SerializedView
      * - 'setSeparator': (default false) Adds sep=[_delimiter] in the first line
      * - 'csvEncoding': (default 'UTF-8') CSV file encoding
      * - 'dataEncoding': (default 'UTF-8') Encoding of data to be serialized
-     * - 'extension': (default 'iconv') PHP extension to use for character encoding conversion
+     * - 'transcodingExtension': (default 'iconv') PHP extension to use for character encoding conversion
      *
      * @var array
      */
@@ -159,7 +159,7 @@ class CsvView extends SerializedView
         'setSeparator' => false,
         'csvEncoding' => 'UTF-8',
         'dataEncoding' => 'UTF-8',
-        'extension' => self::EXTENSION_ICONV,
+        'transcodingExtension' => self::EXTENSION_ICONV,
     ];
 
     /**
@@ -178,10 +178,10 @@ class CsvView extends SerializedView
         ];
 
         if (
-            $this->getConfig('extension') === self::EXTENSION_ICONV &&
+            $this->getConfig('transcodingExtension') === static::EXTENSION_ICONV &&
             !extension_loaded(self::EXTENSION_ICONV)
         ) {
-            $this->setConfig('extension', self::EXTENSION_MBSTRING);
+            $this->setConfig('transcodingExtension', static::EXTENSION_MBSTRING);
         }
 
         parent::initialize();
@@ -354,10 +354,10 @@ class CsvView extends SerializedView
         $dataEncoding = $this->getConfig('dataEncoding');
         $csvEncoding = $this->getConfig('csvEncoding');
         if ($dataEncoding !== $csvEncoding) {
-            $extension = $this->getConfig('extension');
-            if ($extension === self::EXTENSION_ICONV) {
+            $extension = $this->getConfig('transcodingExtension');
+            if ($extension === static::EXTENSION_ICONV) {
                 $csv = iconv($dataEncoding, $csvEncoding, $csv);
-            } elseif ($extension === self::EXTENSION_MBSTRING) {
+            } elseif ($extension === static::EXTENSION_MBSTRING) {
                 $csv = mb_convert_encoding($csv, $csvEncoding, $dataEncoding);
             }
         }
