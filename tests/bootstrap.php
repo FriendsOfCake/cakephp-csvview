@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 use Cake\Core\Configure;
 
 /**
@@ -8,6 +10,7 @@ use Cake\Core\Configure;
  * has been installed as a dependency of the plugin, or the plugin is itself
  * installed as a dependency of an application.
  */
+
 $findRoot = function ($root) {
     do {
         $lastRoot = $root;
@@ -17,7 +20,7 @@ $findRoot = function ($root) {
         }
     } while ($root !== $lastRoot);
 
-    throw new Exception("Cannot find the root of the application, unable to run tests");
+    throw new Exception('Cannot find the root of the application, unable to run tests');
 };
 $root = $findRoot(__FILE__);
 unset($findRoot);
@@ -28,8 +31,13 @@ if (file_exists($root . '/config/bootstrap.php')) {
     require $root . '/config/bootstrap.php';
 }
 
+// Ensure default test connection is defined
+if (!getenv('db_dsn')) {
+    putenv('db_dsn=sqlite:///:memory:');
+}
 Configure::write('App', [
+    'namespace' => 'CsvView\Test\App',
     'paths' => [
-        'templates' => [dirname(__FILE__) . DS . 'test_app' . DS . 'TestApp' . DS . 'Template' . DS],
+        'templates' => [dirname(__FILE__) . DS . 'test_app' . DS . 'templates' . DS],
     ],
 ]);

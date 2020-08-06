@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<psalm
+    totallyTyped="false"
+    allowCoercionFromStringToClassConst="true"
+    allowStringToStandInForClass="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="src/"/>
+        <ignoreFiles>
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <MissingClosureReturnType errorLevel="info"/>
+        <PropertyNotSetInConstructor errorLevel="info"/>
+        <MissingClosureParamType errorLevel="info"/>
+
+        <DocblockTypeContradiction errorLevel="info"/>
+        <RedundantConditionGivenDocblockType errorLevel="info"/>
+    </issueHandlers>
+</psalm>

@@ -1,12 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace CsvView\View;
 
 use Cake\Datasource\EntityInterface;
-use Cake\Event\EventManager;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest as Request;
 use Cake\Utility\Hash;
-use Cake\View\View;
+use Cake\View\SerializedView;
 use Exception;
 
 /**
@@ -19,16 +18,16 @@ use Exception;
  *
  * In your controller, you could do the following:
  *
- * `$this->set(['posts' => $posts, '_serialize' => 'posts']);`
+ * `$this->set(['posts' => $posts])->viewBuilder()->setOption('serialize', 'posts');`
  *
  * When the view is rendered, the `$posts` view variable will be serialized
  * into CSV.
  *
  * When rendering the data, the data should be a single, flat array. If this is not the case,
- * then you should also specify an `_extract` variable:
+ * then you should also specify the `extract` view option:
  *
  * ```
- * $_extract = [
+ * $extract = [
  *   ['id', '%d'],       // Hash-compatible path, sprintf-compatible format
  *   'description',     // Hash-compatible path
  *   function ($row) {  // Callable
@@ -37,38 +36,37 @@ use Exception;
  * ];
  * ```
  *
- * You can also define `'_serialize'` as an array. This will create a top level object containing
+ * You can also define `serialize` as an array. This will create a top level object containing
  * all the named view variables:
  *
  * ```
  * $this->set(compact('posts', 'users', 'stuff'));
- * $this->set('_serialize', array('posts', 'users'));
+ * $this->viewBuilder()->setOption('serialize', ['posts', 'users']);
  * ```
  *
- * Each of the viewVars in `_serialize` would then be output into the csv
+ * Each of the viewVars in `serialize` would then be output into the csv
  *
- * If you don't use the `_serialize` key, you will need a view. You can use extended
+ * If you don't use the `serialize` option, you will need a view. You can use extended
  * views to provide layout like functionality.
  *
- * When not using custom views, you may specify the following view variables:
+ * When not using custom views, you may specify the following view options:
  *
- * - array `$_header`: (default null)    A flat array of header column names
- * - array `$_footer`: (default null)    A flat array of footer column names
- * - string `$_delimiter`: (default ',') CSV Delimiter, defaults to comma
- * - string `$_enclosure`: (default '"') CSV Enclosure for use with fputcsv()
- * - string `$_eol`: (default '\n')      End-of-line character the csv
+ * - array `$header`: (default null)    A flat array of header column names
+ * - array `$footer`: (default null)    A flat array of footer column names
+ * - string `$delimiter`: (default ',') CSV Delimiter, defaults to comma
+ * - string `$enclosure`: (default '"') CSV Enclosure for use with fputcsv()
+ * - string `$eol`: (default '\n')      End-of-line character the csv
  *
  * @link https://github.com/friendsofcake/cakephp-csvview
  */
-class CsvView extends View
+class CsvView extends SerializedView
 {
-
     /**
      * CSV layouts are located in the csv sub directory of `Layouts/`
      *
      * @var string
      */
-    public $layoutPath = 'csv';
+    protected $layoutPath = 'csv';
 
     /**
      * CSV views are always located in the 'csv' sub directory for a
@@ -76,7 +74,14 @@ class CsvView extends View
      *
      * @var string
      */
-    public $subDir = 'csv';
+    protected $subDir = 'csv';
+
+    /**
+     * Response type.
+     *
+     * @var string
+     */
+    protected $_responseType = 'text/csv';
 
     /**
      * Whether or not to reset static variables in use
@@ -90,14 +95,14 @@ class CsvView extends View
      *
      * @var string
      */
-    const EXTENSION_ICONV = 'iconv';
+    public const EXTENSION_ICONV = 'iconv';
 
     /**
      * Mbstring extension.
      *
      * @var string
      */
-    const EXTENSION_MBSTRING = 'mbstring';
+    public const EXTENSION_MBSTRING = 'mbstring';
 
     /**
      * List of bom signs for encodings.
@@ -111,44 +116,59 @@ class CsvView extends View
      *
      * @var bool
      */
-    protected $isFirstBom;
+    protected $isFirstBom = true;
 
     /**
-     * List of special view vars.
+     * Default config.
+     *
+     * - 'header': (default null)  A flat array of header column names
+     * - 'footer': (default null)  A flat array of footer column names
+     * - 'extract': (default null) An array of Hash-compatible paths or
+     *     callable with matching 'sprintf' $format as follows:
+     *     $extract = [
+     *         [$path, $format],
+     *         [$path],
+     *         $path,
+     *         function () { ... } // Callable
+     *      ];
+     *
+     *     If a string or unspecified, the format default is '%s'.
+     * - 'delimiter': (default ',')      CSV Delimiter, defaults to comma
+     * - 'enclosure': (default '"')      CSV Enclosure for use with fputcsv()
+     * - 'newline': (default '\n')       CSV Newline replacement for use with fputcsv()
+     * - 'eol': (default '\n')           End-of-line character the csv
+     * - 'bom': (default false)          Adds BOM (byte order mark) header
+     * - 'setSeparator': (default false) Adds sep=[_delimiter] in the first line
+     * - 'csvEncoding': (default 'UTF-8') CSV file encoding
+     * - 'dataEncoding': (default 'UTF-8') Encoding of data to be serialized
+     * - 'transcodingExtension': (default 'iconv') PHP extension to use for character encoding conversion
      *
      * @var array
      */
-    protected $_specialVars = [
-        '_extract',
-        '_footer',
-        '_header',
-        '_serialize',
-        '_delimiter',
-        '_enclosure',
-        '_newline',
-        '_eol',
-        '_null',
-        '_bom',
-        '_setSeparator',
-        '_csvEncoding',
-        '_dataEncoding',
-        '_extension',
+    protected $_defaultConfig = [
+        'extract' => null,
+        'footer' => null,
+        'header' => null,
+        'serialize' => null,
+        'delimiter' => ',',
+        'enclosure' => '"',
+        'newline' => "\n",
+        'eol' => PHP_EOL,
+        'null' => '',
+        'bom' => false,
+        'setSeparator' => false,
+        'csvEncoding' => 'UTF-8',
+        'dataEncoding' => 'UTF-8',
+        'transcodingExtension' => self::EXTENSION_ICONV,
     ];
 
     /**
-     * Constructor
+     * Initalize View
      *
-     * @param \Cake\Http\ServerRequest|null $request      Request instance.
-     * @param \Cake\Http\Response|null      $response     Response instance.
-     * @param \Cake\Event\EventManager|null $eventManager EventManager instance.
-     * @param array                         $viewOptions  An array of view options
+     * @return void
      */
-    public function __construct(
-        Request $request = null,
-        Response $response = null,
-        EventManager $eventManager = null,
-        array $viewOptions = []
-    ) {
+    public function initialize(): void
+    {
         $this->bomMap = [
             'UTF-32BE' => chr(0x00) . chr(0x00) . chr(0xFE) . chr(0xFF),
             'UTF-32LE' => chr(0xFF) . chr(0xFE) . chr(0x00) . chr(0x00),
@@ -157,151 +177,33 @@ class CsvView extends View
             'UTF-8' => chr(0xEF) . chr(0xBB) . chr(0xBF),
         ];
 
-        parent::__construct($request, $response, $eventManager, $viewOptions);
-
-        $this->response = $this->response->withType('csv');
-        $this->isFirstBom = true;
-    }
-
-    /**
-     * Skip loading helpers if this is a _serialize based view.
-     *
-     * @return void
-     */
-    public function loadHelpers()
-    {
-        if (isset($this->viewVars['_serialize'])) {
-            return;
+        if (
+            $this->getConfig('transcodingExtension') === static::EXTENSION_ICONV &&
+            !extension_loaded(self::EXTENSION_ICONV)
+        ) {
+            $this->setConfig('transcodingExtension', static::EXTENSION_MBSTRING);
         }
-        parent::loadHelpers();
-    }
 
-    /**
-     * Render a CSV view.
-     *
-     * Uses the special '_serialize' parameter to convert a set of
-     * view variables into a CSV response. Makes generating simple
-     * CSV responses very easy. If you omit the '_serialize' parameter,
-     * and use a normal view + layout as well.
-     *
-     * Also has support for specifying headers and footers in '_header'
-     * and '_footer' variables, respectively.
-     *
-     * @param string|null $view   The view being rendered.
-     * @param string|null $layout The layout being rendered.
-     *
-     * @return string The rendered view.
-     */
-    public function render($view = null, $layout = null)
-    {
-        $this->_setupViewVars();
-
-        if (isset($this->viewVars['_serialize'])) {
-            return $this->_serialize();
-        }
-        if ($view !== false && $this->_getViewFileName($view)) {
-            return parent::render($view, false);
-        }
+        parent::initialize();
     }
 
     /**
      * Serialize view vars.
      *
-     * @return string The serialized data
+     * @param array|string $serialize The name(s) of the view variable(s) that
+     *   need(s) to be serialized
+     * @return string The serialized data or false.
      */
-    protected function _serialize()
+    protected function _serialize($serialize): string
     {
-        $this->_renderRow($this->viewVars['_header']);
+        $this->_renderRow($this->getConfig('header'));
         $this->_renderContent();
-        $this->_renderRow($this->viewVars['_footer']);
-        $content = $this->_renderRow(false);
+        $this->_renderRow($this->getConfig('footer'));
+        $content = $this->_renderRow();
         $this->_resetStaticVariables = true;
         $this->_renderRow();
 
         return $content;
-    }
-
-    /**
-     * Setup defaults for CsvView view variables
-     *
-     * The following variables can be retrieved from '$this->viewVars'
-     * for use in configuring this view:
-     *
-     * - array '_header': (default null)  A flat array of header column names
-     * - array '_footer': (default null)  A flat array of footer column names
-     * - array '_extract': (default null) An array of Hash-compatible paths or
-     *                                    callable with matching 'sprintf'
-     *                                    $format as follows:
-     *
-     *                                    $_extract = [
-     *                                        [$path, $format],
-     *                                        [$path],
-     *                                        $path,
-     *                                        function () { ... } // Callable
-     *                                    ];
-     *
-     *                                    If a string or unspecified, the format
-     *                                    default is '%s'.
-     * - '_delimiter': (default ',')      CSV Delimiter, defaults to comma
-     * - '_enclosure': (default '"')      CSV Enclosure for use with fputcsv()
-     * - '_newline': (default '\n')       CSV Newline replacement for use with fputcsv()
-     * - '_eol': (default '\n')           End-of-line character the csv
-     * - '_bom': (default false)          Adds BOM (byte order mark) header
-     * - '_setSeparator: (default false)  Adds sep=[_delimiter] in the first line
-     *
-     * @return void
-     */
-    protected function _setupViewVars()
-    {
-        foreach ($this->_specialVars as $viewVar) {
-            if (!isset($this->viewVars[$viewVar])) {
-                $this->viewVars[$viewVar] = null;
-            }
-        }
-
-        if ($this->viewVars['_delimiter'] === null) {
-            $this->viewVars['_delimiter'] = ',';
-        }
-
-        if ($this->viewVars['_enclosure'] === null) {
-            $this->viewVars['_enclosure'] = '"';
-        }
-
-        if ($this->viewVars['_newline'] === null) {
-            $this->viewVars['_newline'] = "\n";
-        }
-
-        if ($this->viewVars['_eol'] === null) {
-            $this->viewVars['_eol'] = PHP_EOL;
-        }
-
-        if ($this->viewVars['_null'] === null) {
-            $this->viewVars['_null'] = '';
-        }
-
-        if ($this->viewVars['_bom'] === null) {
-            $this->viewVars['_bom'] = false;
-        }
-
-        if ($this->viewVars['_setSeparator'] === null) {
-            $this->viewVars['_setSeparator'] = false;
-        }
-
-        if ($this->viewVars['_dataEncoding'] === null) {
-            $this->viewVars['_dataEncoding'] = 'UTF-8';
-        }
-
-        if ($this->viewVars['_csvEncoding'] === null) {
-            $this->viewVars['_csvEncoding'] = 'UTF-8';
-        }
-
-        if ($this->viewVars['_extension'] === null) {
-            $this->viewVars['_extension'] = self::EXTENSION_ICONV;
-        }
-
-        if ($this->viewVars['_extract'] !== null) {
-            $this->viewVars['_extract'] = (array)$this->viewVars['_extract'];
-        }
     }
 
     /**
@@ -310,16 +212,13 @@ class CsvView extends View
      * @return void
      * @throws \Exception
      */
-    protected function _renderContent()
+    protected function _renderContent(): void
     {
-        $extract = $this->viewVars['_extract'];
-        $serialize = $this->viewVars['_serialize'];
+        $extract = $this->getConfig('extract');
+        $serialize = $this->getConfig('serialize');
 
         if ($serialize === true) {
-            $serialize = array_diff(
-                array_keys($this->viewVars),
-                $this->_specialVars
-            );
+            $serialize = array_keys($this->viewVars);
         }
 
         foreach ((array)$serialize as $viewVar) {
@@ -345,7 +244,7 @@ class CsvView extends View
                         $path = $formatter;
                         $format = null;
                         if (is_array($formatter)) {
-                            list($path, $format) = $formatter;
+                            [$path, $format] = $formatter;
                         }
 
                         if (strpos($path, '.') === false) {
@@ -370,10 +269,9 @@ class CsvView extends View
      * Aggregates the rows into a single csv
      *
      * @param array|null $row Row data
-     *
-     * @return null|string CSV with all data to date
+     * @return string CSV with all data to date
      */
-    protected function _renderRow($row = null)
+    protected function _renderRow(?array $row = null): string
     {
         static $csv = '';
 
@@ -381,7 +279,7 @@ class CsvView extends View
             $csv = '';
             $this->_resetStaticVariables = false;
 
-            return null;
+            return '';
         }
 
         $csv .= (string)$this->_generateRow($row);
@@ -395,10 +293,9 @@ class CsvView extends View
      * returning it's contents
      *
      * @param array|null $row Row data
-     *
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
-    protected function _generateRow($row = null)
+    protected function _generateRow(?array $row = null)
     {
         static $fp = false;
 
@@ -409,24 +306,26 @@ class CsvView extends View
         if ($fp === false) {
             $fp = fopen('php://temp', 'r+');
 
-            if ($this->viewVars['_setSeparator']) {
-                fwrite($fp, "sep=" . $this->viewVars['_delimiter'] . "\n");
+            $setSeparator = $this->getConfig('setSeparator');
+            if ($setSeparator) {
+                fwrite($fp, 'sep=' . $setSeparator . "\n");
             }
         } else {
             ftruncate($fp, 0);
         }
 
-        if ($this->viewVars['_null'] !== '') {
+        $null = $this->getConfig('null');
+        if ($null) {
             foreach ($row as &$field) {
                 if ($field === null) {
-                    $field = $this->viewVars['_null'];
+                    $field = $null;
                 }
             }
         }
 
-        $delimiter = $this->viewVars['_delimiter'];
-        $enclosure = $this->viewVars['_enclosure'];
-        $newline = $this->viewVars['_newline'];
+        $delimiter = $this->getConfig('delimiter');
+        $enclosure = $this->getConfig('enclosure');
+        $newline = $this->getConfig('newline');
 
         $row = str_replace(["\r\n", "\n", "\r"], $newline, $row);
         if ($enclosure === '') {
@@ -447,25 +346,26 @@ class CsvView extends View
             $csv .= $buffer;
         }
 
-        $eol = $this->viewVars['_eol'];
+        $eol = $this->getConfig('eol');
         if ($eol !== "\n") {
             $csv = str_replace("\n", $eol, $csv);
         }
 
-        $dataEncoding = $this->viewVars['_dataEncoding'];
-        $csvEncoding = $this->viewVars['_csvEncoding'];
+        $dataEncoding = $this->getConfig('dataEncoding');
+        $csvEncoding = $this->getConfig('csvEncoding');
         if ($dataEncoding !== $csvEncoding) {
-            $extension = $this->viewVars['_extension'];
-            if ($extension === self::EXTENSION_ICONV) {
+            $extension = $this->getConfig('transcodingExtension');
+            if ($extension === static::EXTENSION_ICONV) {
                 $csv = iconv($dataEncoding, $csvEncoding, $csv);
-            } elseif ($extension === self::EXTENSION_MBSTRING) {
+            } elseif ($extension === static::EXTENSION_MBSTRING) {
                 $csv = mb_convert_encoding($csv, $csvEncoding, $dataEncoding);
             }
         }
 
-        //bom must be added after encoding
-        if ($this->viewVars['_bom'] && $this->isFirstBom) {
-            $csv = $this->getBom($this->viewVars['_csvEncoding']) . $csv;
+        // BOM must be added after encoding
+        $bom = $this->getConfig('bom');
+        if ($bom && $this->isFirstBom) {
+            $csv = $this->getBom($csvEncoding) . $csv;
             $this->isFirstBom = false;
         }
 
@@ -478,22 +378,10 @@ class CsvView extends View
      * @param string $csvEncoding The encoding you want the BOM for
      * @return string
      */
-    protected function getBom($csvEncoding)
+    protected function getBom(string $csvEncoding): string
     {
         $csvEncoding = strtoupper($csvEncoding);
 
-        return isset($this->bomMap[$csvEncoding]) ? $this->bomMap[$csvEncoding] : '';
-    }
-
-    /**
-     * Gets the response instance.
-     *
-     * Added for compatibility with CakePHP 3.7+.
-     *
-     * @return \Cake\Http\Response
-     */
-    public function getResponse()
-    {
-        return $this->response;
+        return $this->bomMap[$csvEncoding] ?? '';
     }
 }
