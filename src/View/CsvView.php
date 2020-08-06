@@ -308,7 +308,7 @@ class CsvView extends SerializedView
 
             $setSeparator = $this->getConfig('setSeparator');
             if ($setSeparator) {
-                fwrite($fp, "sep=" . $setSeparator . "\n");
+                fwrite($fp, 'sep=' . $setSeparator . "\n");
             }
         } else {
             ftruncate($fp, 0);

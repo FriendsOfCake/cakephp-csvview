@@ -462,7 +462,7 @@ CSV;
         $testData = [
             '"' => 'user,"fake apple",list,"a b c",item2' . PHP_EOL,
             "'" => "user,'fake apple',list,'a b c',item2" . PHP_EOL,
-            '' => "user,fake apple,list,a b c,item2" . PHP_EOL,
+            '' => 'user,fake apple,list,a b c,item2' . PHP_EOL,
         ];
 
         foreach ($testData as $enclosure => $expected) {
