@@ -242,10 +242,10 @@ The defaults are:
 ** Only if those two variable are different your data will be converted to another encoding.
 
 CsvView uses the `iconv` extension by default to encode your data. You can change
-the php extension used to encode your data by setting the `extension` option:
+the php extension used to encode your data by setting the `transcodingExtension` option:
 
 ```php
-$this->viewBuilder()->setOption('extension', 'mbstring');
+$this->viewBuilder()->setOption('transcodingExtension', 'mbstring');
 ```
 
 The currently supported encoding extensions are as follows:
