@@ -1,5 +1,7 @@
 parameters:
     level: 6
     checkMissingIterableValueType: false
-    autoload_files:
+    paths:
+        - src
+    bootstrapFiles:
         - tests/bootstrap.php
