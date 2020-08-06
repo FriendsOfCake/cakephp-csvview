@@ -47,13 +47,13 @@ chance of keeping on top of things.
 ## Testcases and codesniffer
 
 CsvView tests requires [PHPUnit](http://www.phpunit.de/manual/current/en/installation.html)
-3.5 or higher. To run the testcases locally use the following command:
+8.5 or higher. To run the testcases locally use the following command:
 
-    ./lib/Cake/Console/cake test CsvView AllCsvView
+    composer test
 
 To run the sniffs for CakePHP coding standards
 
-    phpcs -p --extensions=php --standard=CakePHP ./app/Plugin/CsvView
+    composer cs-check
 
 Check the [cakephp-codesniffer](https://github.com/cakephp/cakephp-codesniffer)
 repository to setup the CakePHP standard. The README contains installation info
@@ -62,7 +62,7 @@ for the sniff and phpcs.
 
 # Additional Resources
 
-* [CakePHP coding standards](http://book.cakephp.org/2.0/en/contributing/cakephp-coding-conventions.html)
+* [CakePHP coding standards](http://book.cakephp.org/4/en/contributing/cakephp-coding-conventions.html)
 * [Bug tracker](https://github.com/friendsofcake/cakephp-csvview/issues)
 * [General GitHub documentation](https://help.github.com/)
 * [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
