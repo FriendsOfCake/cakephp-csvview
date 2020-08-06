@@ -199,7 +199,7 @@ public function index()
     $posts = $this->Posts->find();
     $this->set(compact('posts'));
 
-    if ($this->request->is('csv') {
+    if ($this->request->is('csv')) {
         $serialize = 'posts';
         $header = array('Post ID', 'Title', 'Created');
         $extract = array('id', 'title', 'created');
@@ -217,7 +217,7 @@ leave `serialize` unspecified or set it to null. The view files will be located
 in the `csv` subdirectory of your current controller:
 
 ```php
-// View used will be in src/Template/Posts/csv/export.php
+// View used will be in templates/Posts/csv/export.php
 public function export()
 {
     $posts = $this->Posts->find();
@@ -320,8 +320,7 @@ $view = $builder->build($data);
 $view->set(compact('data'));
 
 // And Save the file
-$file = new File('/full/path/to/file.csv', true, 0644);
-$file->write($view->render());
+file_put_contents('/full/path/to/file.csv', $view->render());
 ```
 
 ## License
