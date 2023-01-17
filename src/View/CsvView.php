@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace CsvView\View;
 
+use Cake\Core\Exception\CakeException;
 use Cake\Datasource\EntityInterface;
 use Cake\Utility\Hash;
 use Cake\View\SerializedView;
@@ -304,7 +305,11 @@ class CsvView extends SerializedView
         }
 
         if ($fp === false) {
-            $fp = fopen('php://temp', 'r+');
+            $stream = 'php://temp';
+            $fp = fopen($stream, 'r+');
+            if ($fp === false) {
+                throw new CakeException(sprintf('Cannot open stream `%s`', $stream));
+            }
 
             $setSeparator = $this->getConfig('setSeparator');
             if ($setSeparator) {

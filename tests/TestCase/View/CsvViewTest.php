@@ -5,7 +5,7 @@ namespace CsvView\Test\TestCase\View;
 
 use Cake\Http\Response;
 use Cake\Http\ServerRequest as Request;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CsvView\View\CsvView;
@@ -34,7 +34,7 @@ class CsvViewTest extends TestCase
 
     public function setUp(): void
     {
-        Time::setToStringFormat('yyyy-MM-dd HH:mm:ss');
+        FrozenTime::setToStringFormat('yyyy-MM-dd HH:mm:ss');
 
         $this->request = new Request();
         $this->response = new Response();
@@ -267,7 +267,7 @@ class CsvViewTest extends TestCase
             [
                 'User' => [
                     'username' => 'jose',
-                    'created' => new Time('2010-01-05'),
+                    'created' => new FrozenTime('2010-01-05'),
                 ],
                 'Item' => [
                     'name' => 'beach',
@@ -343,7 +343,7 @@ class CsvViewTest extends TestCase
         $data = [
             [
                 'username' => 'jose',
-                'created' => new Time('2010-01-05'),
+                'created' => new FrozenTime('2010-01-05'),
                 'item' => [
                     'name' => 'beach',
                 ],
