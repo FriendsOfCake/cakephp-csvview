@@ -8,6 +8,8 @@
 
 Quickly enable CSV output of your model data.
 
+This branch is for CakePHP **4.x**. For details see [version map](https://github.com/FriendsOfCake/cakephp-csvview/wiki#cakephp-version-map).
+
 ## Background
 
 I needed to quickly export CSVs of stuff in the database. Using a view class to
