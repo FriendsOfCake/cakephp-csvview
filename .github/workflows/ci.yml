@@ -101,7 +101,7 @@ jobs:
       run: composer stan-setup
 
     - name: Run PHP CodeSniffer
-      run: vendor/bin/phpcs --report=checkstyle src/ tests/ | cs2pr
+      run: composer cs-check
 
     - name: Run phpstan
       if: success() || failure()

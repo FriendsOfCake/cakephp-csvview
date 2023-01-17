@@ -72,8 +72,8 @@
             "@cs-check",
             "@test"
         ],
-        "cs-check": "phpcs -p -v --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
-        "cs-fix": "phpcbf -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP src/ tests/",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
         "test": "phpunit",
         "stan": "phpstan analyse && psalm",
         "phpstan": "phpstan analyse",
