@@ -44,10 +44,10 @@
         }
     ],
     "require":{
-        "cakephp/cakephp": "^4.0"
+        "cakephp/cakephp": "^4.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "~8.5.0",
+        "phpunit/phpunit": "^9.5.0",
         "cakephp/cakephp-codesniffer": "^4.0"
     },
     "autoload": {
@@ -77,7 +77,12 @@
         "stan": "phpstan analyse && psalm",
         "phpstan": "phpstan analyse",
         "psalm": "psalm --show-info=false",
-        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^0.12 vimeo/psalm:^3.7 && mv composer.backup composer.json",
+        "stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.0.0 vimeo/psalm:^5.0 && mv composer.backup composer.json",
         "test-coverage": "phpunit --coverage-clover=clover.xml"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
