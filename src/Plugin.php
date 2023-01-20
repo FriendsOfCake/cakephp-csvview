@@ -16,21 +16,21 @@ class Plugin extends BasePlugin
      *
      * @var string
      */
-    protected $name = 'CsvView';
+    protected ?string $name = 'CsvView';
 
     /**
      * Load routes or not
      *
      * @var bool
      */
-    protected $routesEnabled = false;
+    protected bool $routesEnabled = false;
 
     /**
      * Console middleware
      *
      * @var bool
      */
-    protected $consoleEnabled = false;
+    protected bool $consoleEnabled = false;
 
     /**
      * @inheritDoc
@@ -42,7 +42,8 @@ class Plugin extends BasePlugin
          *
          * @link https://book.cakephp.org/4/en/controllers/components/request-handling.html#using-custom-viewclasses
          */
-        EventManager::instance()->on('Controller.initialize', function (EventInterface $event) {
+        EventManager::instance()->on('Controller.initialize', function (EventInterface $event): void {
+            /** @var \Cake\Controller\Controller $controller */
             $controller = $event->getSubject();
             if ($controller->components()->has('RequestHandler')) {
                 $controller->RequestHandler->setConfig('viewClassMap.csv', 'CsvView.Csv');

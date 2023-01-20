@@ -67,7 +67,7 @@ class CsvView extends SerializedView
      *
      * @var string
      */
-    protected $layoutPath = 'csv';
+    protected string $layoutPath = 'csv';
 
     /**
      * CSV views are always located in the 'csv' sub directory for a
@@ -75,21 +75,21 @@ class CsvView extends SerializedView
      *
      * @var string
      */
-    protected $subDir = 'csv';
+    protected string $subDir = 'csv';
 
     /**
      * Response type.
      *
      * @var string
      */
-    protected $_responseType = 'text/csv';
+    protected string $_responseType = 'text/csv';
 
     /**
      * Whether or not to reset static variables in use
      *
      * @var bool
      */
-    protected $_resetStaticVariables = false;
+    protected bool $_resetStaticVariables = false;
 
     /**
      * Iconv extension.
@@ -110,14 +110,14 @@ class CsvView extends SerializedView
      *
      * @var array
      */
-    protected $bomMap;
+    protected array $bomMap;
 
     /**
      * BOM first appearance
      *
      * @var bool
      */
-    protected $isFirstBom = true;
+    protected bool $isFirstBom = true;
 
     /**
      * Default config.
@@ -146,7 +146,7 @@ class CsvView extends SerializedView
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'extract' => null,
         'footer' => null,
         'header' => null,
@@ -195,7 +195,7 @@ class CsvView extends SerializedView
      *   need(s) to be serialized
      * @return string The serialized data or false.
      */
-    protected function _serialize($serialize): string
+    protected function _serialize(array|string $serialize): string
     {
         $this->_renderRow($this->getConfig('header'));
         $this->_renderContent();
@@ -296,7 +296,7 @@ class CsvView extends SerializedView
      * @param array|null $row Row data
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
-    protected function _generateRow(?array $row = null)
+    protected function _generateRow(?array $row = null): string|false
     {
         static $fp = false;
 

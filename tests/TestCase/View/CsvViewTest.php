@@ -5,17 +5,18 @@ namespace CsvView\Test\TestCase\View;
 
 use Cake\Http\Response;
 use Cake\Http\ServerRequest as Request;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CsvView\View\CsvView;
+use Exception;
 
 /**
  * CsvViewTest
  */
 class CsvViewTest extends TestCase
 {
-    public $fixtures = ['core.Articles', 'core.Authors'];
+    protected array $fixtures = ['core.Articles', 'core.Authors'];
 
     /**
      * @var \CsvView\View\CsvView
@@ -34,7 +35,7 @@ class CsvViewTest extends TestCase
 
     public function setUp(): void
     {
-        FrozenTime::setToStringFormat('yyyy-MM-dd HH:mm:ss');
+        DateTime::setToStringFormat('yyyy-MM-dd HH:mm:ss');
 
         $this->request = new Request();
         $this->response = new Response();
@@ -267,7 +268,7 @@ class CsvViewTest extends TestCase
             [
                 'User' => [
                     'username' => 'jose',
-                    'created' => new FrozenTime('2010-01-05'),
+                    'created' => new DateTime('2010-01-05'),
                 ],
                 'Item' => [
                     'name' => 'beach',
@@ -343,7 +344,7 @@ class CsvViewTest extends TestCase
         $data = [
             [
                 'username' => 'jose',
-                'created' => new FrozenTime('2010-01-05'),
+                'created' => new DateTime('2010-01-05'),
                 'item' => [
                     'name' => 'beach',
                 ],
@@ -511,7 +512,7 @@ CSV;
      */
     public function testInvalidViewVarThrowsException()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
 
         $this->view->set(['data' => 'invaliddata']);
         $this->view->setConfig('serialize', 'data');
