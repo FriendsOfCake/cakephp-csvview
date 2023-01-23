@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<ruleset name="CakePHP Bake">
+<ruleset name="CsvView">
     <config name="installed_paths" value="../../cakephp/cakephp-codesniffer" />
-    <arg value="nps"/>
+    <arg value="s"/>
 
     <file>src/</file>
     <file>tests/</file>
