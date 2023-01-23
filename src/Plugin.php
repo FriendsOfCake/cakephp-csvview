@@ -5,8 +5,6 @@ namespace CsvView;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
-use Cake\Event\EventInterface;
-use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 
 class Plugin extends BasePlugin
@@ -37,19 +35,6 @@ class Plugin extends BasePlugin
      */
     public function bootstrap(PluginApplicationInterface $app): void
     {
-        /**
-         * Add CsvView to View class map through RequestHandler, if available, on Controller initialisation
-         *
-         * @link https://book.cakephp.org/4/en/controllers/components/request-handling.html#using-custom-viewclasses
-         */
-        EventManager::instance()->on('Controller.initialize', function (EventInterface $event): void {
-            /** @var \Cake\Controller\Controller $controller */
-            $controller = $event->getSubject();
-            if ($controller->components()->has('RequestHandler')) {
-                $controller->RequestHandler->setConfig('viewClassMap.csv', 'CsvView.Csv');
-            }
-        });
-
         /**
          * Add a request detector named "csv" to check whether the request was for a CSV,
          * either through accept header or file extension

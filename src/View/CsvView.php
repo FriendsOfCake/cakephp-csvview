@@ -78,13 +78,6 @@ class CsvView extends SerializedView
     protected string $subDir = 'csv';
 
     /**
-     * Response type.
-     *
-     * @var string
-     */
-    protected string $_responseType = 'text/csv';
-
-    /**
      * Whether or not to reset static variables in use
      *
      * @var bool
@@ -186,6 +179,16 @@ class CsvView extends SerializedView
         }
 
         parent::initialize();
+    }
+
+    /**
+     * Mime-type this view class renders as.
+     *
+     * @return string The JSON content type.
+     */
+    public static function contentType(): string
+    {
+        return 'text/csv';
     }
 
     /**
