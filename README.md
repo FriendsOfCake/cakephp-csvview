@@ -8,7 +8,7 @@
 
 Quickly enable CSV output of your model data.
 
-This branch is for CakePHP **4.x**. For details see [version map](https://github.com/FriendsOfCake/cakephp-csvview/wiki#cakephp-version-map).
+This branch is for CakePHP **5.x**. For details see [version map](https://github.com/FriendsOfCake/cakephp-csvview/wiki#cakephp-version-map).
 
 ## Background
 
@@ -182,18 +182,20 @@ to set how null values should be displayed in the CSV.
 
 #### Automatic view class switching
 
-You can use router's extension parsing feature and the `RequestHandlerComponent` to
-automatically have the CsvView class switched in as follows.
+You can use the controller content negotiation feature to automatically have the
+CsvView class switched in as follows.
 
-Enable `csv` extension parsing for all routes using `Router::extensions('csv')`
-in your app's `routes.php` or using `$routes->addExtensions()` within required
-scope.
+Enable `csv` extension parsing using `$routes->addExtensions(['csv'])` within required
+scope in your app's `routes.php`.
 
 ```php
 // PostsController.php
 
-// In your controller's initialize() method:
-$this->loadComponent('RequestHandler');
+// Override the viewClasses method of your controller:
+public function viewClasses()
+{
+    return ['csv' => 'CsvView.Csv'];
+}
 
 // Controller action
 public function index()
