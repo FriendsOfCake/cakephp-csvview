@@ -16,10 +16,10 @@
     <coverage>
         <include>
             <directory suffix=".php">src/</directory>
-            <exclude>
-                <file>src/Plugin.php</file>
-            </exclude>
         </include>
     </coverage>
 
+    <php>
+        <env name="FIXTURE_SCHEMA_METADATA" value="./tests/schema.php"/>
+    </php>
 </phpunit>

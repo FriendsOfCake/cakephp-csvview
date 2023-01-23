@@ -6,7 +6,6 @@ namespace CsvView\Test\TestCase\View;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest as Request;
 use Cake\I18n\DateTime;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CsvView\View\CsvView;
 use Exception;
@@ -16,7 +15,7 @@ use Exception;
  */
 class CsvViewTest extends TestCase
 {
-    protected array $fixtures = ['core.Articles', 'core.Authors'];
+    protected array $fixtures = ['plugin.CsvView.Articles', 'plugin.CsvView.Authors'];
 
     /**
      * @var \CsvView\View\CsvView
@@ -35,6 +34,8 @@ class CsvViewTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
+
         DateTime::setToStringFormat('yyyy-MM-dd HH:mm:ss');
 
         $this->request = new Request();
@@ -432,7 +433,7 @@ CSV;
      */
     public function testPassingQueryAsData()
     {
-        $articles = TableRegistry::getTableLocator()->get('Articles');
+        $articles = $this->getTableLocator()->get('Articles');
         $query = $articles->find();
 
         $this->view->set(['data' => $query])
