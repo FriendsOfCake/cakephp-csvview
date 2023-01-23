@@ -7,7 +7,6 @@ use Cake\Core\Exception\CakeException;
 use Cake\Datasource\EntityInterface;
 use Cake\Utility\Hash;
 use Cake\View\SerializedView;
-use Exception;
 
 /**
  * A view class that is used for CSV responses.
@@ -214,7 +213,7 @@ class CsvView extends SerializedView
      * Renders the body of the data to the csv
      *
      * @return void
-     * @throws \Exception
+     * @throws \Cake\Core\Exception\CakeException
      */
     protected function _renderContent(): void
     {
@@ -227,7 +226,7 @@ class CsvView extends SerializedView
 
         foreach ((array)$serialize as $viewVar) {
             if (is_scalar($this->viewVars[$viewVar])) {
-                throw new Exception("'" . $viewVar . "' is not an array or iteratable object.");
+                throw new CakeException("'" . $viewVar . "' is not an array or iteratable object.");
             }
 
             foreach ($this->viewVars[$viewVar] as $_data) {
