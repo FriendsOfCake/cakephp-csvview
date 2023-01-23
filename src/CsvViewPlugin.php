@@ -7,7 +7,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Http\ServerRequest;
 
-class Plugin extends BasePlugin
+class CsvViewPlugin extends BasePlugin
 {
     /**
      * Plugin name.
