@@ -182,8 +182,8 @@ to set how null values should be displayed in the CSV.
 
 #### Automatic view class switching
 
-You can use the controller content negotiation feature to automatically have the
-CsvView class switched in as follows.
+You can use the controller's content negotiation feature to automatically have
+the CsvView class switched in as follows.
 
 Enable `csv` extension parsing using `$routes->addExtensions(['csv'])` within required
 scope in your app's `routes.php`.
