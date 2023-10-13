@@ -441,7 +441,7 @@ CSV;
         $output = $this->view->render();
 
         $articles->belongsTo('Authors');
-        $query = $articles->find('all', ['contain' => 'Authors']);
+        $query = $articles->find('all', contain: 'Authors');
         $_extract = ['title', 'body', 'author.name'];
         $this->view->set(['data' => $query])
             ->setConfig(['extract' => $_extract, 'serialize' => 'data']);
