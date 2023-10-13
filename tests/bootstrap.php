@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use Cake\Core\Configure;
+use Cake\TestSuite\Fixture\SchemaLoader;
 
 /**
  * Test suite bootstrap
@@ -43,7 +44,7 @@ Configure::write('App', [
     ],
 ]);
 
-if (env('FIXTURE_SCHEMA_METADATA')) {
-    $loader = new Cake\TestSuite\Fixture\SchemaLoader();
-    $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
+if (getenv('FIXTURE_SCHEMA_METADATA')) {
+    $loader = new SchemaLoader();
+    $loader->loadInternalFile(getenv('FIXTURE_SCHEMA_METADATA'));
 }

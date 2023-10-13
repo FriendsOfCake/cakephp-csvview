@@ -191,10 +191,12 @@ scope in your app's `routes.php`.
 ```php
 // PostsController.php
 
-// Override the viewClasses method of your controller:
-public function viewClasses()
+// Add the CsvView class for content type negotiation
+public function initialize(): void
 {
-    return ['csv' => 'CsvView.Csv'];
+    parent::initialize();
+
+    $this->addViewClasses(['csv' => 'CsvView.Csv']);
 }
 
 // Controller action
