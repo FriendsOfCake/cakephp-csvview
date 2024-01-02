@@ -329,6 +329,3 @@ $view->set(compact('data'));
 file_put_contents('/full/path/to/file.csv', $view->render());
 ```
 
-## License
-
-[The MIT License (MIT)](LICENSE.txt)
