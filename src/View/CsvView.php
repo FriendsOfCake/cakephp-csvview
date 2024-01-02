@@ -226,7 +226,7 @@ class CsvView extends SerializedView
 
         foreach ((array)$serialize as $viewVar) {
             if (is_scalar($this->viewVars[$viewVar])) {
-                throw new CakeException("'" . $viewVar . "' is not an array or iteratable object.");
+                throw new CakeException("'" . $viewVar . "' is not an array or iterable object.");
             }
 
             foreach ($this->viewVars[$viewVar] as $_data) {
@@ -250,7 +250,7 @@ class CsvView extends SerializedView
                             [$path, $format] = $formatter;
                         }
 
-                        if (strpos($path, '.') === false) {
+                        if (!str_contains($path, '.')) {
                             $value = $_data[$path];
                         } else {
                             $value = Hash::get($_data, $path);
@@ -271,7 +271,7 @@ class CsvView extends SerializedView
     /**
      * Aggregates the rows into a single csv
      *
-     * @param array|null $row Row data
+     * @param array<string>|null $row Row data
      * @return string CSV with all data to date
      */
     protected function _renderRow(?array $row = null): string
@@ -293,7 +293,7 @@ class CsvView extends SerializedView
     /**
      * Generates a single row in a csv from an array of
      * data by writing the array to a temporary file and
-     * returning it's contents
+     * returning its contents
      *
      * @param array|null $row Row data
      * @return string|false String with the row in csv-syntax, false on fputscv failure
@@ -302,7 +302,7 @@ class CsvView extends SerializedView
     {
         static $fp = false;
 
-        if (empty($row)) {
+        if (!$row) {
             return '';
         }
 
