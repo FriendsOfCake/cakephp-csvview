@@ -69,7 +69,7 @@ class CsvViewTest extends TestCase
     {
         if (!extension_loaded('mbstring')) {
             $this->markTestSkipped(
-                'The mbstring extension is not available.'
+                'The mbstring extension is not available.',
             );
         }
 
@@ -91,7 +91,7 @@ class CsvViewTest extends TestCase
     {
         if (!extension_loaded('mbstring')) {
             $this->markTestSkipped(
-                'The mbstring extension is not available.'
+                'The mbstring extension is not available.',
             );
         }
 
@@ -118,7 +118,7 @@ class CsvViewTest extends TestCase
     {
         if (!extension_loaded('mbstring')) {
             $this->markTestSkipped(
-                'The mbstring extension is not available.'
+                'The mbstring extension is not available.',
             );
         }
 
@@ -215,7 +215,7 @@ class CsvViewTest extends TestCase
     {
         if (!extension_loaded('mbstring')) {
             $this->markTestSkipped(
-                'The mbstring extension is not available.'
+                'The mbstring extension is not available.',
             );
         }
         $data = [
