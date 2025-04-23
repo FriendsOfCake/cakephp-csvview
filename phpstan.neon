@@ -1,8 +1,8 @@
 parameters:
     level: 8
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
     paths:
         - src/
     bootstrapFiles:
         - tests/bootstrap.php
+    ignoreErrors:
+        - identifier: missingType.generics

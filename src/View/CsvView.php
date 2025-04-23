@@ -100,7 +100,7 @@ class CsvView extends SerializedView
     /**
      * List of bom signs for encodings.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected array $bomMap;
 
@@ -129,6 +129,7 @@ class CsvView extends SerializedView
      * - 'delimiter': (default ',')      CSV Delimiter, defaults to comma
      * - 'enclosure': (default '"')      CSV Enclosure for use with fputcsv()
      * - 'newline': (default '\n')       CSV Newline replacement for use with fputcsv()
+     * - 'escape': (default '\\')        CSV escape character for use with fputcsv()
      * - 'eol': (default '\n')           End-of-line character the csv
      * - 'bom': (default false)          Adds BOM (byte order mark) header
      * - 'setSeparator': (default false) Adds sep=[_delimiter] in the first line
@@ -146,6 +147,7 @@ class CsvView extends SerializedView
         'delimiter' => ',',
         'enclosure' => '"',
         'newline' => "\n",
+        'escape' => '\\',
         'eol' => PHP_EOL,
         'null' => '',
         'bom' => false,
@@ -193,7 +195,7 @@ class CsvView extends SerializedView
     /**
      * Serialize view vars.
      *
-     * @param array|string $serialize The name(s) of the view variable(s) that
+     * @param array<string>|string $serialize The name(s) of the view variable(s) that
      *   need(s) to be serialized
      * @return string The serialized data or false.
      */
@@ -295,7 +297,7 @@ class CsvView extends SerializedView
      * data by writing the array to a temporary file and
      * returning its contents
      *
-     * @param array|null $row Row data
+     * @param array<string|null>|null $row Row data
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
     protected function _generateRow(?array $row = null): string|false
@@ -333,7 +335,9 @@ class CsvView extends SerializedView
         $delimiter = $this->getConfig('delimiter');
         $enclosure = $this->getConfig('enclosure');
         $newline = $this->getConfig('newline');
+        $escape = $this->getConfig('escape');
 
+        /** @phpstan-ignore-next-line */
         $row = str_replace(["\r\n", "\n", "\r"], $newline, $row);
         if ($enclosure === '') {
             // fputcsv does not supports empty enclosure
@@ -341,12 +345,13 @@ class CsvView extends SerializedView
                 return false;
             }
         } else {
-            if (fputcsv($fp, $row, $delimiter, $enclosure) === false) {
+            if (fputcsv($fp, $row, $delimiter, $enclosure, $escape) === false) {
                 return false;
             }
         }
 
         rewind($fp);
+        unset($row);
 
         $csv = '';
         while (($buffer = fgets($fp, 4096)) !== false) {
