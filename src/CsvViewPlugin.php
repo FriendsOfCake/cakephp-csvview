@@ -47,7 +47,7 @@ class CsvViewPlugin extends BasePlugin
                 'accept' => ['text/csv'],
                 'param' => '_ext',
                 'value' => 'csv',
-            ]
+            ],
         );
     }
 }
