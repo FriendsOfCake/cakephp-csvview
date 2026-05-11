@@ -7,6 +7,7 @@ use Cake\Core\Exception\CakeException;
 use Cake\Datasource\EntityInterface;
 use Cake\Utility\Hash;
 use Cake\View\SerializedView;
+use Stringable;
 
 /**
  * A view class that is used for CSV responses.
@@ -77,11 +78,18 @@ class CsvView extends SerializedView
     protected string $subDir = 'csv';
 
     /**
-     * Whether or not to reset static variables in use
+     * Aggregated CSV output for the current serialization pass.
      *
-     * @var bool
+     * @var string
      */
-    protected bool $_resetStaticVariables = false;
+    protected string $csv = '';
+
+    /**
+     * Temp stream used by fputcsv() to generate a single row.
+     *
+     * @var resource|null
+     */
+    protected $fp = null;
 
     /**
      * Iconv extension.
@@ -201,14 +209,41 @@ class CsvView extends SerializedView
      */
     protected function _serialize(array|string $serialize): string
     {
+        $this->resetState();
+
         $this->_renderRow($this->getConfig('header'));
         $this->_renderContent();
         $this->_renderRow($this->getConfig('footer'));
-        $content = $this->_renderRow();
-        $this->_resetStaticVariables = true;
-        $this->_renderRow();
+        $content = $this->csv;
+
+        $this->resetState();
 
         return $content;
+    }
+
+    /**
+     * Reset accumulated state so the same view instance can render multiple
+     * times in a single request (queue worker, multi-file export, etc.).
+     */
+    protected function resetState(): void
+    {
+        $this->csv = '';
+        $this->isFirstBom = true;
+        if (is_resource($this->fp)) {
+            fclose($this->fp);
+        }
+        $this->fp = null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __destruct()
+    {
+        if (is_resource($this->fp)) {
+            fclose($this->fp);
+            $this->fp = null;
+        }
     }
 
     /**
@@ -245,22 +280,33 @@ class CsvView extends SerializedView
                 foreach ($extract as $formatter) {
                     if (!is_string($formatter) && is_callable($formatter)) {
                         $value = $formatter($_data);
+                        $pathForError = '<callable>';
                     } else {
                         $path = $formatter;
                         $format = null;
                         if (is_array($formatter)) {
                             [$path, $format] = $formatter;
                         }
+                        $pathForError = (string)$path;
 
-                        if (!str_contains($path, '.')) {
-                            $value = $_data[$path];
-                        } else {
-                            $value = Hash::get($_data, $path);
-                        }
+                        $value = Hash::get($_data, $path);
 
-                        if ($format) {
+                        if ($format !== null) {
                             $value = sprintf($format, $value);
                         }
+                    }
+
+                    if (
+                        $value !== null
+                        && !is_scalar($value)
+                        && !($value instanceof Stringable)
+                    ) {
+                        throw new CakeException(sprintf(
+                            'Extract path `%s` resolved to a non-scalar `%s`. '
+                            . 'Use a callable formatter to flatten it, or adjust the extract path.',
+                            $pathForError,
+                            get_debug_type($value),
+                        ));
                     }
 
                     $values[] = $value;
@@ -273,23 +319,14 @@ class CsvView extends SerializedView
     /**
      * Aggregates the rows into a single csv
      *
-     * @param array<string>|null $row Row data
+     * @param array<scalar|\Stringable|null>|null $row Row data
      * @return string CSV with all data to date
      */
     protected function _renderRow(?array $row = null): string
     {
-        static $csv = '';
+        $this->csv .= (string)$this->_generateRow($row);
 
-        if ($this->_resetStaticVariables) {
-            $csv = '';
-            $this->_resetStaticVariables = false;
-
-            return '';
-        }
-
-        $csv .= (string)$this->_generateRow($row);
-
-        return $csv;
+        return $this->csv;
     }
 
     /**
@@ -297,30 +334,29 @@ class CsvView extends SerializedView
      * data by writing the array to a temporary file and
      * returning its contents
      *
-     * @param array<string|null>|null $row Row data
+     * @param array<scalar|\Stringable|null>|null $row Row data
      * @return string|false String with the row in csv-syntax, false on fputscv failure
      */
     protected function _generateRow(?array $row = null): string|false
     {
-        static $fp = false;
-
         if (!$row) {
             return '';
         }
 
-        if ($fp === false) {
+        if ($this->fp === null) {
             $stream = 'php://temp';
             $fp = fopen($stream, 'r+');
             if ($fp === false) {
                 throw new CakeException(sprintf('Cannot open stream `%s`', $stream));
             }
+            $this->fp = $fp;
 
             $setSeparator = $this->getConfig('setSeparator');
             if ($setSeparator) {
-                fwrite($fp, 'sep=' . $setSeparator . "\n");
+                fwrite($this->fp, 'sep=' . $setSeparator . "\n");
             }
         } else {
-            ftruncate($fp, 0);
+            ftruncate($this->fp, 0);
         }
 
         $null = $this->getConfig('null');
@@ -340,21 +376,21 @@ class CsvView extends SerializedView
         /** @phpstan-ignore-next-line */
         $row = str_replace(["\r\n", "\n", "\r"], $newline, $row);
         if ($enclosure === '') {
-            // fputcsv does not supports empty enclosure
-            if (fputs($fp, implode($delimiter, $row) . "\n") === false) {
+            // fputcsv does not support empty enclosure
+            if (fputs($this->fp, implode($delimiter, $row) . "\n") === false) {
                 return false;
             }
         } else {
-            if (fputcsv($fp, $row, $delimiter, $enclosure, $escape) === false) {
+            if (fputcsv($this->fp, $row, $delimiter, $enclosure, $escape) === false) {
                 return false;
             }
         }
 
-        rewind($fp);
+        rewind($this->fp);
         unset($row);
 
         $csv = '';
-        while (($buffer = fgets($fp, 4096)) !== false) {
+        while (($buffer = fgets($this->fp, 4096)) !== false) {
             $csv .= $buffer;
         }
 
