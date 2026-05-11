@@ -180,6 +180,10 @@ to set how null values should be displayed in the CSV.
 
 `null` defaults to `''`.
 
+Extract paths now consistently resolve through `Hash::get()`, so missing keys
+become `null`. If an extract path resolves to an array or object that cannot be
+stringified, use a callable extractor to flatten it before rendering.
+
 #### Automatic view class switching
 
 You can use the controller's content negotiation feature to automatically have
@@ -328,4 +332,3 @@ $view->set(compact('data'));
 // And Save the file
 file_put_contents('/full/path/to/file.csv', $view->render());
 ```
-
