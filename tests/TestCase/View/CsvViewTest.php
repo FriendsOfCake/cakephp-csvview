@@ -597,4 +597,48 @@ CSV;
             );
         }
     }
+
+    /**
+     * `excel => true` is a shorthand that forces the three options Excel
+     * needs to open a UTF-8 CSV correctly on Windows: BOM, CRLF line
+     * endings, and UTF-8 encoding.
+     *
+     * @return void
+     */
+    public function testExcelPresetEmitsBomCrlfAndUtf8()
+    {
+        $data = [['Möhre', 'café'], ['ü', 'ß']];
+        $this->view->set(['data' => $data])
+            ->setConfig(['serialize' => 'data', 'excel' => true]);
+
+        $bom = chr(0xEF) . chr(0xBB) . chr(0xBF);
+        $expected = $bom . 'Möhre,café' . "\r\n" . 'ü,ß' . "\r\n";
+
+        $this->assertSame($expected, $this->view->render());
+    }
+
+    /**
+     * The Excel preset wins for the three keys it controls even when the
+     * user has explicitly set them to other values. `excel => true` is a
+     * single switch; for a different combination set the individual keys
+     * yourself instead of enabling the preset.
+     *
+     * @return void
+     */
+    public function testExcelPresetOverridesIndividualKeys()
+    {
+        $data = [['a', 'b']];
+        $this->view->set(['data' => $data])
+            ->setConfig([
+                'serialize' => 'data',
+                'excel' => true,
+                'bom' => false,
+                'eol' => "\n",
+            ]);
+
+        $output = $this->view->render();
+        $bom = chr(0xEF) . chr(0xBB) . chr(0xBF);
+        $this->assertStringStartsWith($bom, $output);
+        $this->assertStringEndsWith("\r\n", $output);
+    }
 }

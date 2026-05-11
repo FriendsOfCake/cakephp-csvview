@@ -144,6 +144,10 @@ class CsvView extends SerializedView
      * - 'csvEncoding': (default 'UTF-8') CSV file encoding
      * - 'dataEncoding': (default 'UTF-8') Encoding of data to be serialized
      * - 'transcodingExtension': (default 'iconv') PHP extension to use for character encoding conversion
+     * - 'excel': (default false)  Shorthand for an Excel-friendly UTF-8 export.
+     *     When true, sets `bom => true`, `eol => "\r\n"`, and `csvEncoding => 'UTF-8'`.
+     *     These specific keys are forced; if you need a different combination
+     *     do not enable `excel` and set them individually instead.
      *
      * @var array<string, mixed>
      */
@@ -163,6 +167,7 @@ class CsvView extends SerializedView
         'csvEncoding' => 'UTF-8',
         'dataEncoding' => 'UTF-8',
         'transcodingExtension' => self::EXTENSION_ICONV,
+        'excel' => false,
     ];
 
     /**
@@ -210,6 +215,7 @@ class CsvView extends SerializedView
     protected function _serialize(array|string $serialize): string
     {
         $this->resetState();
+        $this->_applyExcelPreset();
 
         $this->_renderRow($this->getConfig('header'));
         $this->_renderContent();
@@ -244,6 +250,29 @@ class CsvView extends SerializedView
             fclose($this->fp);
             $this->fp = null;
         }
+    }
+
+    /**
+     * Apply the `excel` shorthand if enabled: BOM + CRLF EOL + UTF-8 encoding,
+     * the three options Excel needs to open a UTF-8 CSV correctly on Windows.
+     *
+     * Applied at serialize-time (rather than `initialize()`) so the preset
+     * takes effect regardless of when `excel` is set — including the test
+     * pattern of constructing the view and then calling `setConfig()`.
+     *
+     * @return void
+     */
+    protected function _applyExcelPreset(): void
+    {
+        if (!$this->getConfig('excel')) {
+            return;
+        }
+
+        $this->setConfig([
+            'bom' => true,
+            'eol' => "\r\n",
+            'csvEncoding' => 'UTF-8',
+        ]);
     }
 
     /**
