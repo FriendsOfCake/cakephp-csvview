@@ -263,6 +263,36 @@ The currently supported encoding extensions are as follows:
 - `iconv`
 - `mbstring`
 
+#### Excel-friendly UTF-8 export
+
+Microsoft Excel on Windows does not recognise a UTF-8 CSV unless it has a
+byte-order mark, CRLF line endings, and an explicit UTF-8 declaration. Setting
+all three options individually each time is repetitive and easy to get wrong.
+
+The `excel` shorthand sets the right defaults in one go:
+
+```php
+$this->viewBuilder()
+    ->setClassName('CsvView.Csv')
+    ->setOptions([
+        'serialize' => 'data',
+        'excel' => true,
+    ]);
+```
+
+`excel => true` is equivalent to:
+
+```php
+'bom' => true,
+'eol' => "\r\n",
+'csvEncoding' => 'UTF-8',
+```
+
+The shorthand always wins for the three keys it controls; if you need a
+different combination (e.g. UTF-16, no BOM) do not enable `excel` and set the
+individual keys yourself instead. Other CSV options (`delimiter`, `enclosure`,
+`setSeparator`, `header`, `extract`, etc.) are independent and behave normally.
+
 #### Setting the downloaded file name
 
 By default, the downloaded file will be named after the last segment of the URL
