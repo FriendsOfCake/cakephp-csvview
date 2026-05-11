@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace CsvView\Test\TestCase\View;
 
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest as Request;
 use Cake\I18n\DateTime;
@@ -518,5 +519,82 @@ CSV;
         $this->view->set(['data' => 'invaliddata']);
         $this->view->setConfig('serialize', 'data');
         $this->view->render();
+    }
+
+    /**
+     * Rendering the same instance twice must produce clean output both times
+     * (no stale BOM state, no leftover writer state).
+     *
+     * @return void
+     */
+    public function testRenderTwiceWithSameInstance()
+    {
+        $data = [['a', 'b'], ['c', 'd']];
+        $this->view->set(['data' => $data])
+            ->setConfig(['serialize' => 'data', 'bom' => true, 'csvEncoding' => 'UTF-8']);
+
+        $bom = chr(0xEF) . chr(0xBB) . chr(0xBF);
+        $expected = $bom . 'a,b' . PHP_EOL . 'c,d' . PHP_EOL;
+
+        $this->assertSame($expected, $this->view->render());
+        $this->assertSame($expected, $this->view->render());
+    }
+
+    /**
+     * Simple (non-dotted) extract paths must fall through Hash::get() so a
+     * missing key resolves to null instead of triggering an undefined-key
+     * warning.
+     *
+     * @return void
+     */
+    public function testRenderViaExtractMissingSimpleKey()
+    {
+        $data = [
+            ['name' => 'alice', 'email' => 'a@example.com'],
+            ['name' => 'bob'], // missing 'email'
+        ];
+        $this->view->set(['users' => $data])
+            ->setConfig([
+                'serialize' => 'users',
+                'extract' => ['name', 'email'],
+            ]);
+
+        $expected = 'alice,a@example.com' . PHP_EOL . 'bob,' . PHP_EOL;
+        $this->assertSame($expected, $this->view->render());
+    }
+
+    /**
+     * An extract path that resolves to an array (e.g. a hasMany association)
+     * must throw a clear exception instead of silently producing "Array to
+     * string conversion" notices and corrupted CSV. Regression for #131.
+     *
+     * @return void
+     */
+    public function testRenderViaExtractArrayValueThrows()
+    {
+        $data = [
+            [
+                'id' => 1,
+                'tags' => [['name' => 'php'], ['name' => 'cakephp']],
+            ],
+        ];
+        $this->view->set(['rows' => $data])
+            ->setConfig([
+                'serialize' => 'rows',
+                'extract' => ['id', 'tags'],
+            ]);
+
+        try {
+            $this->view->render();
+            $this->fail('Expected exception for array-valued extract path.');
+        } catch (Exception $e) {
+            // SerializedView wraps our CakeException in SerializationFailureException.
+            $previous = $e->getPrevious() ?? $e;
+            $this->assertInstanceOf(CakeException::class, $previous);
+            $this->assertStringContainsString(
+                'Extract path `tags` resolved to a non-scalar `array`',
+                $previous->getMessage(),
+            );
+        }
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <ruleset name="CsvView">
-    <config name="installed_paths" value="../../cakephp/cakephp-codesniffer" />
     <arg value="s"/>
 
     <file>src/</file>
