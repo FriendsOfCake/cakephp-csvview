@@ -106,6 +106,30 @@ class CsvView extends SerializedView
     public const EXTENSION_MBSTRING = 'mbstring';
 
     /**
+     * Transcoding mode: throw on any unconvertible byte / character (default).
+     *
+     * @var string
+     */
+    public const TRANSCODING_MODE_STRICT = 'strict';
+
+    /**
+     * Transcoding mode: silently drop unconvertible characters and keep going.
+     * Maps to iconv's `//IGNORE` suffix and mbstring's substitute-char `'none'`.
+     *
+     * @var string
+     */
+    public const TRANSCODING_MODE_IGNORE = 'ignore';
+
+    /**
+     * Transcoding mode: transliterate where possible, ignore otherwise.
+     * Maps to iconv's `//TRANSLIT//IGNORE` suffix. For mbstring this falls
+     * back to ignore (mbstring has no transliteration).
+     *
+     * @var string
+     */
+    public const TRANSCODING_MODE_TRANSLITERATE = 'transliterate';
+
+    /**
      * List of bom signs for encodings.
      *
      * @var array<string, string>
@@ -137,7 +161,10 @@ class CsvView extends SerializedView
      * - 'delimiter': (default ',')      CSV Delimiter, defaults to comma
      * - 'enclosure': (default '"')      CSV Enclosure for use with fputcsv()
      * - 'newline': (default '\n')       CSV Newline replacement for use with fputcsv()
-     * - 'escape': (default '\\')        CSV escape character for use with fputcsv()
+     * - 'escape': (default '')          CSV escape character for use with fputcsv().
+     *     Empty string is RFC 4180 compliant and avoids PHP 8.4's
+     *     deprecation warning for non-empty escape values. Set to '\\' for
+     *     legacy PHP-style escaping (will emit E_DEPRECATED on PHP 8.4+).
      * - 'eol': (default '\n')           End-of-line character the csv
      * - 'bom': (default false)          Adds BOM (byte order mark) header
      * - 'setSeparator': (default false) Adds sep=[_delimiter] in the first line
@@ -148,6 +175,12 @@ class CsvView extends SerializedView
      *     When true, sets `bom => true`, `eol => "\r\n"`, and `csvEncoding => 'UTF-8'`.
      *     These specific keys are forced; if you need a different combination
      *     do not enable `excel` and set them individually instead.
+     * - 'transcodingMode': (default 'strict') How to handle source bytes that
+     *     cannot be encoded in the target encoding. One of:
+     *     - 'strict': throw a CakeException naming the source/target encoding.
+     *     - 'ignore': silently drop unconvertible characters and continue.
+     *     - 'transliterate': transliterate where possible (e.g. é → e), ignore
+     *       otherwise. For iconv only; mbstring falls back to 'ignore'.
      *
      * @var array<string, mixed>
      */
@@ -159,7 +192,7 @@ class CsvView extends SerializedView
         'delimiter' => ',',
         'enclosure' => '"',
         'newline' => "\n",
-        'escape' => '\\',
+        'escape' => '',
         'eol' => PHP_EOL,
         'null' => '',
         'bom' => false,
@@ -168,6 +201,7 @@ class CsvView extends SerializedView
         'dataEncoding' => 'UTF-8',
         'transcodingExtension' => self::EXTENSION_ICONV,
         'excel' => false,
+        'transcodingMode' => self::TRANSCODING_MODE_STRICT,
     ];
 
     /**
@@ -431,12 +465,7 @@ class CsvView extends SerializedView
         $dataEncoding = $this->getConfig('dataEncoding');
         $csvEncoding = $this->getConfig('csvEncoding');
         if ($dataEncoding !== $csvEncoding) {
-            $extension = $this->getConfig('transcodingExtension');
-            if ($extension === static::EXTENSION_ICONV) {
-                $csv = iconv($dataEncoding, $csvEncoding, $csv);
-            } elseif ($extension === static::EXTENSION_MBSTRING) {
-                $csv = mb_convert_encoding($csv, $csvEncoding, $dataEncoding);
-            }
+            $csv = $this->_transcode($csv, $dataEncoding, $csvEncoding);
         }
 
         // BOM must be added after encoding
@@ -460,5 +489,78 @@ class CsvView extends SerializedView
         $csvEncoding = strtoupper($csvEncoding);
 
         return $this->bomMap[$csvEncoding] ?? '';
+    }
+
+    /**
+     * Transcode a row's worth of CSV between encodings, honoring the
+     * configured `transcodingMode` (strict / ignore / transliterate).
+     *
+     * @param string $csv The current CSV chunk.
+     * @param string $dataEncoding Source encoding.
+     * @param string $csvEncoding Target encoding.
+     * @return string Transcoded CSV chunk.
+     * @throws \Cake\Core\Exception\CakeException When mode is `strict` and the
+     *  transcoder reports a conversion failure.
+     */
+    protected function _transcode(string $csv, string $dataEncoding, string $csvEncoding): string
+    {
+        $extension = $this->getConfig('transcodingExtension');
+        $mode = $this->getConfig('transcodingMode');
+
+        if ($extension === static::EXTENSION_ICONV) {
+            $targetSpec = match ($mode) {
+                static::TRANSCODING_MODE_IGNORE => $csvEncoding . '//IGNORE',
+                static::TRANSCODING_MODE_TRANSLITERATE => $csvEncoding . '//TRANSLIT//IGNORE',
+                default => $csvEncoding,
+            };
+            // iconv() emits an E_NOTICE / E_WARNING immediately before returning
+            // false on unconvertible input. Install a no-op handler for the
+            // duration of the call so we surface the failure via our own
+            // (strict-mode) exception below rather than as two near-duplicate
+            // signals. PHPUnit's own error handler is restored on `finally`.
+            set_error_handler(static fn(): bool => true, E_NOTICE | E_WARNING);
+            try {
+                $converted = iconv($dataEncoding, $targetSpec, $csv);
+            } finally {
+                restore_error_handler();
+            }
+            if ($converted === false) {
+                if ($mode === static::TRANSCODING_MODE_STRICT) {
+                    throw new CakeException(sprintf(
+                        'iconv() failed to transcode row from `%s` to `%s`. '
+                        . 'Check that the source data is valid `%s` and that both '
+                        . 'encodings are supported by your iconv build, or set '
+                        . '`transcodingMode` to `ignore` or `transliterate` to '
+                        . 'tolerate unconvertible characters.',
+                        $dataEncoding,
+                        $csvEncoding,
+                        $dataEncoding,
+                    ));
+                }
+
+                return '';
+            }
+
+            return $converted;
+        }
+
+        if ($extension === static::EXTENSION_MBSTRING) {
+            $previousSubstitute = null;
+            if ($mode !== static::TRANSCODING_MODE_STRICT) {
+                $previousSubstitute = mb_substitute_character();
+                mb_substitute_character('none');
+            }
+            try {
+                $converted = mb_convert_encoding($csv, $csvEncoding, $dataEncoding);
+            } finally {
+                if ($previousSubstitute !== null) {
+                    mb_substitute_character($previousSubstitute);
+                }
+            }
+
+            return $converted;
+        }
+
+        return $csv;
     }
 }
