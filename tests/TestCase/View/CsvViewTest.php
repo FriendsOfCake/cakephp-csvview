@@ -641,4 +641,127 @@ CSV;
         $this->assertStringStartsWith($bom, $output);
         $this->assertStringEndsWith("\r\n", $output);
     }
+
+    /**
+     * The default `escape` value is `''` (RFC 4180 compliant) to avoid
+     * PHP 8.4's deprecation warning for any non-empty escape passed to
+     * `fputcsv()`. Rendering a row with a quote in it must produce
+     * doubled-quote escaping rather than legacy backslash escaping, and
+     * must not raise E_DEPRECATED.
+     *
+     * @return void
+     */
+    public function testDefaultEscapeIsRfc4180()
+    {
+        $deprecations = [];
+        set_error_handler(function ($severity, $message) use (&$deprecations) {
+            $deprecations[] = $message;
+        }, E_DEPRECATED | E_USER_DEPRECATED);
+
+        try {
+            $data = [['contains "quote"']];
+            $this->view->set(['data' => $data])
+                ->setConfig(['serialize' => 'data']);
+            $output = $this->view->render();
+        } finally {
+            restore_error_handler();
+        }
+
+        // RFC 4180: quote is escaped by doubling, not by backslash.
+        $this->assertSame('"contains ""quote"""' . PHP_EOL, $output);
+        $this->assertSame(
+            [],
+            $deprecations,
+            'fputcsv() raised an unexpected deprecation: ' . implode(', ', $deprecations),
+        );
+    }
+
+    public function testIconvFailureThrows()
+    {
+        if (!extension_loaded('iconv')) {
+            $this->markTestSkipped('The iconv extension is not available.');
+        }
+
+        $data = [['hello']];
+        $this->view->set(['data' => $data])
+            ->setConfig([
+                'serialize' => 'data',
+                'dataEncoding' => 'UTF-8',
+                // Bogus target encoding name. iconv returns false for this.
+                'csvEncoding' => 'NOT-A-REAL-ENCODING',
+                'transcodingExtension' => CsvView::EXTENSION_ICONV,
+            ]);
+
+        try {
+            $this->view->render();
+            $this->fail('Expected exception for iconv() returning false.');
+        } catch (Exception $e) {
+            $previous = $e->getPrevious() ?? $e;
+            $this->assertInstanceOf(CakeException::class, $previous);
+            $this->assertStringContainsString(
+                'iconv() failed to transcode',
+                $previous->getMessage(),
+            );
+        }
+    }
+
+    /**
+     * `transcodingMode => 'ignore'` must keep generating the CSV when iconv
+     * cannot convert a character: the unconvertible character is dropped and
+     * the rest of the row is preserved instead of throwing.
+     *
+     * @return void
+     */
+    public function testIconvIgnoreModeDropsUnconvertibleChars()
+    {
+        if (!extension_loaded('iconv')) {
+            $this->markTestSkipped('The iconv extension is not available.');
+        }
+
+        // `あ` cannot be represented in ASCII; in ignore mode it is dropped.
+        $data = [['hello あ world']];
+        $this->view->set(['data' => $data])
+            ->setConfig([
+                'serialize' => 'data',
+                'dataEncoding' => 'UTF-8',
+                'csvEncoding' => 'ASCII',
+                'transcodingExtension' => CsvView::EXTENSION_ICONV,
+                'transcodingMode' => CsvView::TRANSCODING_MODE_IGNORE,
+            ]);
+
+        $output = $this->view->render();
+        $this->assertStringContainsString('hello ', $output);
+        $this->assertStringContainsString(' world', $output);
+        $this->assertStringNotContainsString('あ', $output);
+    }
+
+    /**
+     * `transcodingMode => 'transliterate'` must convert what it can (e.g.
+     * accented Latin → ASCII equivalents).
+     *
+     * @return void
+     */
+    public function testIconvTransliterateModeConvertsAccentedChars()
+    {
+        if (!extension_loaded('iconv')) {
+            $this->markTestSkipped('The iconv extension is not available.');
+        }
+
+        $data = [['café Möhre']];
+        $this->view->set(['data' => $data])
+            ->setConfig([
+                'serialize' => 'data',
+                'dataEncoding' => 'UTF-8',
+                'csvEncoding' => 'ASCII',
+                'transcodingExtension' => CsvView::EXTENSION_ICONV,
+                'transcodingMode' => CsvView::TRANSCODING_MODE_TRANSLITERATE,
+            ]);
+
+        $output = $this->view->render();
+        // iconv//TRANSLIT typically produces `cafe` and `Mohre`; the exact
+        // output varies by libiconv build, but neither é nor ö should
+        // survive.
+        $this->assertStringNotContainsString('é', $output);
+        $this->assertStringNotContainsString('ö', $output);
+    }
 }
