@@ -362,3 +362,122 @@ $view->set(compact('data'));
 // And Save the file
 file_put_contents('/full/path/to/file.csv', $view->render());
 ```
+
+## Streaming large exports
+
+`CsvView` builds the whole CSV in memory before sending it. That is fine for a
+few thousand rows but becomes a problem for very large exports — memory grows
+with the row count and the user does not see the first byte until the whole
+file is generated.
+
+For those cases the plugin provides `CsvStreamResponse`, a response class that
+writes rows directly to the wire as the iterable yields them. Memory stays
+constant regardless of dataset size and time-to-first-byte drops to "after the
+first row".
+
+> Requires CakePHP **5.4+** for `Cake\Http\Response\AbstractStreamResponse`.
+
+### Usage
+
+Return a `CsvStreamResponse` from the controller — no view layer involved:
+
+```php
+use CsvView\Http\Response\CsvStreamResponse;
+
+public function export()
+{
+    $rows = $this->Articles->find()->disableBufferedResults();
+
+    return new CsvStreamResponse($rows, [
+        'header' => ['id', 'title', 'created'],
+        'extract' => ['id', 'title', ['created', '%s']],
+    ]);
+}
+```
+
+Any `iterable` works: an array, a generator, a `SelectQuery`, a `ResultSet`,
+anything implementing `Traversable`. For ORM queries call
+`disableBufferedResults()` so the driver streams rows one at a time instead of
+loading the full result set in memory first; result formatters such as `map()`
+or `combine()` buffer internally and will defeat the streaming.
+
+### Options
+
+The response accepts the same row-formatting options as `CsvView` plus a few
+streaming-specific ones inherited from the base class.
+
+Row formatting (matches `CsvView` byte-for-byte):
+
+- `header` (`array|null`, default `null`) — flat array of header column names.
+- `footer` (`array|null`, default `null`) — flat array of footer column names.
+- `extract` (`array|null`, default `null`) — Hash-compatible paths and/or
+  callables describing how to flatten each row. Same shape as `CsvView`:
+  `[$path]`, `[$path, $sprintfFormat]`, or `fn($row) => …`.
+- `delimiter` (`string`, default `','`).
+- `enclosure` (`string`, default `'"'`).
+- `escape` (`string`, default `''`) — empty string is RFC 4180 compliant and
+  avoids PHP 8.4's deprecation warning for non-empty escape values.
+- `newline` (`string`, default `"\n"`) — replacement for newline characters
+  found inside a field.
+- `eol` (`string`, default `PHP_EOL`) — line ending written between rows.
+- `null` (`string`, default `''`) — replacement for `null` cells.
+- `bom` (`bool`, default `false`) — prepend a UTF-* BOM.
+- `setSeparator` (`bool`, default `false`) — emit `sep={delimiter}` before the
+  header (Excel hint).
+- `csvEncoding` / `dataEncoding` (`string`, default `'UTF-8'`) — transcoding
+  pair. Uses `iconv` if available, falls back to `mbstring`.
+- `transcodingMode` (`string`, default `'strict'`) — `'strict'`, `'ignore'`,
+  or `'transliterate'`. Controls behavior on unconvertible characters.
+- `excel` (`bool`, default `false`) — shorthand that forces `bom => true`,
+  `eol => "\r\n"`, `csvEncoding => 'UTF-8'` for Excel-friendly UTF-8 exports.
+
+Streaming behavior (inherited from `AbstractStreamResponse`):
+
+- `flushEvery` (`int`, default `1`) — flush output buffers every N rows. The
+  default flushes after every row so clients see data as soon as possible;
+  raise it for fewer flush syscalls at the cost of slightly delayed first-byte.
+
+### Excel example
+
+```php
+return new CsvStreamResponse($rows, [
+    'header' => ['id', 'title', 'amount'],
+    'extract' => ['id', 'title', ['amount', '%.2f']],
+    'excel' => true,
+]);
+```
+
+Produces a UTF-8 BOM, CRLF line endings and UTF-8 encoding — opens cleanly in
+Excel on Windows.
+
+### Forcing a download filename
+
+Use the standard CakePHP response API; `CsvStreamResponse` is a regular
+`Cake\Http\Response`:
+
+```php
+return (new CsvStreamResponse($rows, $options))
+    ->withDownload('articles-' . date('Y-m-d') . '.csv');
+```
+
+### Error handling — tear cleanly
+
+If a row cannot be encoded (unrenderable extract path, strict-mode transcoding
+failure, …) the stream tears: the response logs the failure via `Log::error()`
+and stops emitting further rows. The client receives a valid but truncated
+CSV; the footer is omitted. Server-side logging surfaces the failure in Sentry
+or whatever log adapter is configured.
+
+The trade-off is intentional: once headers and the first byte have been sent
+the HTTP status can no longer change to 500, so emitting an invalid CSV with
+inline error markers would be worse than a clean truncation plus a server-side
+log entry.
+
+### When to use which
+
+| Need                                                                 | Use                  |
+|----------------------------------------------------------------------|----------------------|
+| Small / medium export, want to keep it inside the view layer         | `CsvView` (existing) |
+| Large export, memory pressure, slow time-to-first-byte               | `CsvStreamResponse`  |
+| Save the CSV to disk on the server                                   | `CsvView` (use `ViewBuilder` as shown above) |
+| Ship rows over the wire as they are computed                         | `CsvStreamResponse`  |
